@@ -1,8 +1,8 @@
-package com.example.wuyeguanli.service;
+package com.example.WuyeGuanli.service;
 
 
-import com.example.wuyeguanli.entity.User;
-import com.example.wuyeguanli.repository.UserRepository;
+import com.example.WuyeGuanli.entity.User;
+import com.example.WuyeGuanli.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -56,8 +56,9 @@ public class UserService {
 
     /**
      * 根據身份證號查詢用戶（用於房客初次登入驗證）
+     * 由於可能存在多個具有相同身份證號的用戶，返回一個列表
      */
-    public User getUserByIdentityNumber(String identityNumber) {
+    public List<User> getUserByIdentityNumber(String identityNumber) {
         return userRepository.findByIdentityNumber(identityNumber);
     }
 

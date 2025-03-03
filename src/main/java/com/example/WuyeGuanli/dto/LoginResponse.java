@@ -1,6 +1,6 @@
-package com.example.wuyeguanli.dto;
+package com.example.WuyeGuanli.dto;
 
-import com.example.wuyeguanli.entity.Role;
+import com.example.WuyeGuanli.entity.Role;
 
 public class LoginResponse {
     private Long userId;

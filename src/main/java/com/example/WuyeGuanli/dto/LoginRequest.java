@@ -1,4 +1,4 @@
-package com.example.wuyeguanli.dto;
+package com.example.WuyeGuanli.dto;
 
 public class LoginRequest {
 

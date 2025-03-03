@@ -1,4 +1,4 @@
-package com.example.wuyeguanli.entity;
+package com.example.WuyeGuanli.entity;
 
 //定義用戶的角色種類：管理員、房東、房客
 

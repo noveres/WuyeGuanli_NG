@@ -1,7 +1,7 @@
-package com.example.wuyeguanli.controller;
+package com.example.WuyeGuanli.controller;
 
-import com.example.wuyeguanli.entity.User;
-import com.example.wuyeguanli.service.UserService;
+import com.example.WuyeGuanli.entity.User;
+import com.example.WuyeGuanli.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;

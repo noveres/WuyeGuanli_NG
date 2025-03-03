@@ -1,8 +1,8 @@
-package com.example.wuyeguanli.controller;
+package com.example.WuyeGuanli.controller;
 
-import com.example.wuyeguanli.dto.LoginRequest;
-import com.example.wuyeguanli.dto.LoginResponse;
-import com.example.wuyeguanli.service.AuthService;
+import com.example.WuyeGuanli.dto.LoginRequest;
+import com.example.WuyeGuanli.dto.LoginResponse;
+import com.example.WuyeGuanli.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;

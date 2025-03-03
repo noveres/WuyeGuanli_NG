@@ -1,10 +1,10 @@
-package com.example.wuyeguanli.service;
+package com.example.WuyeGuanli.service;
 
-import com.example.wuyeguanli.dto.LoginRequest;
-import com.example.wuyeguanli.dto.LoginResponse;
-import com.example.wuyeguanli.entity.Role;
-import com.example.wuyeguanli.entity.User;
-import com.example.wuyeguanli.repository.UserRepository;
+import com.example.WuyeGuanli.dto.LoginRequest;
+import com.example.WuyeGuanli.dto.LoginResponse;
+import com.example.WuyeGuanli.entity.Role;
+import com.example.WuyeGuanli.entity.User;
+import com.example.WuyeGuanli.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

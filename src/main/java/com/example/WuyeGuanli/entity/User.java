@@ -1,4 +1,4 @@
-package com.example.wuyeguanli.entity;
+package com.example.WuyeGuanli.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -7,9 +7,6 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 /**

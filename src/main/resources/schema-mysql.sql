@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `fee_info` (
   PRIMARY KEY (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理費';
 
-CREATE TABLE `financial` NOT EXISTS `financial`(
+CREATE TABLE IF NOT EXISTS `financial`(
   `id` int NOT NULL,
   `project` varchar(100) DEFAULT NULL,
   `income` int DEFAULT '0',

@@ -7,6 +7,7 @@ import com.example.wuyeguanli.entity.User;
 import com.example.wuyeguanli.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -24,17 +25,33 @@ public class AuthService {
         LoginResponse response = new LoginResponse();
 
         // 根據身份證號查找用戶
-        User user = userRepository.findByIdentityNumber(loginRequest.getIdentityNumber());
+        List<User> users = userRepository.findByIdentityNumber(loginRequest.getIdentityNumber());
 
-        // 如果用戶不存在或密碼不匹配
-        if (user == null || !user.getPassword().equals(loginRequest.getPassword())) {
+        // 如果沒有找到用戶或找到多個用戶，返回錯誤
+        if (users.isEmpty()) {
+            response.setSuccess(false);
+            response.setMessage("帳號或密碼錯誤");
+            return response;
+        }
+        
+        // 遍歷所有找到的用戶，尋找匹配密碼的用戶
+        User matchedUser = null;
+        for (User user : users) {
+            if (user.getPassword().equals(loginRequest.getPassword())) {
+                matchedUser = user;
+                break;
+            }
+        }
+        
+        // 如果沒有找到匹配密碼的用戶
+        if (matchedUser == null) {
             response.setSuccess(false);
             response.setMessage("帳號或密碼錯誤");
             return response;
         }
 
         // 檢查用戶角色是否為管理員
-        if (user.getRole() != Role.admin) {
+        if (matchedUser.getRole() != Role.admin) {
             response.setSuccess(false);
             response.setMessage("只有管理員可以登入系統");
             return response;
@@ -45,9 +62,9 @@ public class AuthService {
 
         // 設置響應信息
         response.setSuccess(true);
-        response.setUserId(user.getId());
-        response.setName(user.getName());
-        response.setRole(user.getRole());
+        response.setUserId(matchedUser.getId());
+        response.setName(matchedUser.getName());
+        response.setRole(matchedUser.getRole());
         response.setToken(token);
         response.setMessage("登錄成功");
 

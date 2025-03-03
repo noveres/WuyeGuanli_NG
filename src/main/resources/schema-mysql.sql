@@ -33,3 +33,13 @@ CREATE TABLE IF NOT EXISTS `financial`(
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE IF NOT EXISTS `resident_information` (
+  `Partitionhousenumber` varchar(20) NOT NULL,
+  `Owner_Name` varchar(45) DEFAULT NULL,
+  `Owner_Phone` varchar(45) DEFAULT NULL,
+  `Lease` tinyint DEFAULT NULL,
+  `Residentname` varchar(45) DEFAULT NULL,
+  `Residentphonenumber` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`Partitionhousenumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+

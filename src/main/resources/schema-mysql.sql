@@ -20,3 +20,16 @@ CREATE TABLE IF NOT EXISTS `fee_info` (
   `modifying_date` date DEFAULT NULL COMMENT '更新一次刷新一次',
   PRIMARY KEY (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理費';
+
+CREATE TABLE `financial` NOT EXISTS `financial`(
+  `id` int NOT NULL,
+  `project` varchar(100) DEFAULT NULL,
+  `income` int DEFAULT '0',
+  `expenditure` int DEFAULT '0',
+  `date` date DEFAULT NULL,
+  `balance` int DEFAULT '0',
+  `remark` varchar(200) DEFAULT NULL,
+  `receipt` blob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+

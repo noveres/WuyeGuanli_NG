@@ -20,3 +20,44 @@ CREATE TABLE IF NOT EXISTS `fee_info` (
   `modifying_date` date DEFAULT NULL COMMENT '更新一次刷新一次',
   PRIMARY KEY (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理費';
+
+CREATE TABLE IF NOT EXISTS `financial`(
+  `id` int NOT NULL,
+  `project` varchar(100) DEFAULT NULL,
+  `income` int DEFAULT '0',
+  `expenditure` int DEFAULT '0',
+  `date` date DEFAULT NULL,
+  `balance` int DEFAULT '0',
+  `remark` varchar(200) DEFAULT NULL,
+  `receipt` blob,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `resident_information` (
+  `Partitionhousenumber` varchar(20) NOT NULL,
+  `Owner_Name` varchar(45) DEFAULT NULL,
+  `Owner_Phone` varchar(45) DEFAULT NULL,
+  `Lease` tinyint DEFAULT NULL,
+  `Residentname` varchar(45) DEFAULT NULL,
+  `Residentphonenumber` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`Partitionhousenumber`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `users` (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    identity_number VARCHAR(20),
+    password VARCHAR(255) NOT NULL,
+    role ENUM('admin', 'landlord', 'tenant') NOT NULL,
+    landlord_id INT NULL,
+    is_currently_residing BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES Users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+DROP TRIGGER IF EXISTS before_users_update;
+
+CREATE TRIGGER before_users_update
+    BEFORE UPDATE ON Users
+    FOR EACH ROW
+    SET NEW.updated_at = CURRENT_TIMESTAMP;

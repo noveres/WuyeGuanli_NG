@@ -43,9 +43,7 @@ CREATE TABLE IF NOT EXISTS `resident_information` (
   PRIMARY KEY (`Partitionhousenumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- 確保表格存在並創建
 CREATE TABLE IF NOT EXISTS `users` (
-    id INT AUTO_INCREMENT PRIMARY KEY,
 id INT AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(50) NOT NULL,
 identity_number VARCHAR(20),
@@ -55,14 +53,12 @@ landlord_id INT NULL,
 is_currently_residing BOOLEAN NOT NULL DEFAULT TRUE,
 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修正為小寫
+CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-<<<<<<< HEAD
+DROP TRIGGER IF EXISTS `before_users_update`;
 
---DROP TRIGGER IF EXISTS before_users_update;
---
---CREATE TRIGGER before_users_update
---    BEFORE UPDATE ON Users
---    FOR EACH ROW
---    SET NEW.updated_at = CURRENT_TIMESTAMP;
+CREATE TRIGGER `before_users_update`
+    BEFORE UPDATE ON `users`
+    FOR EACH ROW
+    SET NEW.updated_at = CURRENT_TIMESTAMP;

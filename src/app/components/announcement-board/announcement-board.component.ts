@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
 import { Announcement } from '../../models/announcement.model';
 import { AnnouncementService } from '../../services/announcement.service';
 import { EditAnnouncementDialogComponent } from '../edit-announcement-dialog/edit-announcement-dialog.component';
@@ -7,6 +8,8 @@ import { PreviewAnnouncementDialogComponent } from '../preview-announcement-dial
 
 @Component({
   selector: 'app-announcement-board',
+  standalone: true,
+  imports: [MatTableModule],
   templateUrl: './announcement-board.component.html',
   styleUrls: ['./announcement-board.component.scss']
 })
@@ -20,7 +23,7 @@ export class AnnouncementBoardComponent implements OnInit {
   }
 
   loadAnnouncements(): void {
-    this.announcementService.getAnnouncements().subscribe(data => {
+    this.announcementService.getAnnouncements().subscribe((data: Announcement[]) => {
       this.announcements = data;
     });
   }

@@ -1,11 +1,20 @@
-<h2 mat-dialog-title>公告預覽</h2>
+<h2 mat-dialog-title>預覽公告</h2>
+
 <mat-dialog-content>
-  <h3>{{ data.title }}</h3>
-  <p><strong>日期:</strong> {{ data.date }}</p>
-  <p><strong>內容:</strong></p>
-  <p>{{ data.content }}</p>
-  <img *ngIf="data.imageUrl" [src]="data.imageUrl" alt="公告圖片" style="max-width: 100%;">
+  <div class="announcement-preview">
+    <h3 class="title">{{ data.title }}</h3>
+    <div class="date">{{ data.date | date:'yyyy-MM-dd' }}</div>
+    
+    <div class="image-container" *ngIf="data.imageUrl">
+      <img [src]="data.imageUrl" alt="公告圖片">
+    </div>
+    
+    <div class="content">
+      <p>{{ data.content }}</p>
+    </div>
+  </div>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button mat-dialog-close>關閉</button>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">關閉</button>
 </mat-dialog-actions>

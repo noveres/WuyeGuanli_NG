@@ -24,7 +24,8 @@ export const routes: Routes = [
   },
   {
     path: 'announcements',
-    component: AnnouncementBoardComponent
+    component: AnnouncementBoardComponent,
+    canActivate: [AuthGuard]
   },
   { path: '**', redirectTo: 'login' }
 ];

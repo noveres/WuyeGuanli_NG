@@ -1,39 +1,53 @@
-<h2 mat-dialog-title>{{ data.title ? '編輯公告' : '新增公告' }}</h2>
+<h2 mat-dialog-title>{{ data.id ? '編輯公告' : '新增公告' }}</h2>
+
 <mat-dialog-content>
-  <form [formGroup]="announcementForm">
-    <mat-form-field appearance="fill">
+  <form [formGroup]="announcementForm" class="announcement-form">
+    <mat-form-field appearance="outline">
       <mat-label>標題</mat-label>
-      <input matInput formControlName="title">
-      <mat-error *ngIf="announcementForm.get('title')?.hasError('required')">
-        標題為必填項
+      <input matInput formControlName="title" placeholder="請輸入公告標題">
+      <mat-error *ngIf="announcementForm.get('title')?.errors?.['required']">
+        標題為必填項目
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
+    <mat-form-field appearance="outline">
       <mat-label>日期</mat-label>
-      <input matInput [matDatepicker]="picker" formControlName="date">
+      <input matInput [matDatepicker]="picker" formControlName="date" placeholder="請選擇日期">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="announcementForm.get('date')?.hasError('required')">
-        日期為必填項
+      <mat-error *ngIf="announcementForm.get('date')?.errors?.['required']">
+        日期為必填項目
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>內容</mat-label>
-      <textarea matInput formControlName="content"></textarea>
-      <mat-error *ngIf="announcementForm.get('content')?.hasError('required')">
-        內容為必填項
+    <mat-form-field appearance="outline">
+      <mat-label>內文</mat-label>
+      <textarea matInput formControlName="content" rows="6" placeholder="請輸入公告內容"></textarea>
+      <mat-error *ngIf="announcementForm.get('content')?.errors?.['required']">
+        內文為必填項目
       </mat-error>
     </mat-form-field>
 
-    <mat-form-field appearance="fill">
-      <mat-label>圖片 URL</mat-label>
-      <input matInput formControlName="imageUrl">
-    </mat-form-field>
+    <div class="image-upload">
+      <button type="button" mat-stroked-button (click)="fileInput.click()">
+        <mat-icon>upload</mat-icon>
+        上傳圖片
+      </button>
+      <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none">
+      
+      <div class="image-preview" *ngIf="announcementForm.get('imageUrl')?.value">
+        <img [src]="announcementForm.get('imageUrl')?.value" alt="預覽圖片">
+        <button mat-icon-button color="warn" (click)="removeImage()" class="remove-image">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
   </form>
 </mat-dialog-content>
-<mat-dialog-actions>
+
+<mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">取消</button>
-  <button mat-button (click)="onSubmit()" [disabled]="!announcementForm.valid">{{ data.title ? '更新' : '新增' }}</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!announcementForm.valid">
+    確定
+  </button>
 </mat-dialog-actions>

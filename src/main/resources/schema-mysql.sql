@@ -43,19 +43,22 @@ CREATE TABLE IF NOT EXISTS `resident_information` (
   PRIMARY KEY (`Partitionhousenumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- 確保表格存在並創建
 CREATE TABLE IF NOT EXISTS `users` (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(50) NOT NULL,
-    identity_number VARCHAR(20),
-    password VARCHAR(255) NOT NULL,
-    role ENUM('admin', 'landlord', 'tenant') NOT NULL,
-    landlord_id INT NULL,
-    is_currently_residing BOOLEAN NOT NULL DEFAULT TRUE,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES Users(id)
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(50) NOT NULL,
+identity_number VARCHAR(20),
+password VARCHAR(255) NOT NULL,
+role ENUM('admin', 'landlord', 'tenant') NOT NULL,
+landlord_id INT NULL,
+is_currently_residing BOOLEAN NOT NULL DEFAULT TRUE,
+created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修正為小寫
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+<<<<<<< HEAD
 
 --DROP TRIGGER IF EXISTS before_users_update;
 --

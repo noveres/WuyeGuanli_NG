@@ -14,10 +14,10 @@ CREATE TABLE  IF NOT EXISTS `report`(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
-CREATE TABLE IF NOT EXISTS `fee_info` (
+CREATE TABLE `fee_info` (
   `address` varchar(45) NOT NULL,
   `other` varchar(445) DEFAULT NULL COMMENT '''["1134是","1141是"1142否只繳一半"]''',
-  `modifying_date` date DEFAULT NULL COMMENT '更新一次刷新一次',
+  `modifying_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新一次刷新一次',
   PRIMARY KEY (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理費';
 

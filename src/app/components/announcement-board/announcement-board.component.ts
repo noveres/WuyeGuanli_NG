@@ -12,9 +12,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Announcement, AnnouncementType } from '../../models/announcement.model';
 import { AnnouncementService } from '../../services/announcement.service';
+import { EditAnnouncementDialogComponent } from '../edit-announcement-dialog/edit-announcement-dialog.component';
 import { PreviewAnnouncementDialogComponent } from '../preview-announcement-dialog/preview-announcement-dialog.component';
 
 @Component({
@@ -57,6 +59,7 @@ export class AnnouncementBoardComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     private announcementService: AnnouncementService
   ) {}
 
@@ -72,6 +75,7 @@ export class AnnouncementBoardComponent implements OnInit {
       },
       error: (error) => {
         console.error('載入公告失敗:', error);
+        this.showMessage('載入公告失敗');
       }
     });
   }
@@ -138,10 +142,53 @@ export class AnnouncementBoardComponent implements OnInit {
     }
   }
 
+  openEditDialog(announcement?: Announcement): void {
+    const dialogRef = this.dialog.open(EditAnnouncementDialogComponent, {
+      width: '600px',
+      data: announcement || {
+        title: '',
+        content: '',
+        date: new Date(),
+        type: '其他',
+        imageUrl: ''
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.loadAnnouncements();
+        this.showMessage(announcement ? '公告已更新' : '公告已新增');
+      }
+    });
+  }
+
   openPreviewDialog(announcement: Announcement): void {
     this.dialog.open(PreviewAnnouncementDialogComponent, {
       width: '600px',
       data: announcement
+    });
+  }
+
+  deleteAnnouncement(announcement: Announcement): void {
+    if (confirm('確定要刪除這個公告嗎？')) {
+      this.announcementService.deleteAnnouncement(announcement.id).subscribe({
+        next: () => {
+          this.loadAnnouncements();
+          this.showMessage('公告已刪除');
+        },
+        error: (error) => {
+          console.error('刪除公告失敗:', error);
+          this.showMessage('刪除公告失敗');
+        }
+      });
+    }
+  }
+
+  private showMessage(message: string): void {
+    this.snackBar.open(message, '關閉', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top'
     });
   }
 }

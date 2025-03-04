@@ -11,11 +11,15 @@ h1 {
     padding: 16px;
     border-radius: 4px;
     margin-bottom: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 
     .search-section {
       display: flex;
       gap: 16px;
       align-items: flex-start;
+      flex: 1;
 
       .date-range {
         width: 140px;
@@ -47,6 +51,13 @@ h1 {
         .mat-mdc-form-field-flex {
           margin-top: -8px;
         }
+      }
+    }
+
+    .action-buttons {
+      margin-left: 16px;
+      button {
+        min-width: 100px;
       }
     }
   }
@@ -84,8 +95,13 @@ h1 {
     }
 
     .mat-column-actions {
-      width: 80px;
-      text-align: center;
+      width: 120px;
+      text-align: right;
+      white-space: nowrap;
+
+      button {
+        margin-left: 4px;
+      }
     }
   }
 

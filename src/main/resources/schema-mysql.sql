@@ -1,7 +1,7 @@
 CREATE TABLE  IF NOT EXISTS `report`(
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `sort` varchar(20) NOT NULL COMMENT '''種類:比如電梯、大門''',
-  `where` varchar(20) NOT NULL COMMENT '''哪裡:比如A棟3F''',
+  `location` varchar(20) NOT NULL COMMENT '''哪裡:比如A棟3F''',
   `description` varchar(45) NOT NULL COMMENT '''描述''',
   `photo1` varchar(100) NOT NULL,
   `photo2` varchar(100) NOT NULL,
@@ -55,9 +55,11 @@ CREATE TABLE IF NOT EXISTS `users` (
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES Users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-DROP TRIGGER IF EXISTS before_users_update;
 
-CREATE TRIGGER before_users_update
-    BEFORE UPDATE ON Users
-    FOR EACH ROW
-    SET NEW.updated_at = CURRENT_TIMESTAMP;
+
+--DROP TRIGGER IF EXISTS before_users_update;
+--
+--CREATE TRIGGER before_users_update
+--    BEFORE UPDATE ON Users
+--    FOR EACH ROW
+--    SET NEW.updated_at = CURRENT_TIMESTAMP;

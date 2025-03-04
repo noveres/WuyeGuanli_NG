@@ -89,7 +89,6 @@ export class AppComponent implements OnInit, OnDestroy {
     if (url.includes('/attendance')) return '考勤';
     if (url.includes('/admin')) return '管理';
     if (url.includes('/settings')) return '設置';
-    if (url.includes('/fee-info')) return '費用信息';
     return '';
   }
 

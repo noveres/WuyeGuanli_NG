@@ -21,5 +21,6 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/fee-info/fee-info.component').then(m => m.FeeInfoComponent),
     canActivate: [AuthGuard]
   },
+
   { path: '**', redirectTo: 'login' }
 ];

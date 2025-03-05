@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 
 import { Announcement } from '../../models/announcement.model';
 import { AnnouncementService } from '../../services/announcement.service';
@@ -24,7 +25,8 @@ import { AnnouncementService } from '../../services/announcement.service';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule
   ],
   templateUrl: './edit-announcement-dialog.component.html',
   styleUrls: ['./edit-announcement-dialog.component.scss']
@@ -41,6 +43,7 @@ export class EditAnnouncementDialogComponent {
     this.announcementForm = this.fb.group({
       title: [data.title || '', Validators.required],
       date: [data.date || new Date(), Validators.required],
+      type: [data.type || '水電相關', Validators.required],
       content: [data.content || '', Validators.required],
       imageUrl: [data.imageUrl || '']
     });

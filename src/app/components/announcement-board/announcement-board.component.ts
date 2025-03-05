@@ -133,9 +133,11 @@ export class AnnouncementBoardComponent implements OnInit {
 
   getTypeClass(type: AnnouncementType): string {
     switch (type) {
-      case '社區活動':
-        return 'type-activity';
-      case '維修通知':
+      case '水電相關':
+        return 'type-utility';
+      case '住戶相關':
+        return 'type-resident';
+      case '維修相關':
         return 'type-maintenance';
       default:
         return 'type-other';

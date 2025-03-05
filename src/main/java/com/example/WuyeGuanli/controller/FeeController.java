@@ -14,7 +14,7 @@ import com.example.WuyeGuanli.entity.FeeInfo;
 import com.example.WuyeGuanli.service.ifs.FeeInfoService;
 import com.example.WuyeGuanli.vo.BasicRes;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
 @RestController
 public class FeeController {
 

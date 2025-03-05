@@ -21,7 +21,7 @@ public class DashBoard {
     private int id;
 
     @Column(name = "date")
-    private LocalDate date;
+    private LocalDate date;  // 使用 LocalDate 類型
 
     @Column(name = "sort")
     private String sort;

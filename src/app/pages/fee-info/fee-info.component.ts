@@ -78,7 +78,13 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
       )
       .subscribe((response: any) => {
         if (response && Array.isArray(response)) {
-          this.tableData = this.transformData(response);
+          // 過濾掉包含 "nodisplay" 開頭的整個門牌資料
+          const filteredResponse = response.filter(item => {
+            const records = JSON.parse(item.other);
+            return !records.some((record: string) => record.startsWith('nodisplay'));
+          });
+          
+          this.tableData = this.transformData(filteredResponse);
           this.dataSource.data = this.tableData;
         } else {
           console.error('伺服器回傳的資料格式不正確');
@@ -94,7 +100,10 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
         // 解析記錄
         const records = JSON.parse(item.other);
 
-        records.forEach((record: string) => {
+        // 過濾掉 "hide" 開頭的子項目
+        const visibleRecords = records.filter((record: string) => !record.startsWith('hide'));
+
+        visibleRecords.forEach((record: string) => {
           const year = parseInt(record.substring(0, 3));
           const season = parseInt(record.substring(3, 4));
 
@@ -118,7 +127,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
             // 使用 modifyingDate 欄位
             modifying: item.modifyingDate 
               ? new Date(item.modifyingDate).toLocaleString() 
-              : '尚未更新'
+              : '未知時間'
           });
         });
       } catch (error) {

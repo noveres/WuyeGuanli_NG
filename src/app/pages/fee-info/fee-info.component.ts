@@ -7,17 +7,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { HttpServiceService } from '../../services/http-service.service';
 
 // 自定義分頁器文字
 export class CustomMatPaginatorIntl extends MatPaginatorIntl {
   override itemsPerPageLabel = '每頁顯示:';
-}
-
-// 資料庫表結構
-interface DatabaseRecord {
-  address: string;
-  other: string;
-  modifying:string;
 }
 
 // 表格顯示用介面
@@ -28,70 +24,6 @@ export interface PeriodicElement {
   fee: string;
   remark: string;
   modifying: string;
-}
-
-// 模擬從資料庫獲取的原始數據
-const DB_DATA: DatabaseRecord[] = [
-  {
-    address: 'A01',
-    other: '["1133否","1134是","1141是","1142是"]',
-    modifying:'2025-05-02'
-  },
-  {
-    address: 'A02',
-    other: '["1134是","1141是","1142是"]',
-    modifying:'2025-05-02'
-  },
-  {
-    address: 'B01',
-    other: '["1134是","1141是","1142否只繳一半"]',
-    modifying:'2025-05-02'
-  }
-];
-
-// 轉換資料庫數據為表格可用格式
-function transformData(dbData: DatabaseRecord[]): PeriodicElement[] {
-  const result: PeriodicElement[] = [];
-
-  dbData.forEach(item => {
-    try {
-      // 將 other 解析為 JSON 數組
-      const records = JSON.parse(item.other);
-
-      // 處理每條記錄
-      records.forEach((record: string) => {
-        // 解析記錄
-        const year = parseInt(record.substring(0, 3));
-        const season = parseInt(record.substring(3, 4));
-
-        let fee = '';
-        let remark = '';
-
-        // 檢查是否有繳費狀態
-        if (record.length > 4) {
-          fee = record.substring(4, 5);
-
-          // 檢查是否有備註
-          if (record.length > 5) {
-            remark = record.substring(5);
-          }
-        }
-
-        result.push({
-          address: item.address,
-          year: year,
-          season: season,
-          fee: fee,
-          remark: remark,
-          modifying:item.modifying,
-        });
-      });
-    } catch (error) {
-      console.error(`解析記錄錯誤: ${item.address}`, error);
-    }
-  });
-
-  return result;
 }
 
 @Component({
@@ -110,29 +42,91 @@ function transformData(dbData: DatabaseRecord[]): PeriodicElement[] {
   styleUrl: './fee-info.component.scss'
 })
 export class FeeInfoComponent implements OnInit, AfterViewInit {
-  
-
   // 控制 checkbox 欄位的顯示與隱藏
   showCheckboxColumn = true;
 
   // 加入 select 列
-  displayedColumns: string[] = ['select', 'address', 'year', 'season', 'fee', 'remark','modifying'];
+  displayedColumns: string[] = ['select', 'address', 'year', 'season', 'fee', 'remark', 'modifying'];
 
-  // 轉換數據並創建數據源
-  tableData = transformData(DB_DATA);
-  dataSource = new MatTableDataSource<PeriodicElement>(this.tableData);
+  // 原始表格資料
+  tableData: PeriodicElement[] = [];
+  dataSource = new MatTableDataSource<PeriodicElement>([]);
 
   // 選擇模型
   selection = new SelectionModel<PeriodicElement>(true, []);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  constructor(private httpService: HttpServiceService) {}
+
   ngOnInit(): void {
-    // 初始化组件
+    this.fetchFeeData();
   }
 
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+  }
+
+  // 從 API 獲取資料的方法
+  fetchFeeData(): void {
+    this.httpService.GetApi('http://localhost:8585/fee/getall')
+      .pipe(
+        catchError(error => {
+          console.error('獲取資料時發生錯誤', error);
+          return of([]);
+        })
+      )
+      .subscribe((response: any) => {
+        if (response && Array.isArray(response)) {
+          this.tableData = this.transformData(response);
+          this.dataSource.data = this.tableData;
+        } else {
+          console.error('伺服器回傳的資料格式不正確');
+        }
+      });
+  }
+
+  transformData(dbData: any[]): PeriodicElement[] {
+    const result: PeriodicElement[] = [];
+
+    dbData.forEach(item => {
+      try {
+        // 解析記錄
+        const records = JSON.parse(item.other);
+
+        records.forEach((record: string) => {
+          const year = parseInt(record.substring(0, 3));
+          const season = parseInt(record.substring(3, 4));
+
+          let fee = '';
+          let remark = '';
+
+          if (record.length > 4) {
+            fee = record.substring(4, 5);
+
+            if (record.length > 5) {
+              remark = record.substring(5);
+            }
+          }
+
+          result.push({
+            address: item.address,
+            year: year,
+            season: season,
+            fee: fee,
+            remark: remark,
+            // 使用 modifyingDate 欄位
+            modifying: item.modifyingDate 
+              ? new Date(item.modifyingDate).toLocaleString() 
+              : '尚未更新'
+          });
+        });
+      } catch (error) {
+        console.error(`解析記錄錯誤: ${item.address}`, error);
+      }
+    });
+
+    return result;
   }
 
   /** 是否所有行都被選中 */
@@ -163,7 +157,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  modifySelectedItems(): void { //綁update 看update API如何呈現再說 
+  modifySelectedItems(): void { 
     const selectedItems = this.getSelectedItems();
     console.log('選中的項目:', selectedItems);
     // 這裡添加修改邏輯
@@ -173,7 +167,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
   toggleCheckboxColumn(): void {
     this.showCheckboxColumn = !this.showCheckboxColumn;
     this.displayedColumns = this.showCheckboxColumn
-      ? ['select', 'address', 'year', 'season', 'fee', 'remark','modifying']
-      : ['address', 'year', 'season', 'fee', 'remark','modifying'];
+      ? ['select', 'address', 'year', 'season', 'fee', 'remark', 'modifying']
+      : ['address', 'year', 'season', 'fee', 'remark', 'modifying'];
   }
 }

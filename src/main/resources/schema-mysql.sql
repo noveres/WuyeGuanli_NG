@@ -58,6 +58,7 @@ updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修正為小寫
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+<<<<<<< HEAD
 
 --DROP TRIGGER IF EXISTS before_users_update;
 --

@@ -1,27 +1,32 @@
 package com.example.WuyeGuanli.vo;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import com.example.WuyeGuanli.entity.FeeInfo;
 
 public class FeeInfoRes extends BasicRes {
 	private String address;
-	private int year;
-	private int season;
-	private boolean isPaid;
-	private String content;
-	//List<String> other;
+	
+	private String other; 
+	
+	private LocalDateTime modifyingDate;
 
 	public FeeInfoRes() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public FeeInfoRes(String address, int year, int season, boolean isPaid, String content) {
-		super();
+	public FeeInfoRes(int statusCode, String message) {
+		super(statusCode, message);
+		// TODO Auto-generated constructor stub
+	}
+
+	public FeeInfoRes(int statusCode, String message,String address, String other, LocalDateTime modifyingDate) {
+		super(statusCode, message);
 		this.address = address;
-		this.year = year;
-		this.season = season;
-		this.isPaid = isPaid;
-		this.content = content;
+		this.other = other;
+		this.modifyingDate = modifyingDate;
 	}
 
 	public String getAddress() {
@@ -32,41 +37,23 @@ public class FeeInfoRes extends BasicRes {
 		this.address = address;
 	}
 
-	public int getYear() {
-		return year;
+	public String getOther() {
+		return other;
 	}
 
-	public void setYear(int year) {
-		this.year = year;
+	public void setOther(String other) {
+		this.other = other;
 	}
 
-	public int getSeason() {
-		return season;
+	public LocalDateTime getModifyingDate() {
+		return modifyingDate;
 	}
 
-	public void setSeason(int season) {
-		this.season = season;
+	public void setModifyingDate(LocalDateTime modifyingDate) {
+		this.modifyingDate = modifyingDate;
 	}
-
-	public boolean isPaid() {
-		return isPaid;
-	}
-
-	public void setPaid(boolean isPaid) {
-		this.isPaid = isPaid;
-	}
-
-	public String getContent() {
-		return content;
-	}
-
-	public void setContent(String content) {
-		this.content = content;
-	}
-
-	public FeeInfoRes(int statusCode, String message) {
-		super(statusCode, message);
-		// TODO Auto-generated constructor stub
-	}
-
+	
+	
+	
+	
 }

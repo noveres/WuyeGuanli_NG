@@ -29,9 +29,9 @@ public class DashBoard {
     @Column(name = "header")
     private String header;
 
-    @Column(name = "content")
+    @Column(name = "content", columnDefinition = "TEXT")
     private String content;
 
-    @Column(name = "img_url")
+    @Column(name = "img_url", length = 500)
     private String imgUrl;
 }

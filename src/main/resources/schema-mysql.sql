@@ -58,10 +58,15 @@ updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修正為小寫
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+#
+# --DROP TRIGGER IF EXISTS before_users_update;
+# --
+# --CREATE TRIGGER before_users_update
+# --    BEFORE UPDATE ON Users
+# --    FOR EACH ROW
+# --    SET NEW.updated_at = CURRENT_TIMESTAMP;
 
---DROP TRIGGER IF EXISTS before_users_update;
---
---CREATE TRIGGER before_users_update
---    BEFORE UPDATE ON Users
---    FOR EACH ROW
---    SET NEW.updated_at = CURRENT_TIMESTAMP;
+    CREATE TABLE  IF NOT EXISTS  `file_names` (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    file_name VARCHAR(255) NOT NULL UNIQUE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;

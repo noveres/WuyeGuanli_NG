@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import com.example.WuyeGuanli.service.FileNameService;
+
 @RestController
 @RequestMapping("/api/upload")
 @CrossOrigin(origins = "http://localhost:4200", allowCredentials = "true")
@@ -28,8 +30,11 @@ public class FileUploadController {
     private final Path fileStoragePath;
     private final String fileStorageLocation;
 
+    private final FileNameService fileNameService;
+
     // 構造函數，初始化存儲路徑
-    public FileUploadController() {
+    public FileUploadController(FileNameService fileNameService) {
+        this.fileNameService = fileNameService;
         this.fileStorageLocation = "src/main/resources/img/DashBoard";
         this.fileStoragePath = Paths.get(this.fileStorageLocation).toAbsolutePath().normalize();
 
@@ -75,6 +80,9 @@ public class FileUploadController {
             // 保存文件
             Path targetLocation = this.fileStoragePath.resolve(fileName);
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+
+            // 將文件名存儲到資料庫中
+            fileNameService.saveFileName(fileName);
 
             // 返回文件名
             Map<String, String> response = new HashMap<>();

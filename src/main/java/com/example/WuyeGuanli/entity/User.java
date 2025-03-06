@@ -1,6 +1,5 @@
 package com.example.WuyeGuanli.entity;
 
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -35,6 +34,10 @@ public class User {
     // 用戶角色：admin / landlord / tenant
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    // 用戶頭像路徑
+    @Column(name = "avatar")
+    private String avatar;
 
     // 創建時間，預設以 UTC 時間儲存
     private LocalDateTime createdAt;
@@ -74,9 +77,6 @@ public class User {
     // 新增：判斷房客是否仍在居住，預設為 true
     @Column(name = "is_currently_residing", nullable = false)
     private Boolean isCurrentlyResiding = true;
-
-
-
 
     // 以下為 Getter 與 Setter 方法
 
@@ -120,6 +120,14 @@ public class User {
         this.role = role;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -161,7 +169,6 @@ public class User {
         this.tenants = tenants;
     }
 
-
     public Boolean getIsCurrentlyResiding() {
         return isCurrentlyResiding;
     }
@@ -169,5 +176,4 @@ public class User {
     public void setIsCurrentlyResiding(Boolean isCurrentlyResiding) {
         this.isCurrentlyResiding = isCurrentlyResiding;
     }
-
 }

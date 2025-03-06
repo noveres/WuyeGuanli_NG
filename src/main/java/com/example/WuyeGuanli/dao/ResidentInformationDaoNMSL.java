@@ -1,9 +1,8 @@
 package com.example.WuyeGuanli.dao;
 
-import java.lang.foreign.AddressLayout;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +11,7 @@ import com.example.WuyeGuanli.entity.Resident_Information;
 import jakarta.transaction.Transactional;
 
 @Repository
-public interface ResidentInformationDao extends JpaRepository<Resident_Information, String>
+public interface ResidentInformationDaoNMSL extends JpaRepository<Resident_Information, String>
 {
 	
 	@Modifying

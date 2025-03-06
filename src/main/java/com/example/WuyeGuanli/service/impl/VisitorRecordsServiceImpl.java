@@ -1,6 +1,5 @@
 package com.example.WuyeGuanli.service.impl;
 
-import java.sql.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,7 @@ import org.springframework.util.StringUtils;
 import com.example.WuyeGuanli.vo.BasicRes;
 import com.example.WuyeGuanli.vo.VisitorAddReq;
 import com.example.WuyeGuanli.vo.VisitorleaveReq;
-import com.example.WuyeGuanli.dao.ResidentInformationDao;
+import com.example.WuyeGuanli.dao.ResidentInformationDaoNMSL;
 import com.example.WuyeGuanli.dao.VisitorRecordsDao;
 import com.example.WuyeGuanli.entity.Resident_Information;
 import com.example.WuyeGuanli.entity.VisitorRecords;
@@ -24,7 +23,7 @@ public class VisitorRecordsServiceImpl implements VisitorRecordsService {
 	VisitorRecordsDao visDao;
 	
 	@Autowired
-	ResidentInformationDao residentDao;
+	ResidentInformationDaoNMSL residentDao;
 	
 	@Transactional(rollbackOn = Exception.class)
 	@Override

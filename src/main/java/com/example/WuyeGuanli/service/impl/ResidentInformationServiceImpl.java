@@ -10,7 +10,7 @@ import com.example.WuyeGuanli.vo.BasicRes;
 import com.example.WuyeGuanli.vo.DeleteinformationReq;
 import com.example.WuyeGuanli.vo.UpdateReq;
 import com.example.WuyeGuanli.vo.addinfoReq;
-import com.example.WuyeGuanli.dao.ResidentInformationDao;
+import com.example.WuyeGuanli.dao.ResidentInformationDaoNMSL;
 import com.example.WuyeGuanli.entity.Resident_Information;
 import com.example.WuyeGuanli.service.ifs.ResidentInformationService;
 
@@ -20,7 +20,7 @@ import jakarta.transaction.Transactional;
 public class ResidentInformationServiceImpl implements ResidentInformationService {
 
 	@Autowired
-	ResidentInformationDao residentDao;
+	ResidentInformationDaoNMSL residentDao;
 
 	@Transactional(rollbackOn = Exception.class)
 	@Override

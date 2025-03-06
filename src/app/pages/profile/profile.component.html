@@ -1,0 +1,117 @@
+<div class="profile-container">
+  <h1 class="page-title">個人資料</h1>
+
+  <div *ngIf="loading" class="loading-bar">
+    <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+  </div>
+
+  <!-- 頭像卡片 -->
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>頭像設置</mat-card-title>
+    </mat-card-header>
+    <mat-card-content class="avatar-content">
+      <div class="avatar-container">
+        <img *ngIf="avatarUrl" [src]="avatarUrl" alt="用戶頭像" class="avatar-image">
+        <div *ngIf="!avatarUrl" class="avatar-placeholder">
+          <svg  xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+          </svg>
+        </div>
+      </div>
+      <div class="avatar-actions">
+        <button mat-raised-button color="primary" (click)="fileInput.click()">
+          <mat-icon>photo_camera</mat-icon>
+          選擇圖片
+        </button>
+        <input hidden type="file" #fileInput (change)="onFileSelected($event)" accept="image/*">
+        
+        <button mat-raised-button color="accent" [disabled]="!selectedFile" (click)="uploadAvatar()">
+          <mat-icon>cloud_upload</mat-icon>
+          上傳頭像
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 個人資料卡片 -->
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>基本資料</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>姓名</mat-label>
+          <input matInput formControlName="name" placeholder="請輸入您的姓名">
+          <mat-error *ngIf="profileForm.get('name')?.hasError('required')">
+            姓名不能為空
+          </mat-error>
+          <mat-error *ngIf="profileForm.get('name')?.hasError('minlength')">
+            姓名長度不能少於2個字符
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="profileForm.invalid || loading">
+            更新資料
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- 密碼修改卡片 -->
+  <mat-card class="profile-card">
+    <mat-card-header>
+      <mat-card-title>密碼修改</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="passwordForm" (ngSubmit)="updatePassword()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>當前密碼</mat-label>
+          <input matInput [type]="hideCurrentPassword ? 'password' : 'text'" formControlName="currentPassword" placeholder="請輸入當前密碼">
+          <button mat-icon-button matSuffix (click)="hideCurrentPassword = !hideCurrentPassword" type="button">
+            <mat-icon>{{hideCurrentPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('currentPassword')?.hasError('required')">
+            當前密碼不能為空
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>新密碼</mat-label>
+          <input matInput [type]="hideNewPassword ? 'password' : 'text'" formControlName="newPassword" placeholder="請輸入新密碼">
+          <button mat-icon-button matSuffix (click)="hideNewPassword = !hideNewPassword" type="button">
+            <mat-icon>{{hideNewPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('required')">
+            新密碼不能為空
+          </mat-error>
+          <mat-error *ngIf="passwordForm.get('newPassword')?.hasError('minlength')">
+            新密碼長度不能少於6個字符
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>確認新密碼</mat-label>
+          <input matInput [type]="hideConfirmPassword ? 'password' : 'text'" formControlName="confirmPassword" placeholder="請再次輸入新密碼">
+          <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+            <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordForm.get('confirmPassword')?.hasError('required')">
+            請確認新密碼
+          </mat-error>
+          <mat-error *ngIf="passwordForm.hasError('notMatching') && !passwordForm.get('confirmPassword')?.hasError('required')">
+            兩次輸入的密碼不一致
+          </mat-error>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid || loading">
+            更新密碼
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

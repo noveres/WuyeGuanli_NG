@@ -23,6 +23,11 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'savetab',
+    loadComponent: () => import('./pages/fee-info//savetab/savetab.component').then(m => m.SavetabComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'announcements',
     component: AnnouncementBoardComponent,
     canActivate: [AuthGuard]

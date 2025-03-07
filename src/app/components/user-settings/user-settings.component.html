@@ -1,0 +1,33 @@
+<div class="user-settings">
+  <h2>個人設置</h2>
+  <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline">
+      <mat-label>用戶名</mat-label>
+      <input matInput formControlName="username" placeholder="請輸入用戶名">
+      <mat-error *ngIf="settingsForm.get('username')?.errors?.['required']">
+        用戶名為必填項目
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>電子郵件</mat-label>
+      <input matInput formControlName="email" placeholder="請輸入電子郵件">
+      <mat-error *ngIf="settingsForm.get('email')?.errors?.['required']">
+        電子郵件為必填項目
+      </mat-error>
+      <mat-error *ngIf="settingsForm.get('email')?.errors?.['email']">
+        電子郵件格式不正確
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>密碼</mat-label>
+      <input matInput type="password" formControlName="password" placeholder="請輸入密碼">
+      <mat-error *ngIf="settingsForm.get('password')?.errors?.['required']">
+        密碼為必填項目
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">保存設置</button>
+  </form>
+</div>

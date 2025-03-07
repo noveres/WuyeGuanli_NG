@@ -35,7 +35,7 @@
 
     <mat-form-field appearance="outline">
       <mat-label>內文</mat-label>
-      <textarea matInput formControlName="content" rows="6" placeholder="請輸入公告內容"></textarea>
+      <textarea matInput formControlName="content" rows="5" placeholder="請輸入公告內容"></textarea>
       <mat-error *ngIf="announcementForm.get('content')?.errors?.['required']">
         內文為必填項目
       </mat-error>
@@ -43,10 +43,10 @@
 
     <div class="image-upload-section">
       <div class="image-upload-header">
-        <h3>公告圖片</h3>
+        <h3><mat-icon>image</mat-icon> 公告圖片</h3>
         <div class="image-upload-actions">
-          <button type="button" mat-stroked-button (click)="fileInput.click()" [disabled]="isUploading">
-            <mat-icon>upload</mat-icon>
+          <button type="button" mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+            <mat-icon>cloud_upload</mat-icon>
             上傳圖片
           </button>
           <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none">
@@ -55,7 +55,7 @@
       
       <!-- 上傳進度條 -->
       <div class="upload-progress" *ngIf="isUploading">
-        <mat-progress-bar mode="determinate" [value]="uploadProgress"></mat-progress-bar>
+        <mat-progress-bar mode="determinate" [value]="uploadProgress" color="primary"></mat-progress-bar>
         <span class="progress-text">上傳中 {{ uploadProgress }}%</span>
       </div>
       
@@ -79,8 +79,10 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()" [disabled]="isUploading">取消</button>
+  <button mat-button (click)="onCancel()" [disabled]="isUploading">
+    <mat-icon>cancel</mat-icon> 取消
+  </button>
   <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!announcementForm.valid || isUploading">
-    確定
+    <mat-icon>save</mat-icon> 確定
   </button>
 </mat-dialog-actions>

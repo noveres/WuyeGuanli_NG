@@ -32,5 +32,10 @@ export const routes: Routes = [
     component: AnnouncementBoardComponent,
     canActivate: [AuthGuard]
   },
+  {
+    path: 'profile',
+    loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
+    canActivate: [AuthGuard]
+  },
   { path: '**', redirectTo: 'login' }
 ];

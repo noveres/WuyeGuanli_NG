@@ -1,5 +1,5 @@
-<div class="container"  style="position: relative ;">
-    <div class="row" >
+<div class="container">
+    <div class="row">
         <mat-form-field style="width: 200px;" appearance="outline" class="col-4">
             <mat-label>根據住戶搜尋</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="例如輸入A01" #input>
@@ -14,12 +14,11 @@
             <mat-label>模糊搜尋</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
         </mat-form-field>
-        <div class="btn btn-success col-2" style="position: absolute; top: 0; right: 0;" (click)="openDialog()">改動</div>
-
     </div>
-   
 </div>
 
+<h6>真資料 不NgOnIn全部資料 而是先強制輸入搜尋條件再顯示`,用真資料時刪除這行
+</h6>
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 

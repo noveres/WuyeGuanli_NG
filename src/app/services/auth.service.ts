@@ -67,36 +67,4 @@ export class AuthService {
     // 獲取用戶角色
     return localStorage.getItem('userRole');
   }
-
-  /**
-   * 獲取當前登錄用戶的信息
-   * @returns 用戶信息對象
-   */
-  getCurrentUser(): any {
-    const userId = localStorage.getItem('userId');
-    const userName = localStorage.getItem('userName');
-    const userRole = localStorage.getItem('userRole');
-    
-    if (userId) {
-      return {
-        id: userId,
-        name: userName,
-        role: userRole
-      };
-    }
-    
-    return null;
-  }
-
-  /**
-   * 保存用戶信息到本地存儲
-   * @param user 用戶信息對象
-   */
-  saveUserToLocalStorage(user: any): void {
-    if (user) {
-      if (user.id) localStorage.setItem('userId', user.id.toString());
-      if (user.name) localStorage.setItem('userName', user.name);
-      if (user.role) localStorage.setItem('userRole', user.role);
-    }
-  }
 }

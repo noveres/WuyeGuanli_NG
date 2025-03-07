@@ -10,10 +10,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { HttpServiceService } from '../../services/http-service.service';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
-import { FeedialogComponent } from './feedialog/feedialog.component';
-import { Router } from '@angular/router';
-
 
 // 自定義分頁器文字
 export class CustomMatPaginatorIntl extends MatPaginatorIntl {
@@ -40,8 +36,7 @@ export interface PeriodicElement {
     MatPaginatorModule,
     MatCheckboxModule,
     FormsModule,
-    MatButtonModule,
-    MatDialogModule
+    MatButtonModule
   ],
   templateUrl: './fee-info.component.html',
   styleUrl: './fee-info.component.scss'
@@ -62,11 +57,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(
-    private httpService: HttpServiceService,
-    public dialog: MatDialog,
-    private router: Router
-  ) {}
+  constructor(private httpService: HttpServiceService) {}
 
   ngOnInit(): void {
     this.fetchFeeData();
@@ -188,19 +179,4 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
       ? ['select', 'address', 'year', 'season', 'fee', 'remark', 'modifying']
       : ['address', 'year', 'season', 'fee', 'remark', 'modifying'];
   }
-
-  openDialog() {
-    // const dialogRef = this.dialog.open(FeedialogComponent, {
-    //   width: '90%',     // 設定寬度，這裡是設定為 80% 的屏幕寬度
-    //   height: '90%',    // 設定高度，這裡是設定為 80% 的屏幕高度
-    //   maxWidth: '99vw', // 設定最大寬度，避免對話框過大
-    //   maxHeight: '99vh' // 設定最大高度，避免對話框過高
-    // });
-  
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
-    this.router.navigate(['/savetab']);
-  }
-
 }

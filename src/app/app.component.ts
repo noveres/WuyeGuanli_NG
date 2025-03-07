@@ -1,12 +1,34 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterOutlet, NavigationEnd, RouterModule } from '@angular/router';
+import { Router, RouterOutlet, NavigationEnd, RouterModule, RouterLink, RouterLinkActive } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { AuthService } from './services/auth.service';
+import { UserService } from './services/user.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterModule],
+  imports: [
+    CommonModule, 
+    RouterOutlet, 
+    RouterLink, 
+    RouterLinkActive,
+    RouterModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule,
+    MatListModule,
+    MatMenuModule,
+    MatDividerModule
+  ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
@@ -21,8 +43,13 @@ export class AppComponent implements OnInit, OnDestroy {
   // 用戶信息
   userName = '系統管理員';
   userRole = '系統管理員';
+  avatarUrl: string | null = null;
+
+  @ViewChild('drawer') drawer: any;
 
   constructor(
+    private authService: AuthService,
+    private userService: UserService,
     private router: Router
   ) {
     // 監聽路由變化
@@ -44,7 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // 從 localStorage 獲取用戶信息
     this.updateUserInfo();
-
+    
     // 添加頁面關閉事件監聽
     window.addEventListener('beforeunload', this.handleBeforeUnload);
   }
@@ -89,7 +116,6 @@ export class AppComponent implements OnInit, OnDestroy {
     if (url.includes('/attendance')) return '考勤';
     if (url.includes('/admin')) return '管理';
     if (url.includes('/settings')) return '設置';
-    if (url.includes('/financial')) return '財務報表';
     return '';
   }
 
@@ -119,6 +145,12 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     } else {
       this.userRole = '系統管理員';
+    }
+
+    // 設置用戶頭像
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.avatarUrl = this.userService.getAvatarUrl(userId);
     }
   }
 }

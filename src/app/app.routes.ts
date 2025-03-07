@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AnnouncementBoardComponent } from './components/announcement-board/announcement-board.component';
-import { TableComponent } from './pages/financial/table/table.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -24,16 +23,19 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'savetab',
+    loadComponent: () => import('./pages/fee-info//savetab/savetab.component').then(m => m.SavetabComponent),
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'announcements',
     component: AnnouncementBoardComponent,
     canActivate: [AuthGuard]
   },
   {
-    path:'financial', component:TableComponent,
+    path: 'profile',
+    loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
     canActivate: [AuthGuard]
   },
-
   { path: '**', redirectTo: 'login' }
-
-
 ];

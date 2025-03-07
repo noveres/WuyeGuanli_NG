@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class DashBoardServiceController {
+
     @Autowired
     private DashBoardService dashBoardService;
 

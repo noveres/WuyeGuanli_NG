@@ -1,0 +1,17 @@
+<div class="repair-management-container">
+  <div class="header">
+    <h1 class="page-title">維修服務管理</h1>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="openRepairDialog()">
+        <mat-icon>add</mat-icon> 新增維修申請
+      </button>
+      <button mat-raised-button color="accent" routerLink="/dashboard">
+        <mat-icon>home</mat-icon> 返回首頁
+      </button>
+    </div>
+  </div>
+
+  <mat-card class="content-card">
+    <app-repair-request-list></app-repair-request-list>
+  </mat-card>
+</div>

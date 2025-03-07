@@ -1,0 +1,131 @@
+.repair-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 8px 0;
+  min-width: 500px;
+  max-width: 600px;
+}
+
+.section-header {
+  margin-bottom: 12px;
+  
+  h3 {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0;
+    
+    mat-icon {
+      margin-right: 8px;
+      color: #5c6bc0;
+    }
+  }
+}
+
+.photo-upload-section {
+  margin-top: 8px;
+}
+
+.photo-upload-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.photo-upload-box {
+  width: 160px;
+  height: 160px;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  
+  &.has-image {
+    border: none;
+  }
+  
+  .upload-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    
+    mat-icon {
+      font-size: 36px;
+      height: 36px;
+      width: 36px;
+      color: #5c6bc0;
+      margin-bottom: 8px;
+    }
+    
+    p {
+      margin: 0;
+      font-size: 14px;
+      color: #666;
+    }
+    
+    input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+  }
+  
+  .photo-preview {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    
+    .remove-photo-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      
+      mat-icon {
+        font-size: 16px;
+        height: 16px;
+        width: 16px;
+      }
+    }
+  }
+}
+
+.upload-progress {
+  margin-top: 8px;
+  
+  .progress-text {
+    display: block;
+    text-align: center;
+    font-size: 12px;
+    margin-top: 4px;
+    color: #5c6bc0;
+  }
+}
+
+.spinner {
+  animation: spin 1.5s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

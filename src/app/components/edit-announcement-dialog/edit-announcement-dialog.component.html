@@ -79,10 +79,8 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()" [disabled]="isUploading">
-    <mat-icon>cancel</mat-icon> 取消
-  </button>
+  <button mat-button (click)="onCancel()" [disabled]="isUploading">取消</button>
   <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!announcementForm.valid || isUploading">
-    <mat-icon>save</mat-icon> 確定
+    確定
   </button>
 </mat-dialog-actions>

@@ -1,246 +1,246 @@
 <div class="mat-typography container mt-4">
-    <h1 class="mb-4">費用資訊管理系統使用教學</h1>
-  
-    <div class="card mb-4">
-      <div class="card-header bg-primary text-white">
-        <h2 class="mb-0">系統功能概述</h2>
-      </div>
-      <div class="card-body">
-        <p>本系統提供住戶費用資訊的管理功能，包括：</p>
-        <ul>
-          <li>查看並修改現有門牌的費用項目</li>
-          <li>為門牌新增費用項目</li>
-          <li>新增全新的門牌地址</li>
-          <li>批次管理多個項目的狀態和顯示方式</li>
-        </ul>
-        <p>系統包含兩個主要功能頁籤：「修改」和「新增」。</p>
+  <h1 class="mb-4">費用資訊管理系統使用教學</h1>
+
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">
+      <h2 class="mb-0">系統功能概述</h2>
+    </div>
+    <div class="card-body">
+      <p>本系統提供住戶費用資訊的管理功能，包括：</p>
+      <ul>
+        <li>查看並修改現有門牌的費用項目</li>
+        <li>為門牌新增費用項目</li>
+        <li>新增全新的門牌地址</li>
+        <li>批次管理多個項目的狀態和顯示方式</li>
+      </ul>
+      <p>系統包含兩個主要功能頁籤：「修改」和「新增」。</p>
+    </div>
+  </div>
+
+  <!-- 修改頁籤使用教學 -->
+  <div class="card mb-4">
+    <div class="card-header bg-success text-white">
+      <h2 class="mb-0">修改頁籤使用說明</h2>
+    </div>
+    <div class="card-body">
+      <h3>基本操作</h3>
+      <ol>
+        <li>
+          <strong>搜尋功能</strong>
+          <p>在搜尋框中輸入關鍵字（門牌、項目代碼或前綴如 hide、nodisplay），輸入後按空白鍵即可開始搜尋。</p>
+        </li>
+        <li>
+          <strong>新增項目卡片</strong>
+          <p>在「新增項目」區域輸入項目代碼（格式為年+季，例如1151），點擊「新增卡片」按鈕即可為所有門牌新增該項目。</p>
+          <p class="text-danger">注意：卡片儲存後無法刪除，僅能隱藏。若輸入錯誤，請刷新頁面重新輸入。</p>
+        </li>
+      </ol>
+
+      <h3 class="mt-4">批次操作功能</h3>
+      <ol>
+        <li>
+          <strong>批次選取</strong>
+          <ul>
+            <li>根據門牌全選：輸入門牌關鍵字，點擊「根據門牌全選」</li>
+            <li>根據代碼全選：輸入項目代碼，點擊「根據代碼全選」</li>
+            <li>取消全部選取：點擊「取消全部選取」按鈕</li>
+          </ul>
+        </li>
+        <li>
+          <strong>批次修改狀態</strong>
+          <ul>
+            <li>點擊「批次設為「是」」將所有選取的項目狀態設為「是」</li>
+            <li>點擊「批次設為「否」」將所有選取的項目狀態設為「否」</li>
+          </ul>
+        </li>
+        <li>
+          <strong>批次修改前綴</strong>
+          <ul>
+            <li>移除前綴(正常顯示)：移除前綴，項目正常顯示</li>
+            <li>設為 hide：隱藏該資訊，但其他門牌資訊仍會顯示</li>
+            <li>設為 nodisplay：隱藏所有門牌資訊，整個門牌地址將不顯示</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3 class="mt-4">儲存修改</h3>
+      <ol>
+        <li>任何修改操作後，系統會標記「*有未儲存的修改」</li>
+        <li>點擊「確定修改所有改動內容」按鈕儲存所有變更</li>
+        <li>系統會要求確認，確定後才會儲存</li>
+      </ol>
+
+      <div class="alert alert-warning mt-3">
+        <strong>重要提醒：</strong> 所有修改必須手動儲存才會生效。修改後的項目會以黃色標記顯示「已修改」。
       </div>
     </div>
-  
-    <!-- 修改頁籤使用教學 -->
-    <div class="card mb-4">
-      <div class="card-header bg-success text-white">
-        <h2 class="mb-0">修改頁籤使用說明</h2>
+  </div>
+
+  <!-- 新增頁籤使用教學 -->
+  <div class="card mb-4">
+    <div class="card-header bg-info text-white">
+      <h2 class="mb-0">新增頁籤門牌(或住址)使用說明</h2>
+    </div>
+    <div class="card-body">
+      <p>「新增」頁籤用於新增全新的門牌地址及其費用項目，操作步驟如下：</p>
+
+      <h3>步驟一：輸入門牌資訊</h3>
+      <ol>
+        <li>在「新門牌地址」欄位中輸入完整的門牌地址</li>
+        <li>點擊「檢查門牌是否可用」按鈕，系統會檢查該門牌是否已存在</li>
+        <li>若顯示「此門牌地址可使用」，則可繼續下一步</li>
+        <li>若顯示「此門牌地址已存在」，請使用其他地址或前往「修改」頁籤修改現有門牌</li>
+      </ol>
+
+      <h3 class="mt-4">步驟二：新增項目卡片</h3>
+      <ol>
+        <li>輸入項目代碼(例如：1151)</li>
+        <li>選擇狀態(「是」或「否」)</li>
+        <li>選填備註資訊</li>
+        <li>點擊「新增卡片」按鈕將項目加入預覽區</li>
+        <li>可重複此步驟添加多個項目卡片</li>
+      </ol>
+
+      <h3 class="mt-4">步驟三：預覽與確認</h3>
+      <ol>
+        <li>在預覽區檢查已新增的門牌地址和項目卡片</li>
+        <li>若需修改已新增的項目，可點擊項目卡片上的「移除」按鈕後重新新增</li>
+        <li>確認所有資訊無誤後，點擊「確認送出」按鈕</li>
+        <li>系統會要求再次確認，確定後才會儲存</li>
+      </ol>
+
+      <div class="alert alert-info mt-3">
+        <strong>提示：</strong> 若想重新開始，可點擊「重置表單」按鈕清空所有輸入內容。
       </div>
-      <div class="card-body">
-        <h3>基本操作</h3>
-        <ol>
-          <li>
-            <strong>搜尋功能</strong>
-            <p>在搜尋框中輸入關鍵字（門牌、項目代碼或前綴如 hide、nodisplay），輸入後按空白鍵即可開始搜尋。</p>
-          </li>
-          <li>
-            <strong>新增項目卡片</strong>
-            <p>在「新增項目」區域輸入項目代碼（格式為年+季，例如1151），點擊「新增卡片」按鈕即可為所有門牌新增該項目。</p>
-            <p class="text-danger">注意：卡片儲存後無法刪除，僅能隱藏。若輸入錯誤，請刷新頁面重新輸入。</p>
-          </li>
-        </ol>
-  
-        <h3 class="mt-4">批次操作功能</h3>
-        <ol>
-          <li>
-            <strong>批次選取</strong>
-            <ul>
-              <li>根據門牌全選：輸入門牌關鍵字，點擊「根據門牌全選」</li>
-              <li>根據代碼全選：輸入項目代碼，點擊「根據代碼全選」</li>
-              <li>取消全部選取：點擊「取消全部選取」按鈕</li>
-            </ul>
-          </li>
-          <li>
-            <strong>批次修改狀態</strong>
-            <ul>
-              <li>點擊「批次設為「是」」將所有選取的項目狀態設為「是」</li>
-              <li>點擊「批次設為「否」」將所有選取的項目狀態設為「否」</li>
-            </ul>
-          </li>
-          <li>
-            <strong>批次修改前綴</strong>
-            <ul>
-              <li>移除前綴(正常顯示)：移除前綴，項目正常顯示</li>
-              <li>設為 hide：隱藏該資訊，但其他門牌資訊仍會顯示</li>
-              <li>設為 nodisplay：隱藏所有門牌資訊，整個門牌地址將不顯示</li>
-            </ul>
-          </li>
-        </ol>
-  
-        <h3 class="mt-4">儲存修改</h3>
-        <ol>
-          <li>任何修改操作後，系統會標記「*有未儲存的修改」</li>
-          <li>點擊「確定修改所有改動內容」按鈕儲存所有變更</li>
-          <li>系統會要求確認，確定後才會儲存</li>
-        </ol>
-  
-        <div class="alert alert-warning mt-3">
-          <strong>重要提醒：</strong> 所有修改必須手動儲存才會生效。修改後的項目會以黃色標記顯示「已修改」。
+    </div>
+  </div>
+
+  <!-- 前綴說明 -->
+  <div class="card mb-4">
+    <div class="card-header bg-warning text-dark">
+      <h2 class="mb-0">項目前綴說明</h2>
+    </div>
+    <div class="card-body">
+      <p>系統支援三種顯示模式，透過前綴控制：</p>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>前綴</th>
+            <th>說明</th>
+            <th>使用場景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>無前綴</td>
+            <td>正常顯示</td>
+            <td>項目需要正常顯示於系統中</td>
+          </tr>
+          <tr>
+            <td>hide</td>
+            <td>隱藏該項目資訊</td>
+            <td>當特定項目不需顯示，但門牌其他項目仍需顯示時</td>
+          </tr>
+          <tr>
+            <td>nodisplay</td>
+            <td>隱藏整個門牌資訊</td>
+            <td>當整個門牌地址暫時不需顯示於系統中時</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- 操作提示與注意事項 -->
+  <div class="card mb-4">
+    <div class="card-header bg-danger text-white">
+      <h2 class="mb-0">重要注意事項</h2>
+    </div>
+    <div class="card-body">
+      <ol>
+        <li>
+          <strong>無法刪除項目：</strong>
+          <p>項目一旦建立並儲存後無法刪除，只能透過前綴設置為隱藏（hide或nodisplay）。</p>
+        </li>
+        <li>
+          <strong>修改未儲存提醒：</strong>
+          <p>所有修改操作必須點擊「確定修改所有改動內容」才會儲存。已修改但未儲存的項目會顯示「已修改」標記。</p>
+        </li>
+        <li>
+          <strong>門牌唯一性：</strong>
+          <p>系統不允許重複的門牌地址，新增門牌前需檢查是否可用。</p>
+        </li>
+        <li>
+          <strong>批次操作確認：</strong>
+          <p>批次操作影響範圍較大，操作前請確認選取的項目正確。</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- 常見問題 -->
+  <div class="card mb-4">
+    <div class="card-header bg-secondary text-white">
+      <h2 class="mb-0">常見問題</h2>
+    </div>
+    <div class="card-body">
+      <div class="accordion" id="faqAccordion">
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+              如何快速找到特定項目？
+            </button>
+          </h2>
+          <div id="faq1" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              使用搜尋功能輸入門牌關鍵字、項目代碼或前綴（hide、nodisplay），輸入後按空白鍵即可搜尋。
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  
-    <!-- 新增頁籤使用教學 -->
-    <div class="card mb-4">
-      <div class="card-header bg-info text-white">
-        <h2 class="mb-0">新增門牌(或住址)使用說明</h2>
-      </div>
-      <div class="card-body">
-        <p>「新增」頁籤用於新增全新的門牌地址及其費用項目，操作步驟如下：</p>
-  
-        <h3>步驟一：輸入門牌資訊</h3>
-        <ol>
-          <li>在「新門牌地址」欄位中輸入完整的門牌地址</li>
-          <li>點擊「檢查門牌是否可用」按鈕，系統會檢查該門牌是否已存在</li>
-          <li>若顯示「此門牌地址可使用」，則可繼續下一步</li>
-          <li>若顯示「此門牌地址已存在」，請使用其他地址或前往「修改」頁籤修改現有門牌</li>
-        </ol>
-  
-        <h3 class="mt-4">步驟二：新增項目卡片</h3>
-        <ol>
-          <li>輸入項目代碼(例如：1151)</li>
-          <li>選擇狀態(「是」或「否」)</li>
-          <li>選填備註資訊</li>
-          <li>點擊「新增卡片」按鈕將項目加入預覽區</li>
-          <li>可重複此步驟添加多個項目卡片</li>
-        </ol>
-  
-        <h3 class="mt-4">步驟三：預覽與確認</h3>
-        <ol>
-          <li>在預覽區檢查已新增的門牌地址和項目卡片</li>
-          <li>若需修改已新增的項目，可點擊項目卡片上的「移除」按鈕後重新新增</li>
-          <li>確認所有資訊無誤後，點擊「確認送出」按鈕</li>
-          <li>系統會要求再次確認，確定後才會儲存</li>
-        </ol>
-  
-        <div class="alert alert-info mt-3">
-          <strong>提示：</strong> 若想重新開始，可點擊「重置表單」按鈕清空所有輸入內容。
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+              如何批次修改多個項目的狀態？
+            </button>
+          </h2>
+          <div id="faq2" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              1. 先使用「根據門牌全選」或「根據代碼全選」選取需要修改的項目<br>
+              2. 點擊「批次設為「是」」或「批次設為「否」」按鈕<br>
+              3. 點擊「確定修改所有改動內容」儲存變更
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-  
-    <!-- 前綴說明 -->
-    <div class="card mb-4">
-      <div class="card-header bg-warning text-dark">
-        <h2 class="mb-0">項目前綴說明</h2>
-      </div>
-      <div class="card-body">
-        <p>系統支援三種顯示模式，透過前綴控制：</p>
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>前綴</th>
-              <th>說明</th>
-              <th>使用場景</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>無前綴</td>
-              <td>正常顯示</td>
-              <td>項目需要正常顯示於系統中</td>
-            </tr>
-            <tr>
-              <td>hide</td>
-              <td>隱藏該項目資訊</td>
-              <td>當特定項目不需顯示，但門牌其他項目仍需顯示時</td>
-            </tr>
-            <tr>
-              <td>nodisplay</td>
-              <td>隱藏整個門牌資訊</td>
-              <td>當整個門牌地址暫時不需顯示於系統中時</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  
-    <!-- 操作提示與注意事項 -->
-    <div class="card mb-4">
-      <div class="card-header bg-danger text-white">
-        <h2 class="mb-0">重要注意事項</h2>
-      </div>
-      <div class="card-body">
-        <ol>
-          <li>
-            <strong>無法刪除項目：</strong>
-            <p>項目一旦建立並儲存後無法刪除，只能透過前綴設置為隱藏（hide或nodisplay）。</p>
-          </li>
-          <li>
-            <strong>修改未儲存提醒：</strong>
-            <p>所有修改操作必須點擊「確定修改所有改動內容」才會儲存。已修改但未儲存的項目會顯示「已修改」標記。</p>
-          </li>
-          <li>
-            <strong>門牌唯一性：</strong>
-            <p>系統不允許重複的門牌地址，新增門牌前需檢查是否可用。</p>
-          </li>
-          <li>
-            <strong>批次操作確認：</strong>
-            <p>批次操作影響範圍較大，操作前請確認選取的項目正確。</p>
-          </li>
-        </ol>
-      </div>
-    </div>
-  
-    <!-- 常見問題 -->
-    <div class="card mb-4">
-      <div class="card-header bg-secondary text-white">
-        <h2 class="mb-0">常見問題</h2>
-      </div>
-      <div class="card-body">
-        <div class="accordion" id="faqAccordion">
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
-                如何快速找到特定項目？
-              </button>
-            </h2>
-            <div id="faq1" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                使用搜尋功能輸入門牌關鍵字、項目代碼或前綴（hide、nodisplay），輸入後按空白鍵即可搜尋。
-              </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+              無法找到刪除項目的選項？
+            </button>
+          </h2>
+          <div id="faq3" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              系統設計不允許刪除已儲存的項目，建議使用前綴功能（例如設置為「hide」或「nodisplay」）來隱藏不需要的項目。
             </div>
           </div>
-  
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
-                如何批次修改多個項目的狀態？
-              </button>
-            </h2>
-            <div id="faq2" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                1. 先使用「根據門牌全選」或「根據代碼全選」選取需要修改的項目<br>
-                2. 點擊「批次設為「是」」或「批次設為「否」」按鈕<br>
-                3. 點擊「確定修改所有改動內容」儲存變更
-              </div>
-            </div>
-          </div>
-  
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
-                無法找到刪除項目的選項？
-              </button>
-            </h2>
-            <div id="faq3" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                系統設計不允許刪除已儲存的項目，建議使用前綴功能（例如設置為「hide」或「nodisplay」）來隱藏不需要的項目。
-              </div>
-            </div>
-          </div>
-  
-          <div class="accordion-item">
-            <h2 class="accordion-header">
-              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
-                如何確認修改已經儲存？
-              </button>
-            </h2>
-            <div id="faq4" class="accordion-collapse collapse">
-              <div class="accordion-body">
-                1. 修改操作後，系統會標記「*有未儲存的修改」<br>
-                2. 點擊「確定修改所有改動內容」按鈕後，若操作成功，系統會顯示「資料儲存成功!」的提示<br>
-                3. 儲存成功後，黃色的「已修改」標記會消失
-              </div>
+        </div>
+
+        <div class="accordion-item">
+          <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+              如何確認修改已經儲存？
+            </button>
+          </h2>
+          <div id="faq4" class="accordion-collapse collapse">
+            <div class="accordion-body">
+              1. 修改操作後，系統會標記「*有未儲存的修改」<br>
+              2. 點擊「確定修改所有改動內容」按鈕後，若操作成功，系統會顯示「資料儲存成功!」的提示<br>
+              3. 儲存成功後，黃色的「已修改」標記會消失
             </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</div>

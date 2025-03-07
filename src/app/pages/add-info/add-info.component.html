@@ -1,0 +1,85 @@
+<!-- <button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+</button> -->
+<mat-stepper [linear]="true" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+
+      <ng-template matStepLabel>創建</ng-template>
+      <!-- <mat-form-field>
+        <mat-label>Name</mat-label>
+        <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+      </mat-form-field> -->
+
+
+
+
+      <button mat-icon-button ><mat-icon>delete</mat-icon></button>
+    <button mat-icon-button (click)="add()"><mat-icon>add</mat-icon></button>
+      <table style="width: 100%;">
+
+        <thead>
+          <tr>
+            @for (item of tableTitle; track $index;let i = $index) {
+              <th>{{item}}</th>
+            }
+          </tr>
+        </thead>
+        <tbody>
+
+
+            @for (item of tableData; track $index;let i = $index) {
+              <tr>
+              <!-- <div [formGroup]="firstFormGroup"> -->
+                <td><label for="">{{i+1}}</label></td>
+                <td><input matInput class="inputTable" [(ngModel)]="tableData[i].project" formControlName="firstCtrl"  required type="text"></td>
+                <td><input matInput class="inputTable" [(ngModel)]="tableData[i].income" formControlName="firstCtrl" required type="number"></td>
+                <td><input matInput class="inputTable" [(ngModel)]="tableData[i].expenditure" formControlName="firstCtrl"  required type="number"></td>
+                <td><input matInput class="inputTable" [(ngModel)]="tableData[i].date" formControlName="firstCtrl"  required type="date"></td>
+                <td><input matInput class="inputTable" [(ngModel)]="tableData[i].remark" formControlName="firstCtrl"  required type="text"></td>
+                <td><input matInput class="inputTable" [(ngModel)]="tableData[i].receipt" formControlName="firstCtrl"  required type="text"></td>
+              <!-- </div> -->
+            </tr>
+            }
+
+
+
+        </tbody>
+      </table>
+
+      <div>
+        <button mat-button matStepperNext>下一步</button>
+      </div>
+
+    </form>
+  </mat-step>
+
+  <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field>
+
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+               required>
+      </mat-form-field>
+
+      <div>
+        <button mat-button matStepperPrevious>上一步</button>
+        <button mat-button matStepperNext>下一步</button>
+      </div>
+
+    </form>
+  </mat-step> -->
+
+  <mat-step>
+    <ng-template matStepLabel>確認</ng-template>
+
+    <p>You are now done.</p>
+
+    <div>
+      <button mat-button matStepperPrevious>上一步</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+    </div>
+
+  </mat-step>
+</mat-stepper>

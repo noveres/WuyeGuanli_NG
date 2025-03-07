@@ -1,0 +1,153 @@
+<div class="AAA">
+<div class="AAA">
+<h2 mat-dialog-title class="my-class">新增財務表單</h2>
+<mat-dialog-content class="mat-typography" style="display:flex ; justify-content: left; width: 1000px !important">
+  <!-- 內容 -->
+
+<mat-stepper [linear]="false" #stepper>
+  <mat-step [stepControl]="firstFormGroup">
+    <form [formGroup]="firstFormGroup">
+
+      <ng-template matStepLabel>創建</ng-template>
+
+
+      <div>
+        <button mat-icon-button (click)="add()"><mat-icon>add</mat-icon></button><br>
+        <mat-form-field class="inputTable">
+          <mat-label>項目</mat-label>
+          <form [formGroup]="data"> <input matInput placeholder="名稱" formControlName="project" type="text"></form>
+        </mat-form-field>
+
+        <mat-form-field class="inputTable">
+          <mat-label>選擇日期</mat-label>
+          <form [formGroup]="data"><input matInput [matDatepicker]="picker" matInput placeholder="MM/DD/YYYY"
+              formControlName="date" class="inputTable"></form>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <br>
+
+        <mat-form-field class="inputTable">
+          <mat-label>資產</mat-label>
+          <form [formGroup]="data"><input matInput placeholder="金額" formControlName="income" type="number"
+              class="inputTable"></form>
+        </mat-form-field>
+
+        <mat-form-field class="inputTable">
+          <mat-label>負債</mat-label>
+          <form [formGroup]="data"><input matInput placeholder="金額" formControlName="expenditure" type="number"
+              class="inputTable"></form>
+        </mat-form-field>
+        <br>
+
+        <button mat-button type="file">
+          <form [formGroup]="data">
+            <input type="file" id="file" formControlName="receipt" class="inputTable">
+          </form>
+        </button>
+        <br>
+        <br>
+
+
+          <mat-label>備註</mat-label>
+          <form [formGroup]="data">
+            <textarea  class="nextLine" placeholder="文字說明" formControlName="remark" type="textarea" style="height: 150px;" rows="5"></textarea>
+          </form>
+
+
+      </div>
+
+
+      <table style="width: 100%;">
+
+        <thead>
+          <tr>
+            @for (item of tableTitle; track $index;let i = $index) {
+            <th><mat-label>{{item}}</mat-label></th>
+            }
+            <th><button mat-icon-button (click)="del(-1)"><mat-icon>delete_sweep</mat-icon></button></th>
+          </tr>
+        </thead>
+        <tbody class="nextLine">
+          @for (item of tableData; track $index;let i = $index) {
+          <tr>
+            <td>{{i+1}}</td>
+            <td><label for="">{{item.project}}</label></td>
+            <td><label for="">{{item.income}}</label></td>
+            <td><label for="">{{item.expenditure}}</label></td>
+            <td><label for="">{{item.date}}</label></td>
+            <td><label for="">{{item.remark}}</label></td>
+            <td><label for="">{{item.receipt}}</label></td>
+            <td><button mat-icon-button (click)="del(i)"><mat-icon>delete</mat-icon></button></td>
+          </tr>
+          }
+        </tbody>
+      </table>
+
+      <div style="display: flex; justify-content: right;">
+        <button mat-button matStepperNext>確認</button>
+      </div>
+
+    </form>
+  </mat-step>
+
+  <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
+    <form [formGroup]="secondFormGroup">
+      <mat-form-field>
+
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+               required>
+      </mat-form-field>
+
+      <div>
+        <button mat-button matStepperPrevious>上一步</button>
+        <button mat-button matStepperNext>下一步</button>
+      </div>
+
+    </form>
+  </mat-step> -->
+
+  <mat-step>
+    <ng-template matStepLabel>確認</ng-template>
+
+    <p>準備送出，確認資料是否無誤 </p>
+    <table style="width: 100%;">
+
+      <thead>
+        <tr>
+          @for (item of tableTitle; track $index;let i = $index) {
+          <th><mat-label>{{item}}</mat-label></th>
+          }
+        </tr>
+      </thead>
+      <tbody class="nextLine">
+        @for (item of tableData; track $index;let i = $index) {
+        <tr>
+          <td>{{i+1}}</td>
+          <td><label for="">{{item.project}}</label></td>
+          <td><label for="">{{item.income}}</label></td>
+          <td><label for="">{{item.expenditure}}</label></td>
+          <td><label for="">{{item.date}}</label></td>
+          <td><label for="">{{item.remark}}</label></td>
+          <td><label for="">{{item.receipt}}</label></td>
+        </tr>
+        }
+      </tbody>
+    </table>
+
+
+
+      <mat-dialog-actions align="end">
+        <button mat-button matStepperPrevious >上一步</button>
+      <button mat-button (click)="send(1)" (click)="stepper.reset()" [mat-dialog-close]="true" cdkFocusInitial><mat-icon>done_outline</mat-icon></button>
+      </mat-dialog-actions>
+
+
+  </mat-step>
+</mat-stepper>
+</mat-dialog-content>
+
+
+</div>
+</div>

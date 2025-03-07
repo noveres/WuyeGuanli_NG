@@ -1,0 +1,86 @@
+<h2 mat-dialog-title>{{ data.id ? '編輯公告' : '新增公告' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="announcementForm" class="announcement-form">
+    <mat-form-field appearance="outline">
+      <mat-label>標題</mat-label>
+      <input matInput formControlName="title" placeholder="請輸入公告標題">
+      <mat-error *ngIf="announcementForm.get('title')?.errors?.['required']">
+        標題為必填項目
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>日期</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date" placeholder="請選擇日期">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="announcementForm.get('date')?.errors?.['required']">
+        日期為必填項目
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>分類</mat-label>
+      <mat-select formControlName="type">
+        <mat-option value="水電相關">水電相關</mat-option>
+        <mat-option value="住戶相關">住戶相關</mat-option>
+        <mat-option value="維修相關">維修相關</mat-option>
+        <mat-option value="其他">其他</mat-option>
+      </mat-select>
+      <mat-error *ngIf="announcementForm.get('type')?.errors?.['required']">
+        分類為必填項目
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>內文</mat-label>
+      <textarea matInput formControlName="content" rows="5" placeholder="請輸入公告內容"></textarea>
+      <mat-error *ngIf="announcementForm.get('content')?.errors?.['required']">
+        內文為必填項目
+      </mat-error>
+    </mat-form-field>
+
+    <div class="image-upload-section">
+      <div class="image-upload-header">
+        <h3><mat-icon>image</mat-icon> 公告圖片</h3>
+        <div class="image-upload-actions">
+          <button type="button" mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="isUploading">
+            <mat-icon>cloud_upload</mat-icon>
+            上傳圖片
+          </button>
+          <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" style="display: none">
+        </div>
+      </div>
+      
+      <!-- 上傳進度條 -->
+      <div class="upload-progress" *ngIf="isUploading">
+        <mat-progress-bar mode="determinate" [value]="uploadProgress" color="primary"></mat-progress-bar>
+        <span class="progress-text">上傳中 {{ uploadProgress }}%</span>
+      </div>
+      
+      <!-- 圖片預覽 -->
+      <div class="image-preview" *ngIf="announcementForm.get('imageUrl')?.value">
+        <img [src]="announcementForm.get('imageUrl')?.value" alt="預覽圖片">
+        <div class="image-preview-overlay">
+          <button mat-mini-fab color="warn" (click)="removeImage()" class="remove-image" [disabled]="isUploading">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+      
+      <!-- 上傳提示 -->
+      <div class="upload-tips" *ngIf="!announcementForm.get('imageUrl')?.value && !isUploading">
+        <mat-icon>info</mat-icon>
+        <span>支持 JPG、PNG 格式，大小不超過 5MB</span>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isUploading">取消</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!announcementForm.valid || isUploading">
+    確定
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,19 @@
+.example-tab-icon {
+  margin-right: 8px;
+}
+
+/* 基本的 input 樣式 */
+input.form-control {
+  padding: 10px; /* 設置內邊距，確保邊框不被擠壓 */
+  border: 1px solid #ccc; /* 默認的邊框顏色 */
+  border-radius: 4px; /* 圓角邊框 */
+  box-sizing: border-box; /* 確保內邊距和邊框不影響寬度 */
+  transition: border-color 0.3s ease; /* 平滑過渡邊框顏色 */
+}
+
+/* 聚焦狀態下的樣式 */
+input.form-control:focus {
+  border-color: #007bff; /* 聚焦時的邊框顏色 */
+  outline: none; /* 去除默認的藍色外框 */
+  box-shadow: none; /* 完全去除陰影 */
+}

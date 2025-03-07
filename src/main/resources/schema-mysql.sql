@@ -58,34 +58,28 @@ CREATE TABLE IF NOT EXISTS `users` (
     CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修正為小寫
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-#
-# --DROP TRIGGER IF EXISTS before_users_update;
-# --
-# --CREATE TRIGGER before_users_update
-# --    BEFORE UPDATE ON Users
-# --    FOR EACH ROW
-# --    SET NEW.updated_at = CURRENT_TIMESTAMP;
+
 
     CREATE TABLE  IF NOT EXISTS  `file_names` (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     file_name VARCHAR(255) NOT NULL UNIQUE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;;
-#
-# -- 維修請求表
-# CREATE TABLE IF NOT EXISTS `requests` (
-#   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-#   `description` varchar(45) NOT NULL COMMENT '描述',
-#   `sort` varchar(20) NOT NULL COMMENT '種類',
-#   `where` varchar(20) NOT NULL COMMENT '位置',
-#   `photo1` varchar(255) DEFAULT NULL COMMENT '照片1',
-#   `photo2` varchar(255) DEFAULT NULL COMMENT '照片2',
-#   `status` varchar(20) NOT NULL COMMENT '狀態',
-#   `is_repaired` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否已修復',
-#   `create_time` datetime NOT NULL COMMENT '創建時間',
-#   `process_time` datetime DEFAULT NULL COMMENT '處理時間',
-#   PRIMARY KEY (`id`)
-# ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-=======
+
+ -- 維修請求表
+ CREATE TABLE IF NOT EXISTS `requests` (
+   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `description` varchar(45) NOT NULL COMMENT '描述',
+   `sort` varchar(20) NOT NULL COMMENT '種類',
+   `where` varchar(20) NOT NULL COMMENT '位置',
+   `photo1` varchar(255) DEFAULT NULL COMMENT '照片1',
+   `photo2` varchar(255) DEFAULT NULL COMMENT '照片2',
+   `status` varchar(20) NOT NULL COMMENT '狀態',
+   `is_repaired` tinyint unsigned NOT NULL DEFAULT '0' COMMENT '是否已修復',
+   `create_time` datetime NOT NULL COMMENT '創建時間',
+   `process_time` datetime DEFAULT NULL COMMENT '處理時間',
+   PRIMARY KEY (`id`)
+ ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 CREATE TABLE  IF NOT EXISTS `report`(
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `sort` varchar(20) NOT NULL COMMENT '''種類:比如電梯、大門''',
@@ -159,4 +153,4 @@ CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修�
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     file_name VARCHAR(255) NOT NULL UNIQUE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
->>>>>>> 57fe3490c013cf0795284bdda01aed1fdd526163
+

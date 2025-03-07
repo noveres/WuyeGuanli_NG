@@ -67,7 +67,7 @@ export class AddnewComponent implements OnInit {
         },
         error: (error) => {
           console.error('獲取門牌資料失敗:', error);
-          alert('無法獲取現有門牌資料，請重試或聯繫管理員');
+          alert('無法獲取現有門牌資料，請重試或開啟伺服器');
         }
       });
   }

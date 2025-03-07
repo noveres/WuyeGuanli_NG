@@ -8,7 +8,7 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class AnnouncementService {
-  private apiUrl = 'http://localhost:8585/api/announcements';
+  private apiPath = '/announcements';  
 
   // 假資料 - 保留作為備用
   private mockAnnouncements: Announcement[] = [
@@ -88,7 +88,7 @@ export class AnnouncementService {
 
   getAnnouncements(): Observable<Announcement[]> {
     // 使用真實 API
-    return this.http.GetApi<any[]>(this.apiUrl).pipe(
+    return this.http.GetApi<any[]>(this.apiPath).pipe(
       map(data => data.map(item => this.mapDashboardToAnnouncement(item)))
     );
     
@@ -98,7 +98,7 @@ export class AnnouncementService {
 
   getAnnouncement(id: number): Observable<Announcement> {
     // 使用真實 API
-    return this.http.GetApi<any>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.GetApi<any>(`${this.apiPath}/${id}`).pipe(
       map(data => this.mapDashboardToAnnouncement(data))
     );
     
@@ -118,7 +118,7 @@ export class AnnouncementService {
     };
 
     // 使用真實 API
-    return this.http.PostApi<any>(this.apiUrl, formattedAnnouncement).pipe(
+    return this.http.PostApi<any>(this.apiPath, formattedAnnouncement).pipe(
       map(data => this.mapDashboardToAnnouncement(data))
     );
     
@@ -143,7 +143,7 @@ export class AnnouncementService {
     };
 
     // 使用真實 API
-    return this.http.PutApi<any>(`${this.apiUrl}/${announcement.id}`, formattedAnnouncement).pipe(
+    return this.http.PutApi<any>(`${this.apiPath}/${announcement.id}`, formattedAnnouncement).pipe(
       map(data => this.mapDashboardToAnnouncement(data))
     );
     
@@ -157,7 +157,7 @@ export class AnnouncementService {
 
   deleteAnnouncement(id: number): Observable<any> {
     // 使用真實 API
-    return this.http.DeleteApi<any>(`${this.apiUrl}/${id}`);
+    return this.http.DeleteApi<any>(`${this.apiPath}/${id}`);
     
     // 如果 API 不可用，可以使用以下備用代碼
     // const index = this.mockAnnouncements.findIndex(a => a.id === id);

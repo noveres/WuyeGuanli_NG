@@ -1,44 +1,28 @@
-<div class="container"  style="position: relative ;">
-    <div class="row" >
-        <mat-form-field style="width: 200px;" appearance="outline" class="col-4">
-            <mat-label>根據住戶搜尋</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="例如輸入A01" #input>
-        </mat-form-field>
-
-        <mat-form-field style="width: 200px;" appearance="outline" class="col-4">
-            <mat-label>年度搜尋</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="例如輸入114" #input>
-        </mat-form-field>
-
-        <mat-form-field style="width: 200px;" appearance="outline" class="col-4">
-            <mat-label>模糊搜尋</mat-label>
-            <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
-        </mat-form-field>
-        <div class="btn btn-success col-2" style="position: absolute; top: 0; right: 0;" (click)="openDialog()">改動</div>
-
+<div class="container" style="position: relative;">
+    <div class="row">
+      <!-- 年+季搜尋 -->
+      <mat-form-field style="width: 299px;" appearance="outline" class="col-12 col-md-4 mb-3">
+        <mat-label>年+季搜尋</mat-label>
+        <input matInput id="yearSeasonInput" (keyup)="applyYearSeasonFilter($event)" placeholder="例如輸入1141" #input>
+      </mat-form-field>
+  
+      <!-- 模糊搜尋 -->
+      <mat-form-field style="width: 299px;" appearance="outline" class="col-12 col-md-4 mb-3">
+        <mat-label>模糊搜尋</mat-label>
+        <input matInput id="generalInput" (keyup)="applyGeneralFilter($event)" placeholder="搜尋任何欄位關鍵字 例如門牌A01" #input>
+      </mat-form-field>
+  
+      <!-- 重置搜尋按鈕 -->
+      <button mat-fab extended color="primary" class="ms-5 mb-3 col-12 col-md-2" (click)="resetFilters()"> <mat-icon>refresh</mat-icon>重置搜尋</button>
+      
+      <!-- 改動按鈕 -->
+      <button mat-fab color="accent" class="mb-3 col-12 col-md-2" style="position: absolute; top: 0; right: 0;" (click)="openDialog()">改動</button>
     </div>
-   
-</div>
+  </div>
 
+  <!-- table , before -->
 
 <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-
-    <!-- 勾選框 -->
-    <ng-container matColumnDef="select">
-        <th mat-header-cell *matHeaderCellDef>
-            <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
-                [indeterminate]="selection.hasValue() && !isAllSelected()">
-            </mat-checkbox>
-        </th>
-        <td mat-cell *matCellDef="let row">
-            <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
-                [checked]="selection.isSelected(row)">
-            </mat-checkbox>
-        </td>
-    </ng-container>
-
-    <!--  -->
-
     <ng-container matColumnDef="address">
         <th mat-header-cell *matHeaderCellDef> 門牌 </th>
         <td mat-cell *matCellDef="let element"> {{element.address}} </td>
@@ -49,18 +33,15 @@
         <td mat-cell *matCellDef="let element"> {{element.year}} </td>
     </ng-container>
 
-
     <ng-container matColumnDef="season">
         <th mat-header-cell *matHeaderCellDef> 季 </th>
         <td mat-cell *matCellDef="let element"> {{element.season}} </td>
     </ng-container>
 
-
     <ng-container matColumnDef="fee">
         <th mat-header-cell *matHeaderCellDef> 是否繳清費用 </th>
         <td mat-cell *matCellDef="let element"> {{element.fee}} </td>
     </ng-container>
-
 
     <ng-container matColumnDef="remark">
         <th mat-header-cell *matHeaderCellDef> 備註 </th>
@@ -77,27 +58,9 @@
 
     <!-- Row shown when there is no matching data. -->
     <tr class="mat-row" *matNoDataRow>
-        <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+        <td class="mat-cell" colspan="6">找不到符合條件的資料</td>
     </tr>
 </table>
 
 <mat-paginator [length]="1000" [pageSize]="20" [pageSizeOptions]="[1, 10, 20, 100]" aria-label="Select page">
 </mat-paginator>
-
-
-<!-- 看update API如何呈現再說 -->
-
-<button mat-stroked-button (click)="toggleCheckboxColumn()">
-    {{ showCheckboxColumn ? '隱藏勾選框' : '顯示勾選框' }}
-</button>
-
-<button mat-button (click)="modifySelectedItems()" [disabled]="selection.selected.length === 0">修改選中項目</button>
-
-<div class="btn btn-outline-secondary">轉換繳清費用狀態</div>
-
-<div class="input-group mb-3">
-    <input type="text" class="form-control" placeholder="更新備註" aria-label="Recipient's username"
-        aria-describedby="button-addon2">
-    <button class="btn btn-outline-secondary" type="button" id="button-addon2">送出</button>
-</div>
-<!-- 看update API如何呈現再說 -->

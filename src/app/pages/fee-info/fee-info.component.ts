@@ -7,13 +7,13 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
-import { catchError } from 'rxjs/operators';
+import { catchError, timeout } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { HttpServiceService } from '../../services/http-service.service';
 import {MatDialog, MatDialogModule} from '@angular/material/dialog';
 import { FeedialogComponent } from './feedialog/feedialog.component';
 import { Router } from '@angular/router';
-
+import {MatIconModule} from '@angular/material/icon';
 
 // 自定義分頁器文字
 export class CustomMatPaginatorIntl extends MatPaginatorIntl {
@@ -41,7 +41,8 @@ export interface PeriodicElement {
     MatCheckboxModule,
     FormsModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    MatIconModule
   ],
   templateUrl: './fee-info.component.html',
   styleUrl: './fee-info.component.scss'
@@ -51,11 +52,15 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
   showCheckboxColumn = true;
 
   // 加入 select 列
-  displayedColumns: string[] = ['select', 'address', 'year', 'season', 'fee', 'remark', 'modifying'];
+  displayedColumns: string[] = ['address', 'year', 'season', 'fee', 'remark', 'modifying'];
 
   // 原始表格資料
   tableData: PeriodicElement[] = [];
   dataSource = new MatTableDataSource<PeriodicElement>([]);
+
+  // 搜尋值
+  yearSeasonFilterValue: string = '';
+  generalFilterValue: string = '';
 
   // 選擇模型
   selection = new SelectionModel<PeriodicElement>(true, []);
@@ -66,7 +71,10 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     private httpService: HttpServiceService,
     public dialog: MatDialog,
     private router: Router
-  ) {}
+  ) {
+    // 設置自定義過濾器
+    this.dataSource.filterPredicate = this.createFilter();
+  }
 
   ngOnInit(): void {
     this.fetchFeeData();
@@ -147,6 +155,87 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     return result;
   }
 
+  // 創建自定義過濾器
+  createFilter(): (data: PeriodicElement, filter: string) => boolean {
+    return (data: PeriodicElement, filter: string): boolean => {
+      // 解析過濾條件
+      const searchTerms = JSON.parse(filter);
+      
+      // 檢查年季搜尋條件
+      let yearSeasonMatch = true;
+      if (searchTerms.yearSeason) {
+        // 假設輸入格式為 "年度+季" 例如 "1141"
+        if (searchTerms.yearSeason.length >= 3) {
+          const yearPart = searchTerms.yearSeason.substring(0, searchTerms.yearSeason.length - 1);
+          const seasonPart = searchTerms.yearSeason.substring(searchTerms.yearSeason.length - 1);
+          
+          const yearMatch = data.year.toString().includes(yearPart);
+          const seasonMatch = data.season.toString() === seasonPart;
+          
+          yearSeasonMatch = yearMatch && seasonMatch;
+        } else {
+          // 如果輸入不足以構成年+季的格式，則只按照一般方式匹配
+          yearSeasonMatch = 
+            data.year.toString().includes(searchTerms.yearSeason) || 
+            data.season.toString().includes(searchTerms.yearSeason);
+        }
+      }
+      
+      // 檢查模糊搜尋條件
+      const generalMatch = !searchTerms.general || 
+                          data.address.toLowerCase().includes(searchTerms.general) || 
+                          data.year.toString().includes(searchTerms.general) || 
+                          data.season.toString().includes(searchTerms.general) || 
+                          data.fee.toLowerCase().includes(searchTerms.general) || 
+                          data.remark.toLowerCase().includes(searchTerms.general) || 
+                          data.modifying.toLowerCase().includes(searchTerms.general);
+      
+      // 所有條件必須匹配
+      return yearSeasonMatch && generalMatch;
+    };
+  }
+
+  // 套用年季搜尋過濾器
+  applyYearSeasonFilter(event: Event): void {
+    this.yearSeasonFilterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.applyFilters();
+  }
+
+  // 套用模糊搜尋過濾器
+  applyGeneralFilter(event: Event): void {
+    this.generalFilterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    this.applyFilters();
+  }
+
+  // 套用所有過濾器
+  applyFilters(): void {
+    const filterValue = JSON.stringify({
+      yearSeason: this.yearSeasonFilterValue,
+      general: this.generalFilterValue
+    });
+    
+    this.dataSource.filter = filterValue;
+
+    if (this.dataSource.paginator) {
+      this.dataSource.paginator.firstPage();
+    }
+  }
+
+  // 重置所有過濾器
+  resetFilters(): void {
+    this.yearSeasonFilterValue = '';
+    this.generalFilterValue = '';
+    
+    // 更新DOM中的輸入框值
+    const yearSeasonInput = document.querySelector('#yearSeasonInput') as HTMLInputElement;
+    const generalInput = document.querySelector('#generalInput') as HTMLInputElement;
+    
+    if (yearSeasonInput) yearSeasonInput.value = '';
+    if (generalInput) generalInput.value = '';
+    
+    this.applyFilters();
+  }
+
   /** 是否所有行都被選中 */
   isAllSelected(): boolean {
     const numSelected = this.selection.selected.length;
@@ -166,12 +255,22 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     return this.selection.selected;
   }
 
+  /** 原始過濾方法 - 改為維持相容性 */
   applyFilter(event: Event): void {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    // 根據目標元素的ID決定要應用哪種過濾
+    const target = event.target as HTMLInputElement;
+    const id = target.id;
+    
+    if (id === 'yearSeasonInput') {
+      this.applyYearSeasonFilter(event);
+    } else if (id === 'generalInput') {
+      this.applyGeneralFilter(event);
+    } else {
+      // 如果沒有ID或無法識別，則應用所有過濾條件
+      const value = target.value.trim().toLowerCase();
+      this.yearSeasonFilterValue = value;
+      this.generalFilterValue = value;
+      this.applyFilters();
     }
   }
 
@@ -190,17 +289,8 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
   }
 
   openDialog() {
-    // const dialogRef = this.dialog.open(FeedialogComponent, {
-    //   width: '90%',     // 設定寬度，這裡是設定為 80% 的屏幕寬度
-    //   height: '90%',    // 設定高度，這裡是設定為 80% 的屏幕高度
-    //   maxWidth: '99vw', // 設定最大寬度，避免對話框過大
-    //   maxHeight: '99vh' // 設定最大高度，避免對話框過高
-    // });
-  
-    // dialogRef.afterClosed().subscribe(result => {
-    //   console.log(`Dialog result: ${result}`);
-    // });
-    this.router.navigate(['/savetab']);
+    setTimeout(() => {
+      this.router.navigate(['/savetab']);
+    }, 250); 
   }
-
 }

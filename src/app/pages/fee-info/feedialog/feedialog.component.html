@@ -1,26 +1,39 @@
 <div class="mat-typography" style="overflow-x: auto; display: block; width: 100%;">
     <!-- 搜尋和批次操作區域 -->
-    <div class="search-batch-container">
+    <div class="search-batch-container ">
         <!-- 搜尋區域 -->
-        <div class="search-container">
-            <div class="form-group search-box">
-                <label>搜尋</label>
-                <input type="text" class="form-control" placeholder="輸入門牌或項目代碼" [(ngModel)]="searchTerm"
+        <div class="search-container d-flex flex-wrap justify-content-between">
+            <!-- 搜尋區域，設置為 col-3 寬度 -->
+            <div class="form-group col-12 col-sm-4">
+                <label>搜尋(輸入關鍵字後 須按空白鍵 方可開始搜尋)</label>
+                <input type="text" class="form-control" placeholder="輸入門牌或項目代碼或hide,nodisplay" [(ngModel)]="searchTerm"
                     (input)="performSearch()">
             </div>
+
+            <!-- 新增項目區域，設置為 col-4 寬度 -->
+            <div class="form-group col-12 col-sm-5">
+                <label>新增項目(當前所有住址)</label>
+                <div class="d-flex gap-2">
+                    <input type="text" class="form-control" placeholder="輸入項目代碼:年+季 例如1151" #newItemCode>
+                    <button class="btn btn-primary" (click)="addNewItemCard(newItemCode.value)">新增卡片</button>
+                </div>
+            </div>
+
+
         </div>
+
 
         <!-- 批次操作區域 -->
         <div class="batch-actions-container">
             <div class="address-selection">
                 <input type="text" class="form-control form-control-sm" placeholder="輸入門牌" #addressInput>
-                <button class="btn btn-outline-secondary btn-sm"
+                <button class="btn btn-outline-dark btn-sm"
                     (click)="selectAllByAddressForAllAddresses(addressInput.value)">根據門牌全選</button>
             </div>
 
             <div class="code-selection">
                 <input type="text" class="form-control form-control-sm" placeholder="輸入代碼" #codeInput>
-                <button class="btn btn-outline-secondary btn-sm"
+                <button class="btn btn-outline-dark btn-sm"
                     (click)="selectAllByCodeForAllAddresses(codeInput.value)">根據代碼全選</button>
             </div>
             <!-- 新增取消全選按鈕 -->
@@ -39,19 +52,30 @@
             <div class="prefix-actions">
                 <div class="btn-group">
                     <button class="btn btn-outline-info btn-sm" (click)="batchChangePrefix('')">移除前綴:正常顯示</button>
-                    <button class="btn btn-outline-info btn-sm" (click)="batchChangePrefix('hide')">設為 hide:隱藏該資訊</button>
+                    <button class="btn btn-outline-info btn-sm" (click)="batchChangePrefix('hide')">設為
+                        hide:隱藏該資訊</button>
                     <button class="btn btn-outline-info btn-sm" (click)="batchChangePrefix('nodisplay')">設為
                         nodisplay:隱藏所有門牌資訊</button>
                 </div>
-                <button class="btn btn-success ms-5"  (click)="submitData()">確定修改所有改動內容</button>
+
+                <button class="btn btn-success ms-5" (click)="submitData()"
+                    [disabled]="!hasModifications">確定修改所有改動內容</button>
+
+                <!-- 新增：已修改標記 -->
+                <div class="form-group col-12 col-sm-3" *ngIf="hasModifications">
+                    <div class="modification-indicator">
+                        <span class="badge bg-warning text-dark me-5">*有未儲存的修改</span>
+                    </div>
+                </div>
             </div>
-
-
         </div>
     </div>
 
+    <!-- //以下內容 -->
+
+
     <div *ngFor="let item of filteredData; let addressIndex = index; trackBy: trackByAddressIndex"
-        class="address-container m-2 my-3">
+        class="address-container m-2 my-3" [ngClass]="{'modified-container': getOriginalItem(item).isModified}">
         <!-- 地址區 -->
         <div class="address-row">
             <div class="form-group">
@@ -59,13 +83,12 @@
                 <input type="text" class="form-control" [(ngModel)]="getOriginalItem(item).address" placeholder="地址"
                     [attr.disabled]="true" readonly>
             </div>
-          
         </div>
 
         <!-- 其他項目列表 - 水平排列 -->
         <div class="other-items">
             <div *ngFor="let otherItem of item.otherItems; let otherIndex = index; trackBy: trackByOtherItemIndex"
-                class="other-item-row">
+                class="other-item-row" [ngClass]="{'modified-item': otherItem.isModified}">
 
                 <!-- Checkbox 和前綴在同一行 -->
                 <div class="checkbox-prefix-row">
@@ -73,12 +96,14 @@
                     <div class="checkbox-container">
                         <mat-checkbox [(ngModel)]="otherItem.selected" color="primary">
                         </mat-checkbox>
+                        <!-- 新增：修改標記 -->
+                        <span class="badge bg-warning text-dark" *ngIf="otherItem.isModified">已修改</span>
+
                     </div>
 
                     <!-- 前綴選擇區域 -->
-                    <div class="form-group prefix-select" >
-                      
-                        <div class="prefix-options" >
+                    <div class="form-group prefix-select">
+                        <div class="prefix-options">
                             <mat-radio-group [(ngModel)]="otherItem.prefix"
                                 (change)="updateItem(getOriginalIndex(item), otherIndex)">
                                 <!-- <mat-radio-button *ngFor="let prefix of prefixOptions" [value]="prefix.value"
@@ -118,6 +143,9 @@
                     <input type="text" class="form-control form-control-sm" [(ngModel)]="otherItem.comment"
                         (change)="updateItem(getOriginalIndex(item), otherIndex)">
                 </div>
+
+
+
             </div>
         </div>
 
@@ -127,5 +155,6 @@
 
 <!-- 確定按鈕 -->
 <div class="form-actions">
-    <button class="btn btn-primary" (click)="submitData()">確定</button>
+    <button class="btn btn-success" (click)="submitData()" [disabled]="!hasModifications">確定修改所有改動內容</button>
+
 </div>

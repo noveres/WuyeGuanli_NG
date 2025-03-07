@@ -1,0 +1,122 @@
+<div class="mat-typography container mt-3">
+    <h2>新增門牌及項目</h2>
+
+    <!-- 門牌輸入區域 -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h4>第一步：輸入門牌資訊</h4>
+        </div>
+        <div class="card-body">
+            <div class="form-group mb-3">
+                <label for="newAddress">新門牌地址 <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="text" id="newAddress" class="form-control" placeholder="輸入完整門牌地址" [(ngModel)]="newAddress">
+                    <button class="btn btn-primary" (click)="checkAddressAvailability()">檢查門牌是否可用</button>
+                </div>
+                <small *ngIf="addressCheckResult === 'loading'" class="text-info">檢查中...</small>
+                <small *ngIf="addressCheckResult === 'available'" class="text-success">此門牌地址可使用！</small>
+                <small *ngIf="addressCheckResult === 'duplicate'" class="text-danger">此門牌地址已存在，請使用其他地址！</small>
+                <small *ngIf="addressCheckResult === 'empty'" class="text-danger">請輸入門牌地址！</small>
+            </div>
+
+            <!-- 目前已有的門牌列表 -->
+            <div *ngIf="existingAddresses.length > 0" class="mt-3">
+                <h5>目前已有門牌：(門牌無法重複)</h5>
+                <div class="existing-addresses">
+                    <div class="row">
+                        <div *ngFor="let address of existingAddresses" class="col-md-3 mb-2">
+                            <div class="existing-address-item">
+                                {{address}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 項目卡片輸入區域 -->
+    <div class="card mb-4" [class.disabled-card]="addressCheckResult !== 'available'">
+        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+            <h4>第二步：新增項目卡片</h4>
+            <span *ngIf="addressCheckResult !== 'available'" class="badge bg-warning">請先完成門牌檢查</span>
+        </div>
+        <div class="card-body" [class.disabled-content]="addressCheckResult !== 'available'">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="form-group mb-3">
+                        <label for="itemCode">項目代碼 <span class="text-danger">*</span></label>
+                        <input type="text" id="itemCode" class="form-control" placeholder="例如：1151" [(ngModel)]="newItem.code" [disabled]="addressCheckResult !== 'available'">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group mb-3">
+                        <label for="itemStatus">狀態 <span class="text-danger">*</span></label>
+                        <select id="itemStatus" class="form-control" [(ngModel)]="newItem.status" [disabled]="addressCheckResult !== 'available'">
+                            <option value="是">是</option>
+                            <option value="否">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group mb-3">
+                        <label for="itemComment">備註</label>
+                        <input type="text" id="itemComment" class="form-control" placeholder="可選填" [(ngModel)]="newItem.comment" [disabled]="addressCheckResult !== 'available'">
+                    </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100 mb-3" (click)="addItemCard()" [disabled]="addressCheckResult !== 'available' || !newItem.code">新增卡片</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 預覽區域 -->
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <h4>第三步：預覽與確認</h4>
+        </div>
+        <div class="card-body">
+            <div *ngIf="!newAddress || addressCheckResult !== 'available'" class="alert alert-warning">
+                請先完成門牌輸入和檢查，再新增項目卡片
+            </div>
+
+            <div *ngIf="newAddress && addressCheckResult === 'available'">
+                <h5>門牌地址：{{newAddress}}</h5>
+                
+                <div *ngIf="previewItems.length === 0" class="alert alert-info">
+                    尚未新增任何項目卡片，請在上方新增至少一個項目卡片
+                </div>
+
+                <div *ngIf="previewItems.length > 0" class="preview-cards">
+                    <h6>已新增的項目卡片：</h6>
+                    <div class="row">
+                        <div *ngFor="let item of previewItems; let i = index" class="col-md-4 mb-3">
+                            <div class="card preview-card">
+                                <div class="card-header d-flex justify-content-between">
+                                    <span><strong>項目代碼：</strong>{{item.code}}</span>
+                                    <button class="btn btn-sm btn-danger" (click)="removeItemCard(i)">移除</button>
+                                </div>
+                                <div class="card-body">
+                                    <p><strong>狀態：</strong>{{item.status}}</p>
+                                    <p *ngIf="item.comment"><strong>備註：</strong>{{item.comment}}</p>
+                                    <p *ngIf="!item.comment"><strong>備註：</strong><em>無</em></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 提交按鈕 -->
+    <div class="form-actions mb-5">
+        <button class="btn btn-success btn-lg" (click)="submitData()" [disabled]="!canSubmit()">
+            確認送出
+        </button>
+        <button class="btn btn-secondary btn-lg ms-2" (click)="resetForm()">
+            重置表單
+        </button>
+    </div>
+</div>

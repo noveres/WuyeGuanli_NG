@@ -1,0 +1,92 @@
+// 整體容器樣式
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  // 卡片樣式增強
+  .card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    
+    &:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .card-header {
+      padding: 12px 20px;
+      font-weight: bold;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+  }
+  
+  // 列表樣式
+  ol, ul {
+    padding-left: 20px;
+    
+    li {
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+  }
+  
+  // 警告區塊強調
+  .alert {
+    border-radius: 6px;
+    font-weight: 500;
+  }
+  
+  // 表格樣式
+  .table {
+    margin-top: 15px;
+    
+    th {
+      background-color: #f8f9fa;
+    }
+  }
+  
+  // 強調文字
+  strong {
+    font-weight: 600;
+    color: #0d6efd;
+  }
+  
+  // 註解文字
+  .text-danger {
+    font-weight: 500;
+  }
+  
+  // 手風琴樣式
+  .accordion-item {
+    margin-bottom: 10px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  
+  .accordion-button {
+    font-weight: 500;
+    
+    &:not(.collapsed) {
+      background-color: #e7f1ff;
+    }
+  }
+  
+  .accordion-body {
+    padding: 15px 20px;
+    line-height: 1.6;
+  }
+  
+  // 分隔標題
+  h3 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e9ecef;
+  }

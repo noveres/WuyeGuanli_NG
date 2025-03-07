@@ -17,9 +17,10 @@ CREATE TABLE  IF NOT EXISTS `report`(
 CREATE TABLE IF NOT EXISTS `fee_info` (
   `address` varchar(45) NOT NULL,
   `other` varchar(445) DEFAULT NULL COMMENT '''["1134是","1141是"1142否只繳一半"]''',
-  `modifying_date` date DEFAULT NULL COMMENT '更新一次刷新一次',
+  `modifying_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '更新一次刷新一次',
   PRIMARY KEY (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='管理費';
+
 
 CREATE TABLE IF NOT EXISTS `financial`(
   `id` int NOT NULL,
@@ -45,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `resident_information` (
 
 -- 確保表格存在並創建
 CREATE TABLE IF NOT EXISTS `users` (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+ 
 id INT AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(50) NOT NULL,
 identity_number VARCHAR(20),
@@ -59,9 +60,14 @@ CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修�
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 
---DROP TRIGGER IF EXISTS before_users_update;
---
---CREATE TRIGGER before_users_update
---    BEFORE UPDATE ON Users
---    FOR EACH ROW
---    SET NEW.updated_at = CURRENT_TIMESTAMP;
+ --DROP TRIGGER IF EXISTS before_users_update;
+
+ --CREATE TRIGGER before_users_update
+ --    BEFORE UPDATE ON Users
+ --    FOR EACH ROW
+ --    SET NEW.updated_at = CURRENT_TIMESTAMP;
+
+    CREATE TABLE IF NOT EXISTS `file_names` (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    file_name VARCHAR(255) NOT NULL UNIQUE
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

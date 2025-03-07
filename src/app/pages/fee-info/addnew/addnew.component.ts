@@ -14,6 +14,13 @@ interface NewItem {
   prefix?: string;
 }
 
+interface AddressData {
+  address: string;
+  other: string;
+  id?: string;
+  items?: NewItem[];
+}
+
 @Component({
   selector: 'app-addnew',
   standalone: true,
@@ -31,11 +38,12 @@ interface NewItem {
 export class AddnewComponent implements OnInit {
   // 現有門牌地址列表
   existingAddresses: string[] = [];
-  
+  existingAddressesData: AddressData[] = [];
+
   // 新門牌資訊
   newAddress: string = '';
   addressCheckResult: 'none' | 'loading' | 'available' | 'duplicate' | 'empty' = 'none';
-  
+
   // 新項目資訊
   newItem: NewItem = {
     code: '',
@@ -43,9 +51,15 @@ export class AddnewComponent implements OnInit {
     comment: '',
     prefix: ''
   };
-  
+
   // 預覽項目列表
   previewItems: NewItem[] = [];
+
+  // 目前操作的資料 ID
+  currentDataId: string | null = null;
+
+  // 是否處於編輯模式
+  isEditMode: boolean = false;
 
   constructor(
     private httpService: HttpServiceService
@@ -61,6 +75,7 @@ export class AddnewComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           if (response && Array.isArray(response)) {
+            this.existingAddressesData = response;
             // 只提取門牌地址
             this.existingAddresses = response.map((item: any) => item.address);
           }
@@ -80,15 +95,82 @@ export class AddnewComponent implements OnInit {
     }
 
     this.addressCheckResult = 'loading';
-    
+
     // 檢查是否存在於已有地址中
     setTimeout(() => {
-      const isDuplicate = this.existingAddresses.some(
-        address => address.toLowerCase() === this.newAddress.toLowerCase()
+      const duplicateAddress = this.existingAddressesData.find(
+        item => item.address.toLowerCase() === this.newAddress.toLowerCase()
       );
-      
-      this.addressCheckResult = isDuplicate ? 'duplicate' : 'available';
+
+      if (duplicateAddress) {
+        this.addressCheckResult = 'duplicate';
+
+        // 顯示確認對話框
+        const confirmEdit = confirm(`門牌「${this.newAddress}」已存在，是否要查看並編輯此門牌的項目資料？`);
+
+        if (confirmEdit) {
+          // 獲取該門牌的詳細資料
+          this.loadAddressDetails(duplicateAddress);
+        } else {
+          // 用戶選擇取消，重置輸入欄位
+          this.newAddress = '';
+          this.addressCheckResult = 'none';
+        }
+      } else {
+        this.addressCheckResult = 'available';
+        this.isEditMode = false;
+        this.currentDataId = null;
+        this.previewItems = [];
+      }
     }, 500); // 短暫延遲模擬檢查過程
+  }
+
+  // 載入特定門牌的詳細資料
+  loadAddressDetails(addressData: AddressData): void {
+    // 設定當前編輯的資料 ID
+    this.currentDataId = addressData.id ?? null;
+    this.isEditMode = true;
+
+    // 解析 other 字段中的項目資料
+    let otherItems: string[] = [];
+    try {
+      otherItems = JSON.parse(addressData.other || '[]');
+    } catch (e) {
+      console.error('解析項目資料失敗:', e);
+      otherItems = [];
+    }
+
+    // 將項目字串轉換為對象
+    this.previewItems = this.parseOtherItemsToObjects(otherItems);
+
+    // 設置狀態，允許編輯
+    this.addressCheckResult = 'available';
+  }
+
+  // 將 other 字段中的項目字串轉換為對象
+  parseOtherItemsToObjects(otherItems: string[]): NewItem[] {
+    return otherItems.map(itemStr => {
+      // 這裡需要根據實際的項目字串格式進行解析
+      // 假設格式為 "前綴代碼狀態備註"，需要自行調整正則表達式
+      const codeMatch = itemStr.match(/^([^\d]*)(\d+)(是|否)(.*)$/);
+
+      if (codeMatch) {
+        return {
+          prefix: codeMatch[1] || '',
+          code: codeMatch[2] || '',
+          status: codeMatch[3] || '否',
+          comment: codeMatch[4] || ''
+        };
+      }
+
+      // 預設返回
+      return {
+        code: itemStr,
+        status: '否',
+        comment: '',
+        prefix: ''
+      };
+    });
   }
 
   // 新增項目卡片到預覽區
@@ -106,7 +188,7 @@ export class AddnewComponent implements OnInit {
     }
 
     // 複製項目並加入到預覽列表的最前方
-    this.previewItems.unshift({...this.newItem});
+    this.previewItems.unshift({ ...this.newItem });
 
     // 重置項目輸入欄位（保持狀態為上次選擇）
     this.newItem = {
@@ -138,6 +220,8 @@ export class AddnewComponent implements OnInit {
       prefix: ''
     };
     this.previewItems = [];
+    this.isEditMode = false;
+    this.currentDataId = null;
   }
 
   // 提交數據到API
@@ -147,7 +231,8 @@ export class AddnewComponent implements OnInit {
     }
 
     // 確認是否要送出
-    const confirmSubmit = confirm(`確定要新增門牌「${this.newAddress}」及其所有項目卡片嗎？`);
+    const actionText = this.isEditMode ? '更新' : '新增';
+    const confirmSubmit = confirm(`確定要${actionText}門牌「${this.newAddress}」及其所有項目卡片嗎？`);
     if (!confirmSubmit) {
       return;
     }
@@ -159,29 +244,39 @@ export class AddnewComponent implements OnInit {
     });
 
     // 構建提交數據
-    const dataToSubmit = {
+    const dataToSubmit: any = {
       address: this.newAddress,
       other: JSON.stringify(otherItems)
     };
 
+    // 如果是編輯模式，添加 ID
+    if (this.isEditMode && this.currentDataId) {
+      dataToSubmit.id = this.currentDataId;
+    }
+
     console.log('準備提交的資料:', dataToSubmit);
 
-    // 呼叫API
-    this.httpService.PostApi('http://localhost:8585/fee/add', [dataToSubmit])
+    // 選擇 API 端點
+    const apiUrl = this.isEditMode
+      ? `http://localhost:8585/fee/update`
+      : `http://localhost:8585/fee/add`;
+
+    // 呼叫 API
+    this.httpService.PostApi(apiUrl, [dataToSubmit])
       .subscribe({
         next: (response: any) => {
-          console.log('新增成功:', response);
-          alert('門牌及項目新增成功！');
-          
-          // 新增成功後重置表單
+          console.log(`${actionText}成功:`, response);
+          alert(`門牌及項目${actionText}成功！`);
+
+          // 成功後重置表單
           this.resetForm();
-          
+
           // 重新載入現有門牌列表
           this.loadExistingAddresses();
         },
         error: (error) => {
-          console.error('新增失敗:', error);
-          
+          console.error(`${actionText}失敗:`, error);
+
           // 顯示更詳細的錯誤訊息
           let errorMsg = '未知錯誤';
           if (error.error && error.error.message) {
@@ -189,8 +284,8 @@ export class AddnewComponent implements OnInit {
           } else if (error.message) {
             errorMsg = error.message;
           }
-          
-          alert('新增失敗: ' + errorMsg);
+
+          alert(`${actionText}失敗: ` + errorMsg);
         }
       });
   }

@@ -1,0 +1,107 @@
+<h2 mat-dialog-title>{{ data.id ? '編輯維修申請' : '新增維修申請' }}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="repairForm" class="repair-form">
+    <!-- 維修類型 -->
+    <mat-form-field appearance="outline">
+      <mat-label>維修類型</mat-label>
+      <mat-select formControlName="sort">
+        <mat-option *ngFor="let sort of repairSorts" [value]="sort">
+          {{ sort }}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="repairForm.get('sort')?.hasError('required')">
+        請選擇維修類型
+      </mat-error>
+    </mat-form-field>
+
+    <!-- 維修位置 -->
+    <mat-form-field appearance="outline">
+      <mat-label>維修位置</mat-label>
+      <input matInput formControlName="location" required placeholder="例如：客廳、廚房、衛生間等">
+      <mat-icon matPrefix>place</mat-icon>
+      <mat-error *ngIf="repairForm.get('location')?.hasError('required')">
+        請輸入維修位置
+      </mat-error>
+      <mat-error *ngIf="repairForm.get('location')?.hasError('minlength')">
+        維修位置至少需要2個字符
+      </mat-error>
+    </mat-form-field>
+
+    <!-- 問題描述 -->
+    <mat-form-field appearance="outline">
+      <mat-label>問題描述</mat-label>
+      <textarea matInput formControlName="description" rows="4" placeholder="請詳細描述您遇到的問題..."></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-error *ngIf="repairForm.get('description')?.hasError('required')">
+        請輸入問題描述
+      </mat-error>
+      <mat-error *ngIf="repairForm.get('description')?.hasError('maxlength')">
+        問題描述不能超過45個字符
+      </mat-error>
+    </mat-form-field>
+
+    <!-- 狀態 (僅在編輯模式下顯示) -->
+    <mat-form-field appearance="outline" *ngIf="data.id">
+      <mat-label>狀態</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let status of repairStatuses" [value]="status">
+          {{ status }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- 照片上傳 -->
+    <div class="photo-upload-section">
+      <div class="section-header">
+        <h3><mat-icon>photo_camera</mat-icon> 上傳照片（可選）</h3>
+      </div>
+      
+      <div class="photo-upload-container">
+        <!-- 照片1 -->
+        <div class="photo-upload-box" [class.has-image]="photo1Preview">
+          <div *ngIf="!photo1Preview" class="upload-placeholder">
+            <mat-icon>add_a_photo</mat-icon>
+            <p>上傳照片 1</p>
+            <input type="file" accept="image/*" (change)="onFileSelected($event, 'photo1')">
+          </div>
+          <div *ngIf="photo1Preview" class="photo-preview">
+            <img [src]="photo1Preview" alt="照片預覽">
+            <button type="button" mat-mini-fab color="warn" class="remove-photo-btn" (click)="removePhoto('photo1')">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+        
+        <!-- 照片2 -->
+        <div class="photo-upload-box" [class.has-image]="photo2Preview">
+          <div *ngIf="!photo2Preview" class="upload-placeholder">
+            <mat-icon>add_a_photo</mat-icon>
+            <p>上傳照片 2</p>
+            <input type="file" accept="image/*" (change)="onFileSelected($event, 'photo2')">
+          </div>
+          <div *ngIf="photo2Preview" class="photo-preview">
+            <img [src]="photo2Preview" alt="照片預覽">
+            <button type="button" mat-mini-fab color="warn" class="remove-photo-btn" (click)="removePhoto('photo2')">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 上傳進度條 -->
+      <div class="upload-progress" *ngIf="isUploading">
+        <mat-progress-bar mode="determinate" [value]="uploadProgress" color="primary"></mat-progress-bar>
+        <span class="progress-text">上傳中 {{ uploadProgress }}%</span>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()" [disabled]="isSubmitting || isUploading">取消</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="repairForm.invalid || isSubmitting || isUploading">
+    <mat-icon>save</mat-icon> {{ data.id ? '更新' : '提交' }}
+    <mat-icon *ngIf="isSubmitting" class="spinner">sync</mat-icon>
+  </button>
+</mat-dialog-actions>

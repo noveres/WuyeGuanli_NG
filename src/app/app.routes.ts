@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AnnouncementBoardComponent } from './components/announcement-board/announcement-board.component';
+import { RepairRequestFormComponent } from './components/repair-request-form/repair-request-form.component';
+import { TableComponent } from './pages/table/table.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -30,6 +32,21 @@ export const routes: Routes = [
   {
     path: 'announcements',
     component: AnnouncementBoardComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'repair-request',
+    component: RepairRequestFormComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'repair-management',
+    loadComponent: () => import('./pages/repair-management/repair-management.component').then(m => m.RepairManagementComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'financial',
+    loadComponent: () => import('./pages/financial/table/table.component').then(m => m.TableComponent),
     canActivate: [AuthGuard]
   },
   {

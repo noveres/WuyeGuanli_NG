@@ -190,7 +190,7 @@ export class AnnouncementBoardComponent implements OnInit {
     this.snackBar.open(message, '關閉', {
       duration: 3000,
       horizontalPosition: 'center',
-      verticalPosition: 'top'
+      verticalPosition: 'bottom'
     });
   }
 }

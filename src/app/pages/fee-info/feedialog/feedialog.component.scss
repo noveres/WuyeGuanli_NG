@@ -1,0 +1,311 @@
+/* 容器樣式 */
+.mat-typography {
+  font-family: Arial, sans-serif;
+  margin-top: 20px;
+}
+
+/* 搜尋和批次操作區域 */
+.search-batch-container {
+  background-color: #f8f9fa;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 搜尋區域樣式 */
+.search-container {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.search-box {
+  width: 50%;
+  max-width: 400px;
+}
+
+/* 批次操作區域樣式 */
+.batch-actions-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.code-selection, .address-selection {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-actions, .prefix-actions {
+  display: flex;
+  gap: 10px;
+}
+
+/* 每一組地址和項目 */
+.address-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* 地址顯示區域 */
+.address-row {
+  width: 100%;
+  display: flex;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* 項目區域 - 改為水平延伸 */
+.other-items {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  overflow-x: auto;
+  width: 100%;
+  padding-bottom: 10px; /* 增加下方空間給滾動條 */
+}
+
+/* 每個項目的樣式 */
+.other-item-row {
+  flex: 0 0 auto;
+  min-width: 300px;
+  max-width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+/* 代碼與狀態行 */
+.code-status-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.code-input {
+  flex: 1;
+}
+
+.status-select {
+  flex: 1;
+}
+
+/* checkbox 和 radio 放在同一行 */
+.checkbox-prefix-row {
+  display: flex;             /* 使容器為 Flexbox 來控制排列 */
+  align-items: center;       /* 垂直居中 */
+  gap: 20px;                 /* 項目之間的間距 */
+  width: 100%;               /* 確保寬度為 100% */
+  flex-wrap: nowrap;         /* 防止換行 */
+}
+
+/* 使 checkbox 保持在同一行內 */
+.checkbox-container {
+  display: inline-flex;      /* 使用 inline-flex 保證它在同一行 */
+  align-items: center;       /* 垂直居中 */
+  margin-right: 15px;        /* 右邊距 */
+}
+
+/* 前綴選擇區域的排列 */
+.prefix-select {
+  display: inline-flex;      /* 使用 inline-flex 保證它在同一行 */
+  align-items: center;       /* 垂直居中 */
+}
+
+.prefix-options {
+  display: inline-flex;      /* 使用 inline-flex 保證它在同一行 */
+  gap: 10px;                 /* 項目之間的間距 */
+  align-items: center;       /* 垂直居中 */
+}
+
+.prefix-radio {
+  margin-right: 15px;        /* 右邊距 */
+}
+
+/* 備註行 */
+.comment-input {
+  width: 100%;
+}
+
+/* 下拉選單包裝器 (用於添加箭頭) */
+.select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.select-arrow {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: #555;
+  font-size: 12px;
+}
+
+/* 表單欄位樣式 */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* 基本的 input 樣式 */
+input.form-control {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  width: 100%;
+}
+
+/* 聚焦狀態下的樣式 */
+input.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: none;
+}
+
+select.form-control {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 25px; /* 為箭頭留出空間 */
+}
+
+select.form-control:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: none;
+}
+
+/* 表單按鈕 */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* 按鈕樣式 */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.btn-outline-primary {
+  color: #007bff;
+  border: 1px solid #007bff;
+  background-color: transparent;
+}
+
+.btn-outline-primary:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  background-color: transparent;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border: 1px solid #6c757d;
+  background-color: transparent;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-outline-info {
+  color: #17a2b8;
+  border: 1px solid #17a2b8;
+  background-color: transparent;
+}
+
+.btn-outline-info:hover {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.btn-group {
+  display: flex;
+  gap: 5px;
+}
+
+/* 滾動條美化 */
+.other-items::-webkit-scrollbar {
+  height: 8px;
+}
+
+.other-items::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.other-items::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 4px;
+}
+
+.other-items::-webkit-scrollbar-thumb:hover {
+  background: #ccc;
+}
+
+/* 全選與取消全選按鈕 */
+.selection-actions {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+}

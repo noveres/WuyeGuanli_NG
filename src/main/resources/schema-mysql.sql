@@ -46,7 +46,6 @@ CREATE TABLE IF NOT EXISTS `resident_information` (
 
 -- 確保表格存在並創建
 CREATE TABLE IF NOT EXISTS `users` (
- 
 id INT AUTO_INCREMENT PRIMARY KEY,
 name VARCHAR(50) NOT NULL,
 identity_number VARCHAR(20),
@@ -67,7 +66,18 @@ CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修�
  --    FOR EACH ROW
  --    SET NEW.updated_at = CURRENT_TIMESTAMP;
 
-    CREATE TABLE IF NOT EXISTS `file_names` (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    file_name VARCHAR(255) NOT NULL UNIQUE
-    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE IF NOT EXISTS `file_names` (
+id BIGINT AUTO_INCREMENT PRIMARY KEY,
+file_name VARCHAR(255) NOT NULL UNIQUE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE IF NOT EXISTS `rule` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `sort` varchar(10) NOT NULL,
+  `header` varchar(30) NOT NULL,
+  `content` varchar(200) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+

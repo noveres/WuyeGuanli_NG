@@ -98,6 +98,9 @@
         <button type="button" mat-button (click)="resetForm()" [disabled]="isSubmitting">
           <mat-icon>refresh</mat-icon> 重置
         </button>
+        <button type="button" mat-button color="accent" (click)="togglePreview()" [disabled]="isSubmitting">
+          <mat-icon>{{ showPreview ? 'visibility_off' : 'visibility' }}</mat-icon> {{ showPreview ? '隱藏預覽' : '查看預覽' }}
+        </button>
         <button type="submit" mat-raised-button color="primary" [disabled]="repairForm.invalid || isSubmitting">
           <mat-icon>send</mat-icon> 提交申請
           <mat-icon *ngIf="isSubmitting" class="spinner">sync</mat-icon>
@@ -105,4 +108,52 @@
       </mat-card-actions>
     </mat-card>
   </form>
+
+  <!-- 預覽彈窗 -->
+  <div *ngIf="showPreview" class="preview-overlay" (click)="togglePreview()">
+    <div class="preview-modal" (click)="$event.stopPropagation()">
+      <div class="preview-header">
+        <h2>預覽維修申請</h2>
+        <button mat-icon-button (click)="togglePreview()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="preview-content">
+        <div class="preview-info">
+          <div class="info-row">
+            <span class="info-label">維修類型:</span>
+            <span class="info-value">
+              <span class="type-badge" [ngClass]="getSortClass(repairForm.get('sort')?.value)">
+                {{ repairForm.get('sort')?.value }}
+              </span>
+            </span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">維修位置:</span>
+            <span class="info-value">{{ repairForm.get('location')?.value || '未填寫' }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">問題描述:</span>
+            <span class="info-value description">{{ repairForm.get('description')?.value || '未填寫' }}</span>
+          </div>
+        </div>
+
+        <div class="preview-photos">
+          <h3 *ngIf="photo1Preview || photo2Preview">照片預覽</h3>
+          <div class="preview-photos-container">
+            <div *ngIf="photo1Preview" class="preview-photo-item">
+              <img [src]="photo1Preview" alt="照片1預覽">
+            </div>
+            <div *ngIf="photo2Preview" class="preview-photo-item">
+              <img [src]="photo2Preview" alt="照片2預覽">
+            </div>
+          </div>
+          <div *ngIf="!photo1Preview && !photo2Preview" class="no-photos">
+            <mat-icon>photo_library</mat-icon>
+            <p>未上傳照片</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

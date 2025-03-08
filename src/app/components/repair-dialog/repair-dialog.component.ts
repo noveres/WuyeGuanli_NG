@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,18 +9,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { HttpClientModule, HttpEventType, HttpResponse } from '@angular/common/http';
-import { finalize } from 'rxjs/operators';
 
-import { RepairRequest, RepairSort, RepairStatus } from '../../models/repair-request.model';
+import { RepairRequest } from '../../models/repair-request.model';
 import { RepairService } from '../../services/repair.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
-  selector: 'app-edit-repair-dialog',
+  selector: 'app-repair-dialog',
   standalone: true,
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    FormsModule,
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -32,10 +32,10 @@ import { RepairService } from '../../services/repair.service';
     HttpClientModule
   ],
   providers: [RepairService],
-  templateUrl: './edit-repair-dialog.component.html',
-  styleUrls: ['./edit-repair-dialog.component.scss']
+  templateUrl: './repair-dialog.component.html',
+  styleUrls: ['./repair-dialog.component.scss']
 })
-export class EditRepairDialogComponent {
+export class RepairDialogComponent {
   repairForm: FormGroup;
   isSubmitting = false;
   isUploading = false;
@@ -43,31 +43,44 @@ export class EditRepairDialogComponent {
   photo1Preview: string | null = null;
   photo2Preview: string | null = null;
   
-  repairSorts: RepairSort[] = ['水電相關', '設備相關', '結構相關', '其他'];
-  repairStatuses: RepairStatus[] = ['待處理', '處理中', '已完成', '已拒絕'];
+  repairSorts: string[] = ['水電相關', '設備相關', '結構相關', '其他'];
+  repairStatuses: string[] = ['待處理', '處理中', '已完成', '已拒絕'];
 
   constructor(
     private fb: FormBuilder,
     private repairService: RepairService,
     private snackBar: MatSnackBar,
-    public dialogRef: MatDialogRef<EditRepairDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Partial<RepairRequest>
+    public dialogRef: MatDialogRef<RepairDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: RepairRequest
   ) {
     this.repairForm = this.fb.group({
-      description: [data.description || '', [Validators.required, Validators.maxLength(200)]],
-      location: [data.location || '', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
-      sort: [data.sort || '水電', Validators.required],
-      photo1: [data.photo1 || ''],
-      photo2: [data.photo2 || ''],
-      status: [data.status || '待處理']
+      description: ['', [Validators.required, Validators.maxLength(200)]],
+      location: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+      sort: ['水電', Validators.required],
+      status: ['待處理', Validators.required],
+      photo1: [''],
+      photo2: ['']
     });
+    
+    // 如果是編輯模式，填充表單
+    if (this.data && this.data.id) {
+      this.repairForm.patchValue({
+        description: this.data.description || '',
+        location: this.data.location || '',
+        sort: this.data.sort || '水電',
+        status: this.data.status || '待處理',
+        photo1: this.data.photo1 || '',
+        photo2: this.data.photo2 || ''
+      });
 
-    // 如果有現有的照片，設置預覽
-    if (data.photo1) {
-      this.photo1Preview = data.photo1;
-    }
-    if (data.photo2) {
-      this.photo2Preview = data.photo2;
+      // 設置圖片預覽
+      if (this.data.photo1) {
+        this.photo1Preview = this.data.photo1;
+      }
+      
+      if (this.data.photo2) {
+        this.photo2Preview = this.data.photo2;
+      }
     }
   }
 
@@ -80,7 +93,7 @@ export class EditRepairDialogComponent {
     
     const formValue = this.repairForm.value;
     const repairRequest: RepairRequest = {
-      ...this.data as RepairRequest,
+      ...this.data,
       description: formValue.description,
       location: formValue.location,
       sort: formValue.sort,
@@ -90,26 +103,27 @@ export class EditRepairDialogComponent {
       isRepaired: formValue.status === '已完成' ? 1 : 0
     };
 
-    const operation = repairRequest.id
+    // 如果有 ID 則更新，否則創建新的
+    const operation = this.data?.id
       ? this.repairService.updateRepairRequest(repairRequest)
       : this.repairService.createRepairRequest(repairRequest);
 
     operation.subscribe({
-      next: () => {
+      next: (response) => {
         this.isSubmitting = false;
-        this.showMessage('維修申請已保存');
-        this.dialogRef.close(true);
+        this.snackBar.open('維修申請已保存', '關閉', { duration: 3000 });
+        this.dialogRef.close(response);
       },
       error: (error: any) => {
         this.isSubmitting = false;
         console.error('保存維修申請時發生錯誤', error);
-        this.showMessage('保存維修申請時發生錯誤');
+        this.snackBar.open('保存維修申請時發生錯誤', '關閉', { duration: 3000 });
       }
     });
   }
 
   onCancel(): void {
-    this.dialogRef.close(false);
+    this.dialogRef.close();
   }
 
   onFileSelected(event: Event, photoField: 'photo1' | 'photo2'): void {
@@ -118,7 +132,7 @@ export class EditRepairDialogComponent {
 
     const file = input.files[0];
     if (!file.type.startsWith('image/')) {
-      this.showMessage('請選擇圖片文件');
+      this.snackBar.open('請選擇圖片文件', '關閉', { duration: 3000 });
       return;
     }
 
@@ -138,23 +152,22 @@ export class EditRepairDialogComponent {
         this.isUploading = false;
         this.uploadProgress = 100;
         
-        // 更新表單值和預覽，使用後端返回的URL
+        // 更新表單值和預覽
         this.repairForm.patchValue({ [photoField]: response.url });
         
-        // 使用後端返回的URL來預覽圖片
         if (photoField === 'photo1') {
-          this.photo1Preview = response.url;
+          this.photo1Preview = URL.createObjectURL(file);
         } else {
-          this.photo2Preview = response.url;
+          this.photo2Preview = URL.createObjectURL(file);
         }
         
-        this.showMessage('圖片上傳成功');
+        this.snackBar.open('圖片上傳成功', '關閉', { duration: 3000 });
       },
       error: (error: any) => {
         this.isUploading = false;
         this.uploadProgress = 0;
         console.error('圖片上傳失敗', error);
-        this.showMessage('圖片上傳失敗');
+        this.snackBar.open('圖片上傳失敗', '關閉', { duration: 3000 });
       }
     });
   }
@@ -167,9 +180,5 @@ export class EditRepairDialogComponent {
     } else {
       this.photo2Preview = null;
     }
-  }
-
-  private showMessage(message: string): void {
-    this.snackBar.open(message, '關閉', { duration: 3000 });
   }
 }

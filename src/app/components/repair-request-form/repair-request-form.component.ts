@@ -11,8 +11,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
+import { HttpClientModule } from '@angular/common/http';
 
-import { RepairRequestService } from '../../services/repair-request.service';
+import { RepairService } from '../../services/repair.service';
 import { RepairRequest, RepairSort, RepairStatus } from '../../models/repair-request.model';
 
 @Component({
@@ -30,8 +31,10 @@ import { RepairRequest, RepairSort, RepairStatus } from '../../models/repair-req
     MatProgressBarModule,
     MatCardModule,
     MatDividerModule,
-    RouterModule
+    RouterModule,
+    HttpClientModule
   ],
+  providers: [RepairService],
   templateUrl: './repair-request-form.component.html',
   styleUrls: ['./repair-request-form.component.scss']
 })
@@ -42,19 +45,20 @@ export class RepairRequestFormComponent implements OnInit {
   uploadProgress = 0;
   photo1Preview: string | null = null;
   photo2Preview: string | null = null;
+  showPreview: boolean = false;
   
   repairSorts: RepairSort[] = ['水電相關', '設備相關', '結構相關', '其他'];
   
   constructor(
     private fb: FormBuilder,
-    private repairService: RepairRequestService,
+    private repairService: RepairService,
     private snackBar: MatSnackBar
   ) { }
 
   ngOnInit(): void {
     this.repairForm = this.fb.group({
       description: ['', [Validators.required, Validators.maxLength(200)]],
-      sort: ['水電相關', Validators.required],
+      sort: ['水電', Validators.required],
       location: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
       photo1: [''],
       photo2: ['']
@@ -74,20 +78,15 @@ export class RepairRequestFormComponent implements OnInit {
       photo1: formValue.photo1 || '',
       photo2: formValue.photo2 || '',
       isRepaired: 0,
-      status: '待處理'
+      status: '待處理' as RepairStatus
     };
 
     this.repairService.createRepairRequest(repairRequest).subscribe({
       next: (response) => {
         this.showMessage('維修申請已提交成功');
-        this.repairForm.reset({
-          sort: '水電相關',
-          status: '待處理'
-        });
-        this.photo1Preview = null;
-        this.photo2Preview = null;
+        this.resetForm();
       },
-      error: (error) => {
+      error: (error: any) => {
         this.showMessage('提交維修申請時發生錯誤，請稍後再試');
         console.error('Error creating repair request:', error);
       }
@@ -116,26 +115,27 @@ export class RepairRequestFormComponent implements OnInit {
     }, 200);
 
     this.repairService.uploadPhoto(file).subscribe({
-      next: (response) => {
+      next: (response: { url: string }) => {
         this.isUploading = false;
         this.uploadProgress = 100;
         
-        // 更新表單值和預覽
+        // 更新表單值和預覽，使用後端返回的URL
         this.repairForm.patchValue({ [photoField]: response.url });
         
+        // 使用後端返回的URL來預覽圖片
         if (photoField === 'photo1') {
-          this.photo1Preview = URL.createObjectURL(file);
+          this.photo1Preview = response.url;
         } else {
-          this.photo2Preview = URL.createObjectURL(file);
+          this.photo2Preview = response.url;
         }
         
         this.showMessage('圖片上傳成功');
       },
-      error: (error) => {
+      error: (error: any) => {
         this.isUploading = false;
         this.uploadProgress = 0;
+        console.error('圖片上傳失敗', error);
         this.showMessage('圖片上傳失敗，請稍後再試');
-        console.error('Error uploading image:', error);
       }
     });
   }
@@ -152,17 +152,32 @@ export class RepairRequestFormComponent implements OnInit {
 
   resetForm(): void {
     this.repairForm.reset({
-      sort: '水電相關'
+      sort: '水電',
+      location: '',
+      description: '',
+      photo1: null,
+      photo2: null
     });
     this.photo1Preview = null;
     this.photo2Preview = null;
+    this.showPreview = false;
   }
 
-  showMessage(message: string): void {
-    this.snackBar.open(message, '關閉', {
-      duration: 3000,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom'
-    });
+  togglePreview(): void {
+    this.showPreview = !this.showPreview;
+  }
+
+  getSortClass(sort: string): string {
+    switch (sort) {
+      case '水電相關': return 'type-utility';
+      case '設備相關': return 'type-resident';
+      case '結構相關': return 'type-maintenance';
+      case '其他': return 'type-other';
+      default: return '';
+    }
+  }
+
+  private showMessage(message: string): void {
+    this.snackBar.open(message, '關閉', { duration: 3000 });
   }
 }

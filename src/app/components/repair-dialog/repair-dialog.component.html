@@ -37,16 +37,29 @@
         請輸入問題描述
       </mat-error>
       <mat-error *ngIf="repairForm.get('description')?.hasError('maxlength')">
-        問題描述不能超過45個字符
+        問題描述不能超過200個字符
       </mat-error>
     </mat-form-field>
 
-    <!-- 狀態 (僅在編輯模式下顯示) -->
-    <mat-form-field appearance="outline" *ngIf="data.id">
+    <!-- 狀態選擇 -->
+    <mat-form-field appearance="outline">
       <mat-label>狀態</mat-label>
       <mat-select formControlName="status">
         <mat-option *ngFor="let status of repairStatuses" [value]="status">
-          {{ status }}
+          <ng-container [ngSwitch]="status">
+            <ng-container *ngSwitchCase="'待處理'">
+              <mat-icon>schedule</mat-icon> {{ status }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'處理中'">
+              <mat-icon>engineering</mat-icon> {{ status }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'已完成'">
+              <mat-icon>check_circle</mat-icon> {{ status }}
+            </ng-container>
+            <ng-container *ngSwitchCase="'已拒絕'">
+              <mat-icon>cancel</mat-icon> {{ status }}
+            </ng-container>
+          </ng-container>
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -66,7 +79,7 @@
             <input type="file" accept="image/*" (change)="onFileSelected($event, 'photo1')">
           </div>
           <div *ngIf="photo1Preview" class="photo-preview">
-            <img [src]="photo1Preview.startsWith('http') ? photo1Preview : 'http://localhost:8585' + photo1Preview" alt="照片預覽">
+            <img [src]="photo1Preview" alt="照片預覽">
             <button type="button" mat-mini-fab color="warn" class="remove-photo-btn" (click)="removePhoto('photo1')">
               <mat-icon>delete</mat-icon>
             </button>
@@ -81,7 +94,7 @@
             <input type="file" accept="image/*" (change)="onFileSelected($event, 'photo2')">
           </div>
           <div *ngIf="photo2Preview" class="photo-preview">
-            <img [src]="photo2Preview.startsWith('http') ? photo2Preview : 'http://localhost:8585' + photo2Preview" alt="照片預覽">
+            <img [src]="photo2Preview" alt="照片預覽">
             <button type="button" mat-mini-fab color="warn" class="remove-photo-btn" (click)="removePhoto('photo2')">
               <mat-icon>delete</mat-icon>
             </button>

@@ -1,13 +1,13 @@
 export interface RepairRequest {
   id?: number;
   cost?: number;
-  create_time?: string;  // 改為 string 類型
+  createTime?: string;  // 改為與後端一致的命名
   description: string;
   isRepaired: number;
   photo1?: string;
   photo2?: string;
-  process_time?: string;  // 改為 string 類型
-  sort: string;
+  processTime?: string;  // 改為與後端一致的命名
+  sort: '水電相關' | '設備相關' | '結構相關' | '其他';
   status: string;
   location: string;
 }

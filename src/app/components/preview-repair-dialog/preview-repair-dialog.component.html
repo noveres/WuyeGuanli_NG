@@ -1,0 +1,52 @@
+<h2 mat-dialog-title>維修請求詳情</h2>
+
+<mat-dialog-content>
+  <div class="repair-preview">
+    <div class="header-info">
+      <div class="repair-id">#{{ data.id }}</div>
+      <div class="repair-status" [ngClass]="'status-' + data.status">{{ data.status }}</div>
+    </div>
+
+    <div class="repair-type">
+      <span class="type-tag" [ngClass]="'type-' + data.sort">{{ data.sort }}</span>
+    </div>
+    
+    <div class="location">
+      <h4>位置:</h4>
+      <p>{{ data.location }}</p>
+    </div>
+    
+    <div class="description">
+      <h4>問題描述:</h4>
+      <p>{{ data.description }}</p>
+    </div>
+    
+    <div class="time-info">
+      <div class="create-time">
+        <h4>提交時間:</h4>
+        <p>{{ formatDate(data.createTime ) }}</p>
+      </div>
+      
+      <div class="process-time" *ngIf="data.processTime">
+        <h4>處理時間:</h4>
+        <p>{{ formatDate(data.processTime) }}</p>
+      </div>
+    </div>
+    
+    <div class="images" *ngIf="data.photo1 || data.photo2">
+      <h4>相關照片:</h4>
+      <div class="image-container">
+        <div class="image-wrapper" *ngIf="data.photo1">
+          <img [src]="getImageUrl(data.photo1)" alt="維修照片1">
+        </div>
+        <div class="image-wrapper" *ngIf="data.photo2">
+          <img [src]="getImageUrl(data.photo2)" alt="維修照片2">
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onClose()">關閉</button>
+</mat-dialog-actions>

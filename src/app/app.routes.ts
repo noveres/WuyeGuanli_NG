@@ -1,3 +1,4 @@
+import { Component } from '@angular/core';
 import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AnnouncementBoardComponent } from './components/announcement-board/announcement-board.component';
@@ -17,6 +18,11 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     loadComponent: () => import('./pages/dashboard/dashboard.component').then(m => m.DashboardComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'rental-info',
+    loadComponent: () => import('./pages/rental-info/rental-info.component').then(m => m.RentalInfoComponent),
     canActivate: [AuthGuard]
   },
   {

@@ -258,7 +258,7 @@ export class AddnewComponent implements OnInit {
 
     // 選擇 API 端點
     const apiUrl = this.isEditMode
-      ? `http://localhost:8585/fee/update`
+      ? `http://localhost:8585/fee/add`
       : `http://localhost:8585/fee/add`;
 
     // 呼叫 API

@@ -86,7 +86,7 @@ export class AppComponent implements OnInit, OnDestroy {
     // 檢查是否有 sessionStorage 中的 token
     // 如果有，表示用戶沒有選擇保持登入，需要在頁面關閉時自動登出
     const sessionToken = sessionStorage.getItem('token');
-    if (sessionToken) {
+    if (!sessionToken) {
       this.logout();
     }
   }

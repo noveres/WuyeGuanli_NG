@@ -2,6 +2,8 @@ package com.example.WuyeGuanli.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -17,13 +19,14 @@ import java.time.LocalDateTime;
 @Table(name = "report")
 public class Report {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "sort")
     private String sort;
 
-    @Column(name = "where")
+    @Column(name = "location")
     private String location;
 
     @Column(name = "description")
@@ -42,9 +45,11 @@ public class Report {
     private LocalDateTime processTime;
 
     @Column(name = "is_repaired")
-    private Boolean isRepaired;
+    private Integer isRepaired;
 
     @Column(name = "cost")
-    private int cost ;
+    private Integer cost;
 
+    @Column(name = "status")
+    private String status;
 }

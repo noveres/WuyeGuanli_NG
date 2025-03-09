@@ -3,6 +3,7 @@ import { Routes } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { AnnouncementBoardComponent } from './components/announcement-board/announcement-board.component';
 import { RepairRequestFormComponent } from './components/repair-request-form/repair-request-form.component';
+import { RepairRequestListComponent } from './components/repair-request-list/repair-request-list.component';
 import { TableComponent } from './pages/table/table.component';
 
 export const routes: Routes = [
@@ -43,6 +44,11 @@ export const routes: Routes = [
   {
     path: 'repair-request',
     component: RepairRequestFormComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'repair-list',
+    component: RepairRequestListComponent,
     canActivate: [AuthGuard]
   },
   {

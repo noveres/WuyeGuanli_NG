@@ -6,8 +6,20 @@ h1 {
   padding: 16px;
   background-color: #f5f5f5;
 
+  @keyframes highlight-column {
+    0% {
+      background-color: rgba(24, 144, 255, 0);
+    }
+    50% {
+      background-color: rgba(24, 144, 255, 0.1);
+    }
+    100% {
+      background-color: rgba(24, 144, 255, 0);
+    }
+  }
+
   .header {
-    background-color: white;
+    
     padding: 16px;
     border-radius: 4px;
     margin-bottom: 16px;
@@ -15,49 +27,170 @@ h1 {
     justify-content: space-between;
     align-items: flex-start;
 
+    // 重新設計的搜尋區域
     .search-section {
       display: flex;
+      flex-wrap: wrap;
       gap: 16px;
-      align-items: flex-start;
-      flex: 1;
-
+      align-items: center;
+      margin-bottom: 20px;
+      background-color: #f5f5f5;
+      padding: 16px;
+      border-radius: 8px;
+      
+      mat-form-field {
+        flex: 1;
+        min-width: 150px;
+      }
+      
       .date-range {
-        width: 140px;
+        flex: 1;
       }
-
+      
       .search-input {
-        width: 200px;
+        flex: 2;
       }
-
+      
       .actions {
         display: flex;
-        gap: 8px;
-        margin-top: 3px;
-
+        align-items: center;
+        
         button {
-          min-width: 80px;
+          height: 40px;
+          line-height: 40px;
+          min-width: 100px;
+          padding: 0 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 0;
+          
+          mat-icon {
+            margin-right: 8px;
+          }
         }
       }
-
+      
       ::ng-deep {
+        // 隱藏底部多餘空間
         .mat-mdc-form-field-subscript-wrapper {
           display: none;
         }
-
+        
+        // 統一輸入框樣式
         .mat-mdc-text-field-wrapper {
-          background-color: #f8f8f8;
+          background-color: #ffffff;
         }
-
-        .mat-mdc-form-field-flex {
-          margin-top: -8px;
+        
+        // 設置統一高度
+        .mdc-text-field--outlined {
+          --mdc-outlined-text-field-container-height: 40px;
+        }
+        
+        // 文字垂直對齊
+        .mat-mdc-form-field-infix {
+          padding-top: 8px;
+          padding-bottom: 8px;
+        }
+        
+        // 輸入文字對齊
+        .mat-mdc-input-element,
+        .mat-mdc-select-value-text,
+        .mat-mdc-select-min-line {
+          line-height: 24px;
+          padding-left: 4px;
+          display: flex;
+          align-items: center;
+          height: auto;
+        }
+        
+        // 類別文字右推
+        mat-form-field:nth-child(2) {
+          overflow: visible !important;
+          
+          .mat-mdc-form-field-flex,
+          .mat-mdc-select,
+          .mat-mdc-select-trigger,
+          .mat-mdc-select-value {
+            overflow: visible !important;
+          }
+          
+          .mat-mdc-select-value-text {
+            overflow: visible !important;
+            padding-top: 16px;
+            padding-left: 12px;
+          }
+          
+          .mdc-notched-outline__notch {
+            overflow: visible !important;
+          }
+        }
+        
+        // 標籤對齊
+        .mat-mdc-form-field-label-wrapper {
+          top: 0;
+          padding-top: 0;
+          
+          .mat-mdc-form-field-label {
+            transform: translateY(20px) scale(1);
+            
+            &.mdc-floating-label--float-above {
+              transform: translateY(12px) scale(0.75);
+            }
+          }
+        }
+        
+        // 日期選擇器圖標
+        .mat-datepicker-toggle {
+          color: rgba(0, 0, 0, 0.54);
+        }
+        
+        // 搜索圖標
+        .mat-icon.mat-mdc-icon-element {
+          color: rgba(0, 0, 0, 0.54);
+          margin-right: 4px;
+        }
+        
+        // 下拉選項樣式
+        .mat-mdc-select .mat-mdc-select-value,
+        .mat-mdc-select .mat-mdc-select-arrow-wrapper {
+          padding-top: 0;
+          padding-bottom: 0;
+          height: 24px;
+          display: flex;
+          align-items: center;
+        }
+        
+        // 選項樣式
+        .mat-mdc-option {
+          min-height: 36px;
+          display: flex;
+          align-items: center;
+          
+          .mdc-list-item__primary-text {
+            display: flex;
+            align-items: center;
+            height: 24px;
+          }
         }
       }
     }
-
+    
     .action-buttons {
+      display: flex;
+      gap: 16px;
       margin-left: 16px;
+      
       button {
         min-width: 100px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        mat-icon {
+          margin-right: 8px;
+        }
       }
     }
   }
@@ -71,6 +204,11 @@ h1 {
       color: rgba(0, 0, 0, 0.85);
       font-weight: 500;
       background: #fafafa;
+      transition: background-color 0.3s;
+      
+      // &:hover {
+      //   background-color: #f0f0f0;
+      // }
     }
 
     td {
@@ -88,6 +226,43 @@ h1 {
 
     .mat-column-date {
       width: 120px;
+      transition: background-color 0.3s;
+      
+      &.sort-changed {
+        animation: highlight-column 0.5s ease;
+      }
+
+      .date-header {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        cursor: pointer;
+
+        span {
+          margin-right: 8px;
+          font-weight: 500;
+        }
+
+        button {
+          width: 28px;
+          height: 28px;
+          line-height: 28px;
+          padding: 0;
+          margin: 0;
+          min-width: unset;
+          border-radius: 50%;
+          transition: background-color 0.3s, transform 0.2s;
+          
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            transform: scale(1.1);
+          }
+          
+          &:disabled {
+            color: rgba(0, 0, 0, 0.25);
+          }
+        }
+      }
     }
 
     .mat-column-type {
@@ -103,12 +278,59 @@ h1 {
         margin-left: 4px;
       }
     }
+
+    .sort-header {
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      
+      span {
+        margin-right: 4px;
+      }
+      
+      button {
+        height: 24px;
+        width: 24px;
+        line-height: 24px;
+        padding: 0;
+        margin: 0;
+        min-width: unset;
+        border-radius: 50%;
+        transition: background-color 0.3s, transform 0.2s;
+        
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.05);
+          transform: scale(1.1);
+        }
+        
+        &:disabled {
+          color: rgba(0, 0, 0, 0.25);
+        }
+        
+        .mat-icon {
+          font-size: 16px;
+          width: 18px;
+          height: 18px;
+          line-height: 18px;
+          transition: color 0.3s, transform 0.2s;
+          color: rgba(0, 0, 0, 0.65);
+          
+          &.active {
+            color: #1890ff;
+            font-weight: bold;
+          }
+        }
+      }
+    }
   }
 
   .type-tag {
+    display: inline-block;
     padding: 4px 8px;
-    border-radius: 2px;
+    border-radius: 16px;
     font-size: 12px;
+    font-weight: 500;
   }
 
   .type-utility {
@@ -135,6 +357,14 @@ h1 {
     border: 1px solid #d9d9d9;
   }
 
+  .mat-column-date {
+    transition: background-color 0.3s;
+    
+    &.sort-changed {
+      animation: highlight-column 0.5s ease;
+    }
+  }
+
   .paginator-container {
     display: flex;
     justify-content: space-between;
@@ -142,10 +372,13 @@ h1 {
     background: white;
     padding: 8px 16px;
     border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 
     .total-info {
       color: rgba(0, 0, 0, 0.45);
       font-size: 14px;
+      font-weight: normal;
+      white-space: nowrap;
     }
 
     ::ng-deep {
@@ -158,7 +391,46 @@ h1 {
       }
 
       .mat-mdc-paginator-range-label {
-        margin: 0;
+        margin: 0 8px;
+      }
+      
+      .mat-mdc-paginator-page-size {
+        margin-right: 8px;
+      }
+      
+      .mat-mdc-form-field {
+        width: 56px;
+      }
+      
+      .mat-mdc-icon-button {
+        &.mat-mdc-paginator-navigation-first,
+        &.mat-mdc-paginator-navigation-previous,
+        &.mat-mdc-paginator-navigation-next,
+        &.mat-mdc-paginator-navigation-last {
+          color: rgba(0, 0, 0, 0.65);
+          
+          &:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+          }
+          
+          &:disabled {
+            color: rgba(0, 0, 0, 0.25);
+          }
+          
+          .mat-icon {
+            font-size: 16px;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            transition: color 0.3s, transform 0.2s;
+            color: rgba(0, 0, 0, 0.65);
+            
+            &.active {
+              color: #1890ff;
+              font-weight: bold;
+            }
+          }
+        }
       }
     }
   }

@@ -49,6 +49,12 @@ export class AnnouncementBoardComponent implements OnInit {
   startDate: Date | null = null;
   selectedType: AnnouncementType | '' = '';
   searchText: string = '';
+  
+  // 排序設定
+  sortOrder: 'asc' | 'desc' = 'desc'; // 默認降序（新到舊）
+
+  // Math物件用於模板中計算頁數
+  Math = Math;
 
   // 分頁
   totalItems: number = 0;
@@ -104,6 +110,9 @@ export class AnnouncementBoardComponent implements OnInit {
         item.title.toLowerCase().includes(searchLower)
       );
     }
+    
+    // 排序
+    this.sortAnnouncements(filtered);
 
     this.totalItems = filtered.length;
     
@@ -111,6 +120,34 @@ export class AnnouncementBoardComponent implements OnInit {
     const start = this.currentPage * this.pageSize;
     const end = start + this.pageSize;
     this.announcements = filtered.slice(start, end);
+  }
+  
+  // 切換排序順序
+  toggleSortOrder(): void {
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    
+    // 應用排序變化動畫
+    const dateColumn = document.querySelector('.mat-column-date');
+    if (dateColumn) {
+      dateColumn.classList.add('sort-changed');
+      setTimeout(() => {
+        dateColumn.classList.remove('sort-changed');
+      }, 500);
+    }
+    
+    this.filterAnnouncements();
+  }
+  
+  // 排序公告
+  private sortAnnouncements(announcements: Announcement[]): void {
+    announcements.sort((a, b) => {
+      const dateA = new Date(a.date).getTime();
+      const dateB = new Date(b.date).getTime();
+      
+      return this.sortOrder === 'asc' 
+        ? dateA - dateB  // 升序：從舊到新
+        : dateB - dateA; // 降序：從新到舊
+    });
   }
 
   search(): void {

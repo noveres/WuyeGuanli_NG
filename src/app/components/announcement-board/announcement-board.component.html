@@ -11,7 +11,7 @@
       <mat-form-field appearance="outline">
         <mat-label>類別</mat-label>
         <mat-select [(ngModel)]="selectedType" (selectionChange)="search()">
-          <mat-option value="">類別選別</mat-option>
+          <mat-option value="">類別</mat-option>
           <mat-option value="水電相關">水電相關</mat-option>
           <mat-option value="住戶相關">住戶相關</mat-option>
           <mat-option value="維修相關">維修相關</mat-option>
@@ -20,13 +20,14 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="search-input">
-        <mat-label>標題</mat-label>
-        <input matInput [(ngModel)]="searchText" (ngModelChange)="search()" placeholder="請輸入標題關鍵字">
+        <mat-label>搜尋</mat-label>
+        <input matInput [(ngModel)]="searchText" (ngModelChange)="search()" >
+        <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
 
       <div class="actions">
         <button mat-raised-button (click)="clearSearch()">
-          清空
+          <mat-icon>filter_alt_off</mat-icon> 清空篩選
         </button>
       </div>
     </div>
@@ -42,7 +43,16 @@
   <table mat-table [dataSource]="announcements" class="mat-elevation-z1">
     <!-- 日期欄位 -->
     <ng-container matColumnDef="date">
-      <th mat-header-cell *matHeaderCellDef>日期</th>
+      <th mat-header-cell *matHeaderCellDef>
+        <div class="sort-header" (click)="toggleSortOrder()">
+          <span>日期</span>
+          <button mat-icon-button 
+                  matTooltip="{{ sortOrder === 'asc' ? '目前：從舊到新' : '目前：從新到舊' }}"
+                  *ngIf="true">
+            <mat-icon [ngClass]="{'active': sortOrder === 'desc'}">{{ sortOrder === 'asc' ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+          </button>
+        </div>
+      </th>
       <td mat-cell *matCellDef="let announcement">{{ announcement.date | date:'yyyy-MM-dd' }}</td>
     </ng-container>
 
@@ -84,12 +94,13 @@
 
   <div class="paginator-container">
     <div class="total-info">
-      共 {{ totalItems }} 筆，{{ pageSize }}筆/頁
+      共 {{ totalItems }} 筆，當前第 {{ currentPage + 1 }} / {{ Math.ceil(totalItems / pageSize) || 1 }} 頁
     </div>
     <mat-paginator
       [length]="totalItems"
       [pageSize]="pageSize"
-      [pageSizeOptions]="[10]"
+      [pageSizeOptions]="[5, 10, 20, 50]"
+      [showFirstLastButtons]="true"
       (page)="onPageChange($event)">
     </mat-paginator>
   </div>

@@ -63,15 +63,22 @@ export class RepairRequestListComponent implements OnInit {
   displayedColumns: string[] = ['id', 'sort', 'location', 'status', 'createTime', 'actions'];
   
   // 分頁相關
-  pageIndex = 0;
-  pageSize = 10;
-  totalItems = 0;
+  totalItems: number = 0;
+  pageSize: number = 10;
+  currentPage: number = 0;
   
   // 篩選相關
   startDate: Date | null = null;
   selectedType: string = '';
   selectedStatus: string = '';
   searchText: string = '';
+  
+  // 排序設定
+  sortOrder: 'asc' | 'desc' = 'desc'; // 默認降序（新到舊）
+  sortField: 'createTime' | 'sort' | 'status' | 'location' | 'id' = 'createTime'; // 默認按創建時間排序
+  
+  // Math物件用於模板中計算頁數
+  Math = Math;
   
   // 定義維修類型和狀態
   repairSorts: string[] = ['水電相關', '設備相關', '結構相關', '其他'];
@@ -142,14 +149,100 @@ export class RepairRequestListComponent implements OnInit {
       );
     }
     
+    // 依照創建時間排序
+    this.sortRepairRequests(filtered);
+    
     // 更新總計數和分頁
     this.totalItems = filtered.length;
-    this.filteredRepairs = filtered.slice(this.pageIndex * this.pageSize, (this.pageIndex + 1) * this.pageSize);
+    
+    // 分頁
+    const start = this.currentPage * this.pageSize;
+    const end = start + this.pageSize;
+    this.filteredRepairs = filtered.slice(start, end);
+  }
+  
+  // 切換排序順序
+  toggleSortOrder(): void {
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+    
+    // 使用動畫效果
+    const column = document.querySelector(`.mat-column-${this.sortField}`);
+    if (column) {
+      column.classList.add('sort-changed');
+      setTimeout(() => {
+        column.classList.remove('sort-changed');
+      }, 500);
+    }
+    
+    this.search();
+  }
+  
+  // 設置排序欄位
+  setSortField(field: 'createTime' | 'sort' | 'status' | 'location' | 'id'): void {
+    if (this.sortField === field) {
+      // 如果當前已按此欄位排序，則切換順序
+      this.toggleSortOrder();
+    } else {
+      // 切換到新的排序欄位，保持當前的排序順序
+      this.sortField = field;
+      
+      // 使用動畫效果
+      const column = document.querySelector(`.mat-column-${field}`);
+      if (column) {
+        column.classList.add('sort-changed');
+        setTimeout(() => {
+          column.classList.remove('sort-changed');
+        }, 500);
+      }
+      
+      this.search();
+    }
+  }
+  
+  // 排序維修申請
+  private sortRepairRequests(repairs: RepairRequest[]): void {
+    repairs.sort((a, b) => {
+      let comparison = 0;
+      
+      switch (this.sortField) {
+        case 'createTime':
+          // 處理可能為空的情況
+          const timeA = a.createTime ? new Date(a.createTime).getTime() : 0;
+          const timeB = b.createTime ? new Date(b.createTime).getTime() : 0;
+          comparison = timeA - timeB;
+          break;
+        
+        case 'sort':
+          // 按類型排序
+          comparison = (a.sort || '').localeCompare(b.sort || '');
+          break;
+        
+        case 'status':
+          // 按狀態排序
+          comparison = (a.status || '').localeCompare(b.status || '');
+          break;
+          
+        case 'location':
+          // 按位置排序
+          comparison = (a.location || '').localeCompare(b.location || '');
+          break;
+          
+        case 'id':
+          // 按ID排序（將ID轉為數字進行比較）
+          const idA = a.id ? parseInt(a.id.toString(), 10) : 0;
+          const idB = b.id ? parseInt(b.id.toString(), 10) : 0;
+          comparison = idA - idB;
+          break;
+      }
+      
+      // 根據排序順序返回結果
+      return this.sortOrder === 'asc' ? comparison : -comparison;
+    });
   }
   
   onPageChange(event: PageEvent): void {
-    this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
+    this.currentPage = event.pageIndex;
     this.search();
   }
   

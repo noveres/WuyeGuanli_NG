@@ -19,7 +19,6 @@ h1 {
   }
 
   .header {
-    
     padding: 16px;
     border-radius: 4px;
     margin-bottom: 16px;
@@ -34,7 +33,6 @@ h1 {
       gap: 16px;
       align-items: center;
       margin-bottom: 20px;
-      background-color: #f5f5f5;
       padding: 16px;
       border-radius: 8px;
       
@@ -48,7 +46,8 @@ h1 {
       }
       
       .search-input {
-        flex: 2;
+        flex: 1;
+        padding-top: 0px;
       }
       
       .actions {
@@ -79,7 +78,7 @@ h1 {
         
         // 統一輸入框樣式
         .mat-mdc-text-field-wrapper {
-          background-color: #ffffff;
+        
         }
         
         // 設置統一高度
@@ -101,7 +100,8 @@ h1 {
           padding-left: 4px;
           display: flex;
           align-items: center;
-          height: auto;
+          height: 24px;
+          padding-top: 10px;
         }
         
         // 類別文字右推
@@ -117,8 +117,7 @@ h1 {
           
           .mat-mdc-select-value-text {
             overflow: visible !important;
-            padding-top: 16px;
-            padding-left: 12px;
+            // padding-left: px;
           }
           
           .mdc-notched-outline__notch {

@@ -47,11 +47,6 @@ export const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'repair-list',
-    component: RepairRequestListComponent,
-    canActivate: [AuthGuard]
-  },
-  {
     path: 'repair-management',
     loadComponent: () => import('./pages/repair-management/repair-management.component').then(m => m.RepairManagementComponent),
     canActivate: [AuthGuard]

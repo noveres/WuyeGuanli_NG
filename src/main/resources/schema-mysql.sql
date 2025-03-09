@@ -153,4 +153,13 @@ CONSTRAINT fk_landlord FOREIGN KEY (landlord_id) REFERENCES `users`(id)  -- 修�
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     file_name VARCHAR(255) NOT NULL UNIQUE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+    
+    CREATE TABLE IF NOT EXISTS `rental` (
+  `idrental` int NOT NULL AUTO_INCREMENT,
+  `item` varchar(255) DEFAULT NULL,
+  `total` int NOT NULL COMMENT '總共數量',
+  `remark` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`idrental`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='公共器材租借';
+
 

@@ -72,6 +72,13 @@ export class AppComponent implements OnInit, OnDestroy {
     // 從 localStorage 獲取用戶信息
     this.updateUserInfo();
     
+    // 檢查並清除刷新標記
+    const isRefreshing = sessionStorage.getItem('isRefreshing');
+    if (isRefreshing) {
+      sessionStorage.removeItem('isRefreshing');
+      console.log('頁面刷新，不執行登出');
+    }
+    
     // 添加頁面關閉事件監聽
     window.addEventListener('beforeunload', this.handleBeforeUnload);
   }
@@ -83,13 +90,24 @@ export class AppComponent implements OnInit, OnDestroy {
 
   // 處理頁面關閉事件
   handleBeforeUnload = (event: BeforeUnloadEvent): void => {
-    // 檢查是否有 sessionStorage 中的 token
-    // 如果有，表示用戶沒有選擇保持登入，需要在頁面關閉時自動登出
-    const sessionToken = sessionStorage.getItem('token');
-    if (sessionToken) {
-      this.logout();
-    }
+    // 標記頁面正在刷新
+    sessionStorage.setItem('isRefreshing', 'true');
+    
+    // 使用 setTimeout 來判斷是否真的是關閉視窗
+    // 如果是刷新，setTimeout 內的代碼將不會執行，因為頁面會在超時前重新載入
+    // 如果是關閉，sessionStorage 中的標記將不會被清除
+    setTimeout(() => {
+      const isRefreshing = sessionStorage.getItem('isRefreshing');
+      if (isRefreshing) {
+        // 如果標記仍存在，表示這是視窗關閉而不是刷新
+        const sessionToken = sessionStorage.getItem('token');
+        if (sessionToken) {
+          this.logout();
+        }
+      }
+    }, 0);
   }
+
 
   // 登出方法
   logout(): void {

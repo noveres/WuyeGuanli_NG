@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   loginForm!: FormGroup;
   isLoading = false;
   errorMessage = '';
-  keepLoggedIn = true;
+  keepLoggedIn = false;
   showPassword = false;
 
   constructor(

@@ -246,10 +246,9 @@ form input::placeholder {
     content: "";
     position: absolute;
     display: none;
-    left: 3px;
-
+    left: 4px;
     width: 4px;
-    height: 8px;
+    height: 10px;
     border: solid white;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);

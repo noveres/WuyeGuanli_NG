@@ -23,16 +23,21 @@ public class FeeController {
 
     // 用來新增資料的 POST 方法
     @PostMapping("/fee/add")
-    public BasicRes saveFeeInfo(@RequestBody FeeInfo feeInfo) {
-        // 呼叫 Service 層保存 FeeInfo 資料
-    	feeInfo.setModifyingDate(LocalDateTime.now());  // 這裡設置時間
-    	
-        boolean isSaved = feeInfoService.saveFeeInfo(feeInfo);
+    public BasicRes saveFeeInfoList(@RequestBody List<FeeInfo> feeInfoList) {
+        int successCount = 0;
         
-        if (isSaved) {
-            return new BasicRes(200, "資料新增成功");//之後改enum
+        for (FeeInfo feeInfo : feeInfoList) {
+            feeInfo.setModifyingDate(LocalDateTime.now()); //刷新設置時間
+            boolean isSaved = feeInfoService.saveFeeInfo(feeInfo);
+            if (isSaved) {
+                successCount++;
+            }
+        }
+        
+        if (successCount == feeInfoList.size()) {
+            return new BasicRes(200, "全部 " + successCount + " 筆資料新增成功");
         } else {
-            return new BasicRes(400, "資料新增失敗");
+            return new BasicRes(400, "有 " + (feeInfoList.size() - successCount) + " 筆資料新增失敗");
         }
     }
 

@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { AvatarService } from '../../services/avatar.service';
 
 @Component({
   selector: 'app-profile',
@@ -42,6 +43,7 @@ export class ProfileComponent implements OnInit {
     private fb: FormBuilder,
     private userService: UserService,
     private authService: AuthService,
+    private avatarService: AvatarService,
     private snackBar: MatSnackBar
   ) {
     this.profileForm = this.fb.group({
@@ -150,11 +152,32 @@ export class ProfileComponent implements OnInit {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length) {
-      this.selectedFile = input.files[0];
+      const file = input.files[0];
+      
+      // 檢查文件類型
+      if (!file.type.startsWith('image/')) {
+        this.snackBar.open('請選擇圖片文件', '關閉', { duration: 3000 });
+        return;
+      }
+      
+      // 檢查文件大小 (限制為 5MB)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        this.snackBar.open('圖片大小不能超過 5MB', '關閉', { duration: 3000 });
+        return;
+      }
+      
+      this.selectedFile = file;
+      
       // 預覽選擇的圖片
       const reader = new FileReader();
       reader.onload = () => {
         this.avatarUrl = reader.result as string;
+        // 選擇圖片後自動上傳
+        this.uploadAvatar();
+      };
+      reader.onerror = () => {
+        this.snackBar.open('讀取圖片失敗', '關閉', { duration: 3000 });
       };
       reader.readAsDataURL(this.selectedFile);
     }
@@ -172,13 +195,19 @@ export class ProfileComponent implements OnInit {
         this.snackBar.open('頭像上傳成功', '關閉', { duration: 3000 });
         // 更新頭像URL（添加時間戳避免緩存）
         this.avatarUrl = this.userService.getAvatarUrl(this.currentUser.id);
+        // 通知頭像已更新 - 由於我們已在 userService 中實現了通知，這裡可以省略
         this.selectedFile = null;
         this.loading = false;
       },
       error: (error) => {
         console.error('Error uploading avatar:', error);
-        this.snackBar.open('頭像上傳失敗', '關閉', { duration: 3000 });
+        this.snackBar.open('頭像上傳失敗，請稍後再試', '關閉', { duration: 3000 });
         this.loading = false;
+        
+        // 如果上傳失敗，恢復之前的頭像URL
+        if (this.currentUser && this.currentUser.id) {
+          this.avatarUrl = this.userService.getAvatarUrl(this.currentUser.id);
+        }
       }
     });
   }

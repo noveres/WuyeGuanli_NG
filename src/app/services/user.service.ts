@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
+import { AvatarService } from './avatar.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    private authService: AuthService
+    private authService: AuthService,
+    private avatarService: AvatarService
   ) { }
 
   /**
@@ -56,7 +58,13 @@ export class UserService {
   uploadAvatar(userId: string | number, file: File): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(`${this.apiUrl}/${userId}/avatar`, formData);
+    return this.http.post(`${this.apiUrl}/${userId}/avatar`, formData).pipe(
+      tap(() => {
+        // 上傳成功後，通知頭像已更新
+        const newAvatarUrl = this.getAvatarUrl(userId);
+        this.avatarService.updateAvatar(newAvatarUrl);
+      })
+    );
   }
 
   /**

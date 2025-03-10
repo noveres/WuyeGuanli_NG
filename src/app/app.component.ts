@@ -11,6 +11,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatDividerModule } from '@angular/material/divider';
 import { AuthService } from './services/auth.service';
 import { UserService } from './services/user.service';
+import { AvatarService } from './services/avatar.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -44,12 +46,17 @@ export class AppComponent implements OnInit, OnDestroy {
   userName = '系統管理員';
   userRole = '系統管理員';
   avatarUrl: string | null = null;
+  showDefaultAvatar = false;
+
+  // 訂閱頭像更新
+  private avatarSubscription: Subscription | null = null;
 
   @ViewChild('drawer') drawer: any;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private avatarService: AvatarService,
     private router: Router
   ) {
     // 監聽路由變化
@@ -72,6 +79,14 @@ export class AppComponent implements OnInit, OnDestroy {
     // 從 localStorage 獲取用戶信息
     this.updateUserInfo();
     
+    // 訂閱頭像更新
+    this.avatarSubscription = this.avatarService.avatarUpdate$.subscribe(newAvatarUrl => {
+      if (newAvatarUrl) {
+        this.avatarUrl = newAvatarUrl;
+        this.showDefaultAvatar = false;
+      }
+    });
+    
     // 檢查並清除刷新標記
     const isRefreshing = sessionStorage.getItem('isRefreshing');
     if (isRefreshing) {
@@ -86,6 +101,11 @@ export class AppComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // 移除事件監聽器
     window.removeEventListener('beforeunload', this.handleBeforeUnload);
+    
+    // 取消訂閱
+    if (this.avatarSubscription) {
+      this.avatarSubscription.unsubscribe();
+    }
   }
 
   // 處理頁面關閉事件
@@ -107,7 +127,6 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     }, 0);
   }
-
 
   // 登出方法
   logout(): void {
@@ -135,6 +154,12 @@ export class AppComponent implements OnInit, OnDestroy {
     if (url.includes('/admin')) return '管理';
     if (url.includes('/settings')) return '設置';
     return '';
+  }
+
+  // 處理頭像加載錯誤
+  handleAvatarError(): void {
+    console.log('頭像加載失敗，顯示默認頭像');
+    this.showDefaultAvatar = true;
   }
 
   // 更新用戶信息
@@ -169,6 +194,9 @@ export class AppComponent implements OnInit, OnDestroy {
     const userId = localStorage.getItem('userId');
     if (userId) {
       this.avatarUrl = this.userService.getAvatarUrl(userId);
+      this.showDefaultAvatar = false;
+    } else {
+      this.showDefaultAvatar = true;
     }
   }
 }

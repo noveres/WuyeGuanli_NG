@@ -19,17 +19,13 @@
         </div>
       </div>
       <div class="avatar-actions">
-        <button mat-raised-button color="primary" (click)="fileInput.click()">
+        <button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="loading">
           <mat-icon>photo_camera</mat-icon>
-          選擇圖片
+          {{ loading ? '上傳中...' : '選擇圖片' }}
         </button>
         <input hidden type="file" #fileInput (change)="onFileSelected($event)" accept="image/*">
-        
-        <button mat-raised-button color="accent" [disabled]="!selectedFile" (click)="uploadAvatar()">
-          <mat-icon>cloud_upload</mat-icon>
-          上傳頭像
-        </button>
       </div>
+      <mat-progress-bar *ngIf="loading" mode="indeterminate" class="upload-progress"></mat-progress-bar>
     </mat-card-content>
   </mat-card>
 

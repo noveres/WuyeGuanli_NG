@@ -25,14 +25,12 @@
         <span>中文</span>
       </div>
       <div class="user-avatar">
-        <img *ngIf="avatarUrl; else defaultAvatar" [src]="avatarUrl" alt="User Avatar" width="36" height="36" />
-        <ng-template #defaultAvatar>
-          <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
-            <circle cx="18" cy="18" r="18" fill="#f0f0f0" />
-            <circle cx="18" cy="14" r="6" fill="#999" />
-            <path d="M18,20 C12,20 8,23 8,28 L28,28 C28,23 24,20 18,20 Z" fill="#999" />
-          </svg>
-        </ng-template>
+        <img *ngIf="!showDefaultAvatar && avatarUrl" [src]="avatarUrl" alt="User Avatar" width="36" height="36" (error)="handleAvatarError()" />
+        <svg *ngIf="showDefaultAvatar || !avatarUrl" xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="18" fill="#f0f0f0" />
+          <circle cx="18" cy="14" r="6" fill="#999" />
+          <path d="M18,20 C12,20 8,23 8,28 L28,28 C28,23 24,20 18,20 Z" fill="#999" />
+        </svg>
       </div>
     </div>
   </div>
@@ -44,14 +42,12 @@
       <!-- 用戶資料 -->
       <div class="user-profile">
         <div class="avatar-container" style="border-radius: 50%; overflow: hidden; border: 2px solid #ccc;">
-          <img *ngIf="avatarUrl; else defaultAvatarSidebar" [src]="avatarUrl" alt="User Avatar" width="50" height="50" />
-          <ng-template #defaultAvatarSidebar>
-            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
-              <circle cx="25" cy="25" r="25" fill="#f0f0f0" />
-              <circle cx="25" cy="20" r="8" fill="#999" />
-              <path d="M25,28 C17,28 11,32 11,38 L39,38 C39,32 33,28 25,28 Z" fill="#999" />
-            </svg>
-          </ng-template>
+          <img *ngIf="!showDefaultAvatar && avatarUrl" [src]="avatarUrl" alt="User Avatar" width="50" height="50" (error)="handleAvatarError()" />
+          <svg *ngIf="showDefaultAvatar || !avatarUrl" xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+            <circle cx="25" cy="25" r="25" fill="#f0f0f0" />
+            <circle cx="25" cy="20" r="8" fill="#999" />
+            <path d="M25,28 C17,28 11,32 11,38 L39,38 C39,32 33,28 25,28 Z" fill="#999" />
+          </svg>
         </div>
         <div class="user-info">
           <div class="user-name">{{ userName }}</div>

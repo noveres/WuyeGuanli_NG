@@ -61,5 +61,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/profile/profile.component').then(m => m.ProfileComponent),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'resident-information',
+    loadComponent: () => import('./pages/resident-information/resident-information.component').then(m => m.ResidentInformationComponent),
+    canActivate: [AuthGuard]
+  },
   { path: '**', redirectTo: 'login' }
 ];

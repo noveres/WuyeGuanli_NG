@@ -1,0 +1,28 @@
+Go to Component
+<!-- dialog content -->
+<h2 mat-dialog-title>更新住戶</h2>
+<!-- dialog content -->
+<mat-dialog-content>
+  <h3>住戶姓名 &nbsp; :&nbsp; <input type="text" name="" id="" [(ngModel)]="name" style="height: 50px; font-size: 22.5px;"></h3>
+  <p></p>
+  <h3>住戶電話 &nbsp; : </h3>
+  <h3>09-&nbsp;&nbsp;<input type="text" name="" id="" [(ngModel)]="phone" style="height: 50px; font-size: 22.5px;"></h3>
+  <p></p>
+  <h3>是否出租 <input type="checkbox" name="" id=""[(ngModel)]="isLase" style="height: 25px; width: 25px;"></h3>
+  <p></p>
+  @if (isLase)
+  {
+     <h3>租客姓名 &nbsp; : <input type="text" name="" id="" [(ngModel)]="Lasename" style="height: 50px; font-size: 22.5px;"></h3>
+     <p></p>
+     <h3 >租客電話 &nbsp;</h3>
+     <h3>09-&nbsp;&nbsp;<input type="text" name="" id="" [(ngModel)]="Lasephone" style="height: 50px; font-size: 22.5px;"></h3>
+     <p></p>
+  }
+</mat-dialog-content>
+<!-- dialog button -->
+<mat-dialog-actions>
+<button (click)="on_loding_click(false)">Cancel</button>
+<button (click)="on_loding_click(true)">OK</button>
+</mat-dialog-actions>
+
+

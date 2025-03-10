@@ -1,0 +1,26 @@
+
+<!-- dialog content -->
+<h2 mat-dialog-title>刪除住戶</h2>
+<!-- dialog content -->
+<mat-dialog-content>
+  <h3>住戶姓名 &nbsp; :&nbsp; {{delatedate.owerName}}</h3>
+  <p></p>
+  <h3>住戶電話 &nbsp; : 09-{{delatedate.owerPhone}}</h3>
+  <p></p>
+  <h3>區號 :{{delatedate.Residential_Zone}} </h3>
+  <p></p>
+  <h3>門牌號碼 &nbsp; :&nbsp; {{delatedate.House_number}}</h3>
+  <p></p>
+  <!-- @if (isLase)
+  {
+     <h3>租客姓名 &nbsp; : {{}}</h3>
+     <p></p>
+     <h3 >租客電話  : &nbsp; 09-{{}}</h3>
+     <p></p>
+  } -->
+</mat-dialog-content>
+<!-- dialog button -->
+<mat-dialog-actions>
+<button (click)="on_loding_click(false)">Cancel</button>
+<button (click)="on_loding_click(true)">OK</button>
+</mat-dialog-actions>

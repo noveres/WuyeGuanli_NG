@@ -1,0 +1,86 @@
+<div class="main">
+  <div class="Resident_Information">
+    <h1 class="OwnerName">姓名:({{OwnerName}})</h1>
+    <h3 class="OwnerPhone">電話:09-{{OwnerPhone}}</h3>
+    <h3 class="Residential_Zone">分區: {{Residential_Zone}}</h3>
+    <h3 class="House_number">門牌: {{House_number}}</h3>
+    <h3 class="isLase">出租: {{isLase}}</h3>
+  </div>
+</div>
+
+<div class="tableMain">
+  <div class="mat-elevation-z8">
+    <button (click)="addInfo() "class="addinfobutton">
+      <svg xmlns="http://www.w3.org/2000/svg" width="50%" height="50%" fill="currentColor" class="bi bi-building-fill-add" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Zm.5-5a.5.5 0 0 0-1 0v1h-1a.5.5 0 0 0 0 1h1v1a.5.5 0 0 0 1 0v-1h1a.5.5 0 0 0 0-1h-1v-1Z"/>
+        <path fill-rule="evenodd" d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.493 4.493 0 0 0 12.5 8a4.493 4.493 0 0 0-3.59 1.787A.498.498 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.476 4.476 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1V1Zm2 1.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
+      </svg>
+    </button>
+      <table mat-table [dataSource]="dataSource">
+        <!-- 编号列 -->
+        <ng-container matColumnDef="id">
+          <th mat-header-cell *matHeaderCellDef> 編號 </th>
+          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        </ng-container>
+
+        <!-- 业主姓名列 -->
+        <ng-container matColumnDef="owerName">
+          <th mat-header-cell *matHeaderCellDef> 姓名 </th>
+          <td mat-cell *matCellDef="let element"> {{element.owerName}} </td>
+        </ng-container>
+
+        <!-- 业主电话列 -->
+        <ng-container matColumnDef="owerPhone">
+          <th mat-header-cell *matHeaderCellDef> 電話 </th>
+          <td mat-cell *matCellDef="let element"> 09-{{element.owerPhone}} </td>
+        </ng-container>
+
+        <!-- 居住区列 -->
+        <ng-container matColumnDef="Residential_Zone">
+          <th mat-header-cell *matHeaderCellDef> 居住區 </th>
+          <td mat-cell *matCellDef="let element"> {{element.Residential_Zone}} </td>
+        </ng-container>
+
+        <!-- 门牌号列 -->
+        <ng-container matColumnDef="House_number">
+          <th mat-header-cell *matHeaderCellDef> 門牌號 </th>
+          <td mat-cell *matCellDef="let element"> {{element.House_number}} </td>
+        </ng-container>
+
+          <!-- 是否出租 -->
+          <ng-container matColumnDef="isLase">
+            <th mat-header-cell *matHeaderCellDef> 出租 </th>
+            <td mat-cell *matCellDef="let element"> {{element.isLase}} </td>
+          </ng-container>
+          <ng-container matColumnDef="toolbar">
+            <th mat-header-cell *matHeaderCellDef> 功能 </th>
+            <td mat-cell *matCellDef="let element"> {{element.toolbar}}
+            <div class="buttonSize">
+              <div class="uphobutton">
+                <button (click)="upDeta(element) "class="">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-fill-exclamation" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.493 4.493 0 0 0 12.5 8a4.493 4.493 0 0 0-3.59 1.787A.498.498 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.476 4.476 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1V1Zm2 1.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
+                    <path fill-rule="evenodd" d="M16 12.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Zm-3.5-2a.5.5 0 0 1 .5.5v1.5a.5.5 0 0 1-1 0V11a.5.5 0 0 1 .5-.5Zm0 4a.5.5 0 1 0 0-1 .5.5 0 0 0 0 1Z"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="dehobutton">
+                <button (click)="delete_botton(element) "class="">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-building-fill-dash" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM11 12a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3Z"/>
+                    <path fill-rule="evenodd" d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.256A4.493 4.493 0 0 0 12.5 8a4.493 4.493 0 0 0-3.59 1.787A.498.498 0 0 0 9 9.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .39-.187A4.476 4.476 0 0 0 8.027 12H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1V1Zm2 1.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1ZM4 5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Zm2.5.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1Z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </td>
+          </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+        <tr class="mat-row" mat-row *matRowDef="let row; columns: displayedColumns;"(click)="getResidents(row.id)"></tr>
+      </table>
+  <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                 showFirstLastButtons
+                 aria-label="Select page of periodic elements">
+  </mat-paginator>
+ </div>
+</div>

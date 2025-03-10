@@ -18,13 +18,23 @@ export class FloatButtonsComponent {
 
   // 滾動到頁面頂部
   scrollToTop() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    console.log("TOP");
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    }
   }
 
   // 滾動到頁面底部
   scrollToBottom() {
-    window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    console.log("b5555");
+    const mainContent = document.querySelector('.main-content');
+    if (mainContent) {
+      mainContent.scrollTo({
+        top: mainContent.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
   }
 }

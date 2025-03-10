@@ -14,7 +14,7 @@ import { FeeguidanceComponent } from '../feeguidance/feeguidance.component';
   imports: [MatIconModule,
      MatTabsModule, 
      FeedialogComponent,
-     RouterOutlet,
+    //  RouterOutlet,
      AddnewComponent,
      FeeguidanceComponent,
     ],

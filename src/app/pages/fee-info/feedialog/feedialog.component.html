@@ -1,3 +1,5 @@
+<app-float-buttons></app-float-buttons>
+
 <div class="mat-typography" style="overflow-x: auto; display: block; width: 100%;">
   <!-- 搜尋和批次操作區域 -->
   <div class="search-batch-container ">
@@ -12,10 +14,10 @@
 
       <!-- 新增項目區域，設置為 col-4 寬度 -->
       <div class="form-group col-12 col-sm-5 ms-5">
-        <label>新增項目(當前所有住址)</label>
+        <label>新增項目(所有住址)</label>
         <div class="d-flex gap-2">
           <input type="text" class="form-control" placeholder="輸入項目代碼:年+季 例如1151" #newItemCode>
-          <button class="btn btn-primary" (click)="addNewItemCard(newItemCode.value)">新增卡片</button>
+          <button class="btn btn-primary" (click)="addNewItemCard(newItemCode.value)">新增資訊</button>
         </div>
       </div>
 

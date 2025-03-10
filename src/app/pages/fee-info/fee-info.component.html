@@ -6,6 +6,18 @@
       <input matInput id="yearSeasonInput" (keyup)="applyYearSeasonFilter($event)" placeholder="例如輸入1141" #input>
     </mat-form-field>
 
+    <!-- 是否繳清費用搜尋 -->
+    <mat-form-field style="width: 150px;" appearance="outline" class="col-12 col-md-4 mb-3">
+      <mat-label>是否繳清</mat-label>
+      <mat-select id="feeStatusSelect" (selectionChange)="applyFeeStatusFilter($event)" >
+        <mat-option value="">全部</mat-option>
+        <mat-option value="是">是</mat-option>
+        <mat-option value="否">否</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+
+
     <!-- 模糊搜尋 -->
     <mat-form-field style="width: 299px;" appearance="outline" class="col-12 col-md-4 mb-3">
       <mat-label>模糊搜尋</mat-label>
@@ -66,3 +78,5 @@
 
 <mat-paginator [length]="1000" [pageSize]="20" [pageSizeOptions]="[1, 10, 20, 100]" aria-label="Select page">
 </mat-paginator>
+
+<app-float-buttons></app-float-buttons>

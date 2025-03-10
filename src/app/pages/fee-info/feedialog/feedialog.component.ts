@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatRadioModule } from '@angular/material/radio';
+import { FloatButtonsComponent } from '../../../components/float-buttons/float-buttons.component';
 
 interface ParsedOtherItem {
   code: string;
@@ -39,7 +40,8 @@ interface ParsedData {
     MatSelectModule,
     MatButtonModule,
     MatCheckboxModule,
-    MatRadioModule
+    MatRadioModule,
+    FloatButtonsComponent,
   ],
   templateUrl: './feedialog.component.html',
   styleUrls: ['./feedialog.component.scss']
@@ -51,7 +53,7 @@ export class FeedialogComponent implements OnInit {
   statusOptions = ['是', '否'];
   masterSelected: boolean = false;
   searchTerm: string = '';
-  
+
   // 追蹤是否有修改
   hasModifications: boolean = false;
 
@@ -153,7 +155,7 @@ export class FeedialogComponent implements OnInit {
   // 當輸入欄位變更時，更新原始資料
   updateItem(addressIndex: number, otherIndex: number): void {
     const item = this.parsedOtherData[addressIndex].otherItems[otherIndex];
-    
+
     // 標記為已修改
     item.isModified = true;
     this.parsedOtherData[addressIndex].isModified = true;
@@ -413,6 +415,10 @@ export class FeedialogComponent implements OnInit {
         isModified: true // 標記為已修改
       };
 
+      // 清空搜尋條件，確保新卡片顯示
+      this.searchTerm = '';
+      this.filteredData = [...this.parsedOtherData];
+
       // 將新項目添加到列表的最前面
       addressData.otherItems.unshift(newItem);
       addressData.isModified = true;
@@ -444,17 +450,17 @@ export class FeedialogComponent implements OnInit {
       alert('沒有任何修改，無需儲存！');
       return;
     }
-    
+
     // 確認是否要儲存
     const confirmSubmit = confirm('確定要儲存所有修改嗎？\n\n修改不可刪除只可隱藏!!\n可按「取消」再次確認~');
-    
+
     if (!confirmSubmit) {
       return; // 用戶取消儲存
     }
-    
+
     // 只獲取已修改的項目
     const modifiedData = this.getModifiedData();
-    
+
     // 如果沒有修改項目，提示並返回
     if (modifiedData.length === 0) {
       alert('沒有任何修改，無需儲存！');
@@ -477,7 +483,7 @@ export class FeedialogComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           console.log('資料儲存成功:', response);
-          
+
           // 重設修改狀態
           this.parsedOtherData.forEach(data => {
             data.isModified = false;
@@ -486,13 +492,13 @@ export class FeedialogComponent implements OnInit {
             });
           });
           this.hasModifications = false;
-          
+
           // 成功訊息
           alert('資料儲存成功!');
         },
         error: (error: any) => {
           console.error('資料儲存失敗:', error);
-          
+
           // 顯示更詳細的錯誤訊息
           let errorMsg = '未知錯誤';
           if (error.error && error.error.message) {
@@ -500,7 +506,7 @@ export class FeedialogComponent implements OnInit {
           } else if (error.message) {
             errorMsg = error.message;
           }
-          
+
           alert('資料儲存失敗: ' + errorMsg);
         }
       });

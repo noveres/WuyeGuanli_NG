@@ -1,0 +1,47 @@
+.float-buttons-container {
+  position: fixed;
+  bottom: 80px;
+  right: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999; /* 確保按鈕顯示在最上層 */
+}
+
+.float-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.float-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.top-button {
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+}
+
+.top-button.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+@media (max-width: 768px) {
+  .float-buttons-container {
+    bottom: 20px;
+    right: 20px;
+  }
+}

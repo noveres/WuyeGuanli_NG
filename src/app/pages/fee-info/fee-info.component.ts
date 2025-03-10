@@ -10,10 +10,15 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { catchError, timeout } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { HttpServiceService } from '../../services/http-service.service';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FeedialogComponent } from './feedialog/feedialog.component';
 import { Router } from '@angular/router';
-import {MatIconModule} from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { FloatButtonsComponent } from '../../components/float-buttons/float-buttons.component';
+import { RouterOutlet } from '@angular/router';
+
+
 
 // 自定義分頁器文字
 export class CustomMatPaginatorIntl extends MatPaginatorIntl {
@@ -42,7 +47,10 @@ export interface PeriodicElement {
     FormsModule,
     MatButtonModule,
     MatDialogModule,
-    MatIconModule
+    MatIconModule,
+    MatSelectModule,
+    FloatButtonsComponent,
+    // RouterOutlet,
   ],
   templateUrl: './fee-info.component.html',
   styleUrl: './fee-info.component.scss'
@@ -50,6 +58,8 @@ export interface PeriodicElement {
 export class FeeInfoComponent implements OnInit, AfterViewInit {
   // 控制 checkbox 欄位的顯示與隱藏
   showCheckboxColumn = true;
+
+  feeStatusFilterValue: string = '';
 
   // 加入 select 列
   displayedColumns: string[] = ['address', 'year', 'season', 'fee', 'remark', 'modifying'];
@@ -100,7 +110,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
             const records = JSON.parse(item.other);
             return !records.some((record: string) => record.startsWith('nodisplay'));
           });
-          
+
           this.tableData = this.transformData(filteredResponse);
           this.dataSource.data = this.tableData;
         } else {
@@ -142,8 +152,8 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
             fee: fee,
             remark: remark,
             // 使用 modifyingDate 欄位
-            modifying: item.modifyingDate 
-              ? new Date(item.modifyingDate).toLocaleString() 
+            modifying: item.modifyingDate
+              ? new Date(item.modifyingDate).toLocaleString()
               : '未知時間'
           });
         });
@@ -155,12 +165,17 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     return result;
   }
 
+
+  applyFeeStatusFilter(event: any): void {
+    this.feeStatusFilterValue = event.value;
+    this.applyFilters();
+  }
   // 創建自定義過濾器
   createFilter(): (data: PeriodicElement, filter: string) => boolean {
     return (data: PeriodicElement, filter: string): boolean => {
       // 解析過濾條件
       const searchTerms = JSON.parse(filter);
-      
+
       // 檢查年季搜尋條件
       let yearSeasonMatch = true;
       if (searchTerms.yearSeason) {
@@ -168,30 +183,34 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
         if (searchTerms.yearSeason.length >= 3) {
           const yearPart = searchTerms.yearSeason.substring(0, searchTerms.yearSeason.length - 1);
           const seasonPart = searchTerms.yearSeason.substring(searchTerms.yearSeason.length - 1);
-          
+
           const yearMatch = data.year.toString().includes(yearPart);
           const seasonMatch = data.season.toString() === seasonPart;
-          
+
           yearSeasonMatch = yearMatch && seasonMatch;
         } else {
           // 如果輸入不足以構成年+季的格式，則只按照一般方式匹配
-          yearSeasonMatch = 
-            data.year.toString().includes(searchTerms.yearSeason) || 
+          yearSeasonMatch =
+            data.year.toString().includes(searchTerms.yearSeason) ||
             data.season.toString().includes(searchTerms.yearSeason);
         }
       }
-      
+
+      // 檢查繳費狀態搜尋條件
+      const feeStatusMatch = !searchTerms.feeStatus ||
+        data.fee === searchTerms.feeStatus;
+
       // 檢查模糊搜尋條件
-      const generalMatch = !searchTerms.general || 
-                          data.address.toLowerCase().includes(searchTerms.general) || 
-                          data.year.toString().includes(searchTerms.general) || 
-                          data.season.toString().includes(searchTerms.general) || 
-                          data.fee.toLowerCase().includes(searchTerms.general) || 
-                          data.remark.toLowerCase().includes(searchTerms.general) || 
-                          data.modifying.toLowerCase().includes(searchTerms.general);
-      
+      const generalMatch = !searchTerms.general ||
+        data.address.toLowerCase().includes(searchTerms.general) ||
+        data.year.toString().includes(searchTerms.general) ||
+        data.season.toString().includes(searchTerms.general) ||
+        data.fee.toLowerCase().includes(searchTerms.general) ||
+        data.remark.toLowerCase().includes(searchTerms.general) ||
+        data.modifying.toLowerCase().includes(searchTerms.general);
+
       // 所有條件必須匹配
-      return yearSeasonMatch && generalMatch;
+      return yearSeasonMatch && feeStatusMatch && generalMatch;
     };
   }
 
@@ -211,9 +230,10 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
   applyFilters(): void {
     const filterValue = JSON.stringify({
       yearSeason: this.yearSeasonFilterValue,
+      feeStatus: this.feeStatusFilterValue,
       general: this.generalFilterValue
     });
-    
+
     this.dataSource.filter = filterValue;
 
     if (this.dataSource.paginator) {
@@ -224,15 +244,21 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
   // 重置所有過濾器
   resetFilters(): void {
     this.yearSeasonFilterValue = '';
+    this.feeStatusFilterValue = '';
     this.generalFilterValue = '';
-    
+
     // 更新DOM中的輸入框值
     const yearSeasonInput = document.querySelector('#yearSeasonInput') as HTMLInputElement;
     const generalInput = document.querySelector('#generalInput') as HTMLInputElement;
-    
+
     if (yearSeasonInput) yearSeasonInput.value = '';
     if (generalInput) generalInput.value = '';
+
+    // 重要：觸發 mat-select 的變更檢測
+    const event = new Event('selectionChange');
+    this.applyFeeStatusFilter({ value: '' } as any);
     
+
     this.applyFilters();
   }
 
@@ -260,7 +286,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     // 根據目標元素的ID決定要應用哪種過濾
     const target = event.target as HTMLInputElement;
     const id = target.id;
-    
+
     if (id === 'yearSeasonInput') {
       this.applyYearSeasonFilter(event);
     } else if (id === 'generalInput') {
@@ -274,7 +300,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     }
   }
 
-  modifySelectedItems(): void { 
+  modifySelectedItems(): void {
     const selectedItems = this.getSelectedItems();
     console.log('選中的項目:', selectedItems);
     // 這裡添加修改邏輯
@@ -291,6 +317,6 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
   openDialog() {
     setTimeout(() => {
       this.router.navigate(['/savetab']);
-    }, 250); 
+    }, 250);
   }
 }

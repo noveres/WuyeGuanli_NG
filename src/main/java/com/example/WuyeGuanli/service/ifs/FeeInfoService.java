@@ -13,4 +13,6 @@ public interface FeeInfoService {
 	
 	public	List<FeeInfo> getAllFeeInfo();
 	
+	public	List<FeeInfo> getByAddress(String address);
+	
 }

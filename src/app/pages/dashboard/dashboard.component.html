@@ -1,0 +1,106 @@
+<div class="dashboard-container">
+  <div class="dashboard-grid">
+    <!-- 左側統計卡片 -->
+    <div class="left-column">
+      <div class="welcome-section">
+        <h2>歡迎回來，{{ userName }} <span class="wave-emoji">👋</span></h2>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <h3>總住戶數</h3>
+          <div class="stat-number">124</div>
+          <div class="stat-details">
+            <span>進入 12</span>
+            <span>遷出 3</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <h3>需額交管理費人數</h3>
+          <div class="stat-number">121</div>
+          <div class="stat-details">
+            <span>繳交 2</span>
+            <span>遲出 7</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <h3>維修案件</h3>
+          <div class="stat-number">7</div>
+          <div class="stat-details">
+            <span>受理 5</span>
+            <span>持修中 2</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <h3>待處理投訴</h3>
+          <div class="stat-number">9</div>
+          <div class="stat-details">
+            <span>受理 6</span>
+            <span>未受理 3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 右側統計和公告 -->
+    <div class="right-column">
+      <div class="monthly-stats">
+        <h3>本月資料統計</h3>
+        <div class="stat-rows">
+          <div class="stat-row">
+            <span class="label">社區人數</span>
+            <div class="progress-bar">
+              <div class="progress" style="width: 80%"></div>
+            </div>
+            <span class="value">106 人</span>
+          </div>
+          <div class="stat-row">
+            <span class="label">訪客人數</span>
+            <div class="progress-bar">
+              <div class="progress" style="width: 40%"></div>
+            </div>
+            <span class="value">23 人</span>
+          </div>
+          <div class="stat-row">
+            <span class="label">維修案件</span>
+            <div class="progress-bar">
+              <div class="progress" style="width: 70%"></div>
+            </div>
+            <span class="value">7 件</span>
+          </div>
+          <div class="stat-row">
+            <span class="label">本月繳費率</span>
+            <div class="progress-bar">
+              <div class="progress" style="width: 50%"></div>
+            </div>
+            <span class="value">50 %</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="announcements">
+        <h3>最新公告</h3>
+        <div class="announcement-list">
+          <div class="announcement-item" *ngFor="let announcement of announcements">
+            <div class="announcement-header">
+              <div class="title-section">
+                <span class="type-tag" [ngClass]="{
+                  'type-utility': announcement.sort === '水電相關',
+                  'type-resident': announcement.sort === '住戶相關',
+                  'type-maintenance': announcement.sort === '維修相關',
+                  'type-other': announcement.sort === '其他'
+                }">{{ announcement.sort }}</span>
+                <span class="title">{{ announcement.header }}</span>
+              </div>
+              <span class="date">{{ announcement.date | date:'yyyy年MM月dd日' }}</span>
+            </div>
+            <p class="description">{{ announcement.content }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,60 +1,80 @@
-<div class="AAA">
-<div class="AAA">
-<h2 mat-dialog-title class="my-class">新增財務表單</h2>
-<mat-dialog-content class="mat-typography" style="display:flex ; justify-content: left; width: 1000px !important">
-  <!-- 內容 -->
+<!-- 內容 -->
+<dialog #myDialog class="centered-dialog">
+  <samp>
+    <h2 style="width: 80%;">錯誤代碼: 400</h2>
+    <h3><label for="" style="color: red;">{{alert}}</label></h3>
+  </samp>
+  <button mat-button (click)="closeDialog()" style="position: absolute; bottom: 1%; right: 0; ">確認</button>
+
+
+</dialog>
 
 <mat-stepper [linear]="false" #stepper>
   <mat-step [stepControl]="firstFormGroup">
     <form [formGroup]="firstFormGroup">
 
       <ng-template matStepLabel>創建</ng-template>
+      <br>
 
+      <div style="display: flex;">
+        <div style="margin-right: 20px;">
+          <form [formGroup]="data" style="width: 200px;">
+            <input type="date" formControlName="date" required>
+          </form>
+        </div>
+
+
+        <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="1">
+          <mat-button-toggle (click)="switch_zzxc(1)" value="1"><mat-icon style="color: green;">
+              attach_money</mat-icon></mat-button-toggle>
+          <mat-button-toggle (click)="switch_zzxc(2)" value="2"><mat-icon style="color: red;">
+              attach_money</mat-icon></mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
 
       <div>
-        <button mat-icon-button (click)="add()"><mat-icon>add</mat-icon></button><br>
+
         <mat-form-field class="inputTable">
           <mat-label>項目</mat-label>
-          <form [formGroup]="data"> <input matInput placeholder="名稱" formControlName="project" type="text"></form>
+          <form [formGroup]="data"> <input matInput placeholder="名稱" formControlName="project" type="text" required>
+          </form>
         </mat-form-field>
 
-        <mat-form-field class="inputTable">
-          <mat-label>選擇日期</mat-label>
-          <form [formGroup]="data"><input matInput [matDatepicker]="picker" matInput placeholder="MM/DD/YYYY"
-              formControlName="date" class="inputTable"></form>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <br>
 
+        @if (switch == 1 ) {
         <mat-form-field class="inputTable">
-          <mat-label>資產</mat-label>
+          <mat-label>收入</mat-label>
           <form [formGroup]="data"><input matInput placeholder="金額" formControlName="income" type="number"
               class="inputTable"></form>
         </mat-form-field>
-
+        }@else if (switch == 2) {
         <mat-form-field class="inputTable">
-          <mat-label>負債</mat-label>
+          <mat-label>支出</mat-label>
           <form [formGroup]="data"><input matInput placeholder="金額" formControlName="expenditure" type="number"
               class="inputTable"></form>
         </mat-form-field>
-        <br>
+        }
 
         <button mat-button type="file">
           <form [formGroup]="data">
-            <input type="file" id="file" formControlName="receipt" class="inputTable">
+            <input type="file" id="file" formControlName="receipt" class="inputTable" required>
           </form>
         </button>
         <br>
-        <br>
 
 
-          <mat-label>備註</mat-label>
-          <form [formGroup]="data">
-            <textarea  class="nextLine" placeholder="文字說明" formControlName="remark" type="textarea" style="height: 150px;" rows="5"></textarea>
-          </form>
+        <mat-label>備註</mat-label>
+        <form [formGroup]="data">
+          <textarea class="nextLine" placeholder="文字說明" formControlName="remark" type="textarea" style="height: 150px;"
+            rows="5"></textarea>
+        </form>
 
 
+        <div style="width: 100%;display: flex;justify-content: right;">
+
+          <button mat-stroked-button
+            (click)="add()"><mat-icon>add_box</mat-icon><mat-label>新增資訊</mat-label></button><br><br>
+        </div>
       </div>
 
 
@@ -76,7 +96,20 @@
             <td><label for="">{{item.income}}</label></td>
             <td><label for="">{{item.expenditure}}</label></td>
             <td><label for="">{{item.date}}</label></td>
-            <td><label for="">{{item.remark}}</label></td>
+            <td>@if (tableData[i].show == 0 && tableData[i].remark != '') {<button mat-icon-button (click)="showEye(i)"><svg
+                  xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill"
+                  viewBox="0 0 16 16" style="text-align: center;">
+                  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                  <path
+                    d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                </svg></button>}@else if(tableData[i].show == 1)
+              {<button mat-icon-button (click)="showEye(i)"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                  height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                  <path
+                    d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+                  <path
+                    d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
+                </svg><br></button><label for="">{{item.remark}}</label>}</td>
             <td><label for="">{{item.receipt}}</label></td>
             <td><button mat-icon-button (click)="del(i)"><mat-icon>delete</mat-icon></button></td>
           </tr>
@@ -85,7 +118,7 @@
       </table>
 
       <div style="display: flex; justify-content: right;">
-        <button mat-button matStepperNext>確認</button>
+        <button mat-icon-button matStepperNext><mat-icon>navigate_next</mat-icon></button>
       </div>
 
     </form>
@@ -138,16 +171,18 @@
 
 
 
-      <mat-dialog-actions align="end">
-        <button mat-button matStepperPrevious >上一步</button>
-      <button mat-button (click)="send(1)" (click)="stepper.reset()" [mat-dialog-close]="true" cdkFocusInitial><mat-icon>done_outline</mat-icon></button>
-      </mat-dialog-actions>
+    <mat-dialog-actions align="end">
+      <div style="width: max-content;display: flex;">
+        <div>
+          <button mat-icon-button matStepperPrevious><mat-icon>navigate_before</mat-icon></button>
+        </div>
+        <div>
+          <button style="position: absolute; right: 5%; " mat-icon-button (click)="send(1)" (click)="stepper.reset()"
+            [mat-dialog-close]="true" cdkFocusInitial><mat-icon>backup</mat-icon></button>
+        </div>
+      </div>
+    </mat-dialog-actions>
 
 
   </mat-step>
 </mat-stepper>
-</mat-dialog-content>
-
-
-</div>
-</div>

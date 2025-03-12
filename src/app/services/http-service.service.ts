@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -24,4 +24,15 @@ export class HttpServiceService {
   DeleteApi<T>(url: string): Observable<T> {
     return this.http.delete<T>(url);
   }
+
+  private dialogColse = new BehaviorSubject<number>(0);
+
+  setNum(num:number)  {
+    this.dialogColse.next(num)
+  }
+
+  getNum(): Observable<number> {
+   return this.dialogColse.asObservable();
+  }
+
 }

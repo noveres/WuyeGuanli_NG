@@ -94,19 +94,21 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
+    this.passwordForm.reset({
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
+
     this.loading = true;
     const name = this.profileForm.get('name')?.value;
     
     if (this.currentUser && this.currentUser.id) {
       this.userService.updateUserName(this.currentUser.id, name).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('Update response:', response);
           this.snackBar.open('個人資料更新成功', '關閉', { duration: 3000 });
-          // 更新本地存儲的用戶名稱
-          const user = this.authService.getCurrentUser();
-          if (user) {
-            user.name = name;
-            this.authService.saveUserToLocalStorage(user);
-          }
+          this.passwordForm.reset();
           this.loading = false;
         },
         error: (error) => {
@@ -115,6 +117,7 @@ export class ProfileComponent implements OnInit {
           this.loading = false;
         }
       });
+      
     }
   }
 
@@ -136,7 +139,21 @@ export class ProfileComponent implements OnInit {
       ).subscribe({
         next: () => {
           this.snackBar.open('密碼更新成功', '關閉', { duration: 3000 });
+          
+          // 完全重置表單
           this.passwordForm.reset();
+          
+          // 手動清除所有錯誤
+          Object.keys(this.passwordForm.controls).forEach(key => {
+            const control = this.passwordForm.get(key);
+            control?.setErrors(null);
+          });
+          
+          // 重置密碼顯示狀態
+          this.hideCurrentPassword = true;
+          this.hideNewPassword = true;
+          this.hideConfirmPassword = true;
+          
           this.loading = false;
         },
         error: (error) => {
@@ -147,6 +164,10 @@ export class ProfileComponent implements OnInit {
       });
     }
   }
+
+
+
+
 
   // 處理文件選擇
   onFileSelected(event: Event) {

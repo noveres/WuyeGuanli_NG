@@ -1,3 +1,15 @@
+<!-- dialog.component.html -->
+
+<dialog #myDialog class="centered-dialog">
+
+
+    <h1 style="width: 80%;"><button mat-icon-button (click)="closeDialog()"><mat-icon>clear</mat-icon></button> 新增財務資訊</h1>
+    <div>
+    <app-add-info  class="center"></app-add-info>
+
+  </div>
+
+</dialog>
 
 
 <!-- tableAndSearch -->
@@ -5,7 +17,7 @@
 <app-search-box></app-search-box>
 <br><br>
 <div>
-  <mat-button-toggle-group name="fontStyle" aria-label="Font Style">
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style"  value="table">
     <mat-button-toggle value="1" (click)="switch_zzxc(1)"><mat-icon>table_rows</mat-icon></mat-button-toggle>
     <mat-button-toggle value="2" (click)="switch_zzxc(2)"><mat-icon>delete</mat-icon></mat-button-toggle>
     <mat-button-toggle value="3" (click)="openDialog()"><mat-icon>add</mat-icon></mat-button-toggle>
@@ -94,137 +106,3 @@
   </div>
 </div>
 }
-
-<!-- addInfo -->
-<!-- @if (table == 3) {
-<mat-stepper [linear]="false" #stepper>
-  <mat-step [stepControl]="firstFormGroup">
-    <form [formGroup]="firstFormGroup"> -->
-
-      <!-- 第1步 -->
-      <!-- <ng-template matStepLabel>創建</ng-template>
-
-
-      <div>
-        <button mat-icon-button (click)="add()"><mat-icon>add</mat-icon></button><br>
-        <mat-form-field class="inputTable">
-          <mat-label>項目</mat-label>
-          <form [formGroup]="data"> <input matInput placeholder="名稱" formControlName="project" type="text"></form>
-        </mat-form-field>
-
-
-        <mat-form-field class="inputTable">
-          <mat-label>資產</mat-label>
-          <form [formGroup]="data"><input matInput placeholder="金額" formControlName="income" type="number"
-              class="inputTable"></form>
-        </mat-form-field>
-
-        <mat-form-field class="inputTable">
-          <mat-label>負債</mat-label>
-          <form [formGroup]="data"><input matInput placeholder="金額" formControlName="expenditure" type="number"
-              class="inputTable"></form>
-        </mat-form-field>
-
-
-
-        <mat-form-field class="inputTable">
-
-          <mat-label>選擇日期</mat-label>
-          <form [formGroup]="data"><input matInput [matDatepicker]="picker" matInput placeholder="MM/DD/YYYY"
-              formControlName="date" class="inputTable"></form>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-
-        </mat-form-field>
-
-        <mat-form-field class="inputTable">
-          <mat-label>備註</mat-label>
-          <form [formGroup]="data">
-            <input matInput placeholder="文字說明" formControlName="remark" type="textarea" class="inputTable" rows="5">
-          </form>
-        </mat-form-field> -->
-
-
-        <!-- <mat-form-field> -->
-
-        <!-- c<input matInput formControlName="receipt" required type="" id="file" for="file"
-              class="inputTable"></form> -->
-        <!-- </mat-form-field> -->
-
-        <!-- <mat-label for="file">選擇檔案</mat-label> -->
-
-        <!-- <button mat-button type="file">
-          <form [formGroup]="data">
-            <input type="file" id="file" formControlName="receipt" class="inputTable">
-          </form>
-        </button>
-
-
-      </div>
-
-
-      <table style="width: 100%;">
-
-        <thead>
-          <tr>
-            @for (item of tableTitle; track $index;let i = $index) {
-            <th><mat-label>{{item}}</mat-label></th>
-            }
-            <th><button mat-icon-button (click)="del(-1)"><mat-icon>delete_sweep</mat-icon></button></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (item of tableData; track $index;let i = $index) {
-          <tr>
-            <td>{{i+1}}</td>
-            <td><label for="">{{item.project}}</label></td>
-            <td><label for="">{{item.income}}</label></td>
-            <td><label for="">{{item.expenditure}}</label></td>
-            <td><label for="">{{item.date}}</label></td>
-            <td><label for="">{{item.remark}}</label></td>
-            <td><label for="">{{item.receipt}}</label></td>
-            <td><button mat-icon-button (click)="del(i)"><mat-icon>delete</mat-icon></button></td>
-          </tr>
-          }
-        </tbody>
-      </table>
-
-      <div style="display: flex; justify-content: right;">
-        <button mat-button matStepperNext>確認</button>
-      </div>
-
-    </form>
-  </mat-step> -->
-
-  <!-- <mat-step [stepControl]="secondFormGroup" label="Fill out your address">
-    <form [formGroup]="secondFormGroup">
-      <mat-form-field>
-
-        <mat-label>Address</mat-label>
-        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-               required>
-      </mat-form-field>
-
-      <div>
-        <button mat-button matStepperPrevious>上一步</button>
-        <button mat-button matStepperNext>下一步</button>
-      </div>
-
-    </form>
-  </mat-step> -->
-
-  <!-- 第2步 -->
-  <!-- <mat-step>
-    <ng-template matStepLabel>確認</ng-template>
-
-    <p>準備送出</p>
-
-    <div>
-      <button mat-button matStepperPrevious>上一步</button>
-      <button mat-button (click)="send(1)" (click)="stepper.reset()">完成</button>
-
-    </div>
-
-  </mat-step>
-</mat-stepper>
-} -->

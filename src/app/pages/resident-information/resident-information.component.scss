@@ -21,31 +21,31 @@
 {
  position: absolute;
  left: 30%;
- top: 0%;
+ top: 10%;
 }
 .OwnerPhone
 {
   position: absolute;
   left: 10%;
-  top: 30%;
+  top: 40%;
 }
 .Residential_Zone
 {
   position: absolute;
   left: 10%;
-  top: 70%;
+  top: 80%;
 }
 .House_number
 {
   position: absolute;
   right: 10%;
-  top: 30%;
+  top: 40%;
 }
 .isLase
 {
   position: absolute;
   right: 10%;
-  top: 70%;
+  top: 80%;
 }
 .tableMain
 {
@@ -76,14 +76,17 @@
     transition: background-color 0.3s;
     padding: 0.5%;
   }
-  .addinfobutton:hover
-  {
-    .bi-building-fill-add
-    {
-      color: #ffffff;
-    }
-    background-color: rgba(0, 0, 0, 0.813);
-  }
+
+}
+.uphobutton
+{
+      transition: background-color 0.3s;
+      border-radius: 10px;
+}
+.dehobutton
+{
+  transition: background-color 0.3s;
+  border-radius: 10px;
 }
 .buttonSize
 {
@@ -91,21 +94,66 @@
   align-items: center;
  // justify-self: center;
   justify-self: center;
-  margin-left: -50px;
+  margin-left: -30px;
   position: relative;
   .uphobutton
   {
+    display: flex;
+    align-items: center;
+    // justify-self: center;
+    justify-self: center;
     position: absolute;
     right: 0%;
+    height: 50px;
+    width: 50px;
+    .bi-building-fill-exclamation
+    {
+      position: absolute;
+      right: 18%;
+      top: 18%;
+    }
   }
   .dehobutton
   {
+    display: flex;
+    align-items: center;
+    // justify-self: center;
+    justify-self: center;
     position: absolute;
     left: 0%;
-    margin-left: 30px;
-
+    height: 50px;
+    width: 50px;
+    .bi-building-fill-dash
+    {
+      position: absolute;
+      right: 18%;
+      top: 18%;
+    }
   }
 }
-
+  .uphobutton:hover
+  {
+    background-color: rgba(27, 27, 27, 0.877);
+    .bi-building-fill-exclamation
+    {
+      color: #ffffff;
+    }
+  }
+  .addinfobutton:hover
+  {
+    background-color: rgba(27, 27, 27, 0.877);
+    .bi-building-fill-add
+    {
+      color: #ffffff;
+    }
+  }
+  .dehobutton:hover
+  {
+    background-color : rgba(27, 27, 27, 0.877);
+    .bi-building-fill-dash
+    {
+      color: #ffffff;
+    }
+  }
 
 

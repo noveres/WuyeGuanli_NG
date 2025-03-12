@@ -5,5 +5,6 @@ export class Service
 {
     gethousenumber!:string;
     deleatedate!:any;
+    data = [];
 
 }

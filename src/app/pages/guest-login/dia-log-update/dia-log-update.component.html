@@ -1,0 +1,20 @@
+
+<h2 mat-dialog-title>訪客離開</h2>
+<!-- dialog content -->
+<mat-dialog-content>
+  <h3>確認資料</h3>
+  <h3> 姓名 : {{alldata.visitorName}}</h3>
+  <h3> 電話 : 09 - {{alldata.visitorPhone}}</h3>
+  <h3> 造訪原因 : {{alldata.visitorReason}}</h3>
+  <h3> 進入時間 : {{alldata.visitorTime}}</h3>
+  <h3> 造訪人 : {{alldata.visitors}}</h3>
+
+
+</mat-dialog-content>
+<!-- dialog button -->
+<mat-dialog-actions>
+<button (click)="on_loding_click(false)">Cancel</button>
+<button (click)="on_loding_click(true)">OK</button>
+</mat-dialog-actions>
+
+

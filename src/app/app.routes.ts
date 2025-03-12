@@ -66,5 +66,10 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/resident-information/resident-information.component').then(m => m.ResidentInformationComponent),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'guest-login',
+    loadComponent: () => import('./pages/guest-login/guest-login.component').then(m => m.GuestLoginComponent),
+    canActivate: [AuthGuard]
+  },
   { path: '**', redirectTo: 'login' }
 ];

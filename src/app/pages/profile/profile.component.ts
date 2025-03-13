@@ -38,6 +38,7 @@ export class ProfileComponent implements OnInit {
   currentUser: any;
   avatarUrl: string | null = null;
   selectedFile: File | null = null;
+  showDefaultAvatar = false;
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +59,12 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 先從 localStorage 設置頭像
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.avatarUrl = this.userService.getAvatarUrl(userId);
+    }
+
     this.loading = true;
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
@@ -65,12 +72,6 @@ export class ProfileComponent implements OnInit {
         this.profileForm.patchValue({
           name: user.name
         });
-        
-        // 設置頭像URL
-        if (user.id) {
-          this.avatarUrl = this.userService.getAvatarUrl(user.id);
-        }
-        
         this.loading = false;
       },
       error: (error) => {
@@ -165,9 +166,11 @@ export class ProfileComponent implements OnInit {
     }
   }
 
-
-
-
+  // 處理頭像加載錯誤
+  handleAvatarError(): void {
+    console.log('頭像加載失敗，顯示默認頭像');
+    this.showDefaultAvatar = true;
+  }
 
   // 處理文件選擇
   onFileSelected(event: Event) {

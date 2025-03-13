@@ -6,6 +6,29 @@
     <h3 class="House_number">門牌: {{House_number}}</h3>
     <h3 class="isLase">出租: {{isLase}}</h3>
   </div>
+  <div class="Lase">
+    <h1 class="OwnerName">租客姓名:({{LaseNameA}})</h1>
+    <h3 class="OwnerPhone">租客電話: 09-{{LasePhoneA}}</h3>
+    <h3 class="Residential_Zone">分區: {{Residential_Zone}}</h3>
+    <h3 class="House_number">門牌: {{House_number}}</h3>
+  </div>
+</div>
+
+<div style="display: flex;align-items: center;align-self: center;height: 150px;width: 100%;">
+  <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+  </svg>
+  <input type="text" name="" id=""placeholder="輸入姓名關鍵字" [(ngModel)]="sachName" (keyup)="serch()">
+
+    <select name="" id="" [(ngModel)]="sacResidential_Zone" (change)="serch()" value="">
+      <option value="">預設</option>
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+    </select>
+
+  <input type="text" name="" id=""placeholder="輸入門牌號最大值" [(ngModel)]="maxValue" (keyup)="serch()">
+  <input type="text" name="" id=""placeholder="輸入門牌號最小值" [(ngModel)]="minValue" (keyup)="serch()">
 </div>
 
 <div class="tableMain">
@@ -76,7 +99,7 @@
           </td>
           </ng-container>
         <tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
-        <tr class="mat-row" mat-row *matRowDef="let row; columns: displayedColumns;"(click)="getResidents(row.id)"></tr>
+        <tr class="mat-row" mat-row *matRowDef="let row; columns: displayedColumns;"(click)="getResidents(row)"></tr>
       </table>
   <mat-paginator [pageSizeOptions]="[5, 10, 20]"
                  showFirstLastButtons

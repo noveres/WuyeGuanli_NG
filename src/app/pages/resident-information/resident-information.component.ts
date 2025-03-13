@@ -1,5 +1,5 @@
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, model } from '@angular/core';
 import { RouterOutlet , Router} from '@angular/router';
 import {AfterViewInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
@@ -12,10 +12,11 @@ import { Service } from '../../services/service';
 import { DiaLogAddinFoComponent } from './dia-log-addin-fo/dia-log-addin-fo.component';
 import { DiaLogUpdateComponent } from './dia-log-update/dia-log-update.component';
 import { DiaLogDeleteComponent } from './dia-log-delete/dia-log-delete.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-resident-information',
-  imports: [RouterOutlet,MatTableModule, MatPaginatorModule,],
+  imports: [RouterOutlet,MatTableModule, MatPaginatorModule,FormsModule],
   templateUrl: './resident-information.component.html',
   styleUrl: './resident-information.component.scss'
 })
@@ -30,6 +31,15 @@ export class ResidentInformationComponent
     Residential_Zone:string ="A區"
     House_number:string = "85號"
     isLase:string = "85號"
+    LaseName:string[] = [];
+    LasePhone:string[]=  [];
+    LaseNameA!:string
+    LasePhoneA!:string
+    sachName!:string;
+    sacResidential_Zone!:string;
+    maxValue!:string;
+    minValue!:string
+
     getId!:number;
 
     Alldate =
@@ -65,61 +75,37 @@ export class ResidentInformationComponent
     }
     getAll():void
     {
+      this.rest_GetAll();
       this.http.getApi("http://localhost:8585/api/residents/getAll").subscribe
       (
         (res:any) =>{
-          console.log(res);
-          let getChar:string[] = [];
-          let getafter:string[] =[];
-          for(let i =0 ; i<res.resident_Informations.length ; i++)
-          {
-            //this.zzxc [i]  = res.resident_Informations[i].partitionhousenumber;
-            console.log(res.resident_Informations[i].partitionhousenumber);
-            this.zzxc[i] = res.resident_Informations[i].partitionhousenumber;
-            getChar[i] = this.zzxc[i].charAt(0);
-            getafter[i] = this.zzxc[i].substring(1);
-
-            this.Alldate[i].id = i+1;
-            this.Alldate[i].owerName = res.resident_Informations[i].owerName;
-            this.Alldate[i].owerPhone = res.resident_Informations[i].owerPhone;
-            if(res.resident_Informations[i].lease == false)
-            {
-              this.Alldate[i].isLase = "否";
-            }
-            else
-            {
-               this.Alldate[i].isLase = "有";
-            }
-            this.Alldate[i].Residential_Zone =getChar[i];
-            this.Alldate[i].House_number = getafter[i];
-            if(this.Alldate.length<res.resident_Informations.length)
-            {
-              this.Alldate.push({
-                id:0,
-                owerName:"",
-                owerPhone:"",
-                Residential_Zone:"",
-                House_number:"",
-                isLase:"",
-                toolbar:"",
-              });
-            }
-          }
-          this.dataSource = new MatTableDataSource(this.Alldate);
-          this.dataSource.paginator = this.paginator;
+          this.inputData(res);
+          this.inputselect();
         }
       )
-
     }
-    getResidents(value:number)
+    getResidents(value:any)
     {
-      value = value-1;
-      this.OwnerName = this.Alldate[value].owerName
-      this.OwnerPhone = this.Alldate[value].owerPhone
-      this.Residential_Zone = this.Alldate[value].Residential_Zone
-      this.House_number = this.Alldate[value].House_number
-      this.isLase = this.Alldate[value].isLase
-      this.getId = value;
+      console.log(value)
+      console.log(this.Alldate)
+      console.log(this.LaseName)
+        this.OwnerName = value.owerName
+        this.OwnerPhone = value.owerPhone
+        this.Residential_Zone = value.Residential_Zone
+        this.House_number = value.House_number
+        this.isLase = value.isLase
+        this.getId = value.id-1;
+        if(value.isLase == "有")
+        {
+           this.LaseNameA  = this.LaseName[this.getId];
+           this.LasePhoneA = this.LasePhone[this.getId];
+        }
+        else
+        {
+          this.LaseNameA = "無";
+          this.LasePhoneA ="無";
+        }
+
     }
     addInfo()
     {
@@ -128,6 +114,7 @@ export class ResidentInformationComponent
         (res:any)=>
           {
             this.getAll();
+
           }
       );
     }
@@ -154,7 +141,144 @@ export class ResidentInformationComponent
         (res:any)=>
         {
           this.getAll();
+
         });
     }
+    serch()
+    {
 
+      this.rest_GetAll();
+      if(!this.sachName)
+      {
+        this.getAll();
+      }
+      else
+      {
+           this.http.postAPI("http://localhost:8585/api/residents/SearchName",this.sachName).subscribe
+          (
+            (res:any)=>
+            {
+              this.inputData(res);
+              this.inputselect();
+            }
+          )
+      }
+      console.log(this.sacResidential_Zone)
+
+    }
+    inputData(res:any)
+    {
+      let getChar:string[] = [];
+      let getafter:string[] =[];
+      for(let i =0 ; i<res.resident_Informations.length ; i++)
+      {
+        //this.zzxc [i]  = res.resident_Informations[i].partitionhousenumber;
+        this.LaseName[i] =res.resident_Informations[i].residentname;
+        this.LasePhone[i] = res.resident_Informations[i].residentphonenumber;
+        this.zzxc[i] = res.resident_Informations[i].partitionhousenumber;
+        getChar[i] = this.zzxc[i].charAt(0);
+        getafter[i] = this.zzxc[i].substring(1);
+
+        this.Alldate[i].id = i+1;
+        this.Alldate[i].owerName = res.resident_Informations[i].owerName;
+        this.Alldate[i].owerPhone = res.resident_Informations[i].owerPhone;
+        if(res.resident_Informations[i].lease == false)
+        {
+          this.Alldate[i].isLase = "否";
+        }
+        else
+        {
+           this.Alldate[i].isLase = "有";
+        }
+        this.Alldate[i].Residential_Zone =getChar[i];
+        this.Alldate[i].House_number = getafter[i];
+        if(this.Alldate.length<res.resident_Informations.length)
+        {
+          this.Alldate.push({
+            id:0,
+            owerName:"",
+            owerPhone:"",
+            Residential_Zone:"",
+            House_number:"",
+            isLase:"",
+            toolbar:"",
+          });
+        }
+      }
+      this.dataSource = new MatTableDataSource(this.Alldate);
+      this.dataSource.paginator = this.paginator;
+    }
+    rest_GetAll()
+    {
+      this.Alldate =
+      [
+        {
+          id:0,
+          owerName:"",
+          owerPhone:"",
+          Residential_Zone:"",
+          House_number:"",
+          isLase:"",
+          toolbar:""
+        }
+      ];
+    }
+    inputselect()
+    {
+      if(this.sacResidential_Zone != ""&& this.sacResidential_Zone != null )
+      {
+        for (let i = this.Alldate.length - 1; i >= 0; i--) {
+          console.log(this.Alldate[i].Residential_Zone)
+          if (this.Alldate[i].Residential_Zone != this.sacResidential_Zone)
+          {
+            console.log(this.Alldate[i].Residential_Zone)
+            this.Alldate.splice(i,1);
+          }
+        }
+        console.log(this.Alldate)
+        this.dataSource = new MatTableDataSource(this.Alldate);
+        this.dataSource.paginator = this.paginator;
+      }
+      this.rangData();
+    }
+    rangData()
+    {
+      let minV:number
+      let MaxV:number
+      minV = Number(this.minValue);
+      MaxV = Number(this.maxValue);
+      if(minV<=0 ||minV == null ||this.minValue =="" || this.minValue == null)
+        {
+          minV =0;
+        }
+      if(MaxV==null || MaxV<0 || this.maxValue =="" || this.maxValue == null)
+      {
+        MaxV = 0;
+        for (let i = this.Alldate.length - 1; i >= 0; i--)
+          {
+
+            if(MaxV <Number(this.Alldate[i].House_number))
+            {
+              MaxV =Number(this.Alldate[i].House_number);
+            }
+          }
+      }
+      console.log( MaxV)
+      for (let i = this.Alldate.length - 1; i >= 0; i--)
+        {
+          console.log(Number(this.Alldate[i].House_number)<= MaxV && Number(this.Alldate[i].House_number)>= minV)
+          if (Number(this.Alldate[i].House_number)<= MaxV && Number(this.Alldate[i].House_number)>= minV)
+          {
+
+          }
+          else
+          {
+            this.Alldate.splice(i,1);
+          }
+        }
+          console.log(this.Alldate)
+          this.dataSource = new MatTableDataSource(this.Alldate);
+          this.dataSource.paginator = this.paginator;
+
+    }
   }

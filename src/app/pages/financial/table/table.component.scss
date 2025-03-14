@@ -1,7 +1,32 @@
-table {
+.demo-table {
   width: 100%;
-  padding: 25px;
-  box-shadow: 1px 1px 3px 2px rgba(0, 0, 0, 0.2);
+}
+
+.mat-column-demo-position {
+  width: 32px;
+  border-right: 1px solid currentColor;
+  padding-right: 24px;
+  text-align: center;
+}
+
+.mat-column-demo-name {
+  padding-left: 16px;
+  font-size: 20px;
+}
+
+.mat-column-demo-weight {
+  font-style: italic;
+}
+
+.mat-column-demo-symbol {
+  width: 32px;
+  text-align: center;
+  font-weight: bold;
+}
+
+th{
+  max-width: 300px;
+  min-width: 100px;
 }
 
 .shadow {

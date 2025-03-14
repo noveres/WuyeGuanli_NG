@@ -54,13 +54,24 @@ export class AddInfoComponent {
 
 
 
+  Num!: number
+
   tableTitle: string[] = ["編號", "項目", "資產", "負債", "日期", "備註", "文本資料"];
   tableData: any[] = []
-  switch: number = 1
+  switch!: number
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   data!: FormGroup
   alert!: string
+  save: any[] = [{
+    project: "",
+    income: "",
+    expenditure: "",
+    date: Date(),
+    remark: "",
+    receipt: "",
+  }
+  ]
 
 
 
@@ -86,13 +97,14 @@ export class AddInfoComponent {
       remark: ['', Validators.required],
       receipt: ['', Validators.required],
 
+
     })
 
 
     this.http.getNum().subscribe(num => {
-      if(num==1){
+      if (num == 1) {
         this.stepper.reset()
-        this.tableData=[]
+        this.tableData = []
       }
     })
 
@@ -102,11 +114,13 @@ export class AddInfoComponent {
   switch_zzxc(num: number) {
     this.switch = num
     if (num == 1) {
+      this.save[0].expenditure = 0
       this.data.patchValue({
         expenditure: Number()
       })
     }
     if (num == 2) {
+      this.save[0].income = 0
       this.data.patchValue({
         income: Number()
       })
@@ -114,7 +128,7 @@ export class AddInfoComponent {
   }
 
   add() {
-    this.data.get('project')?.value
+    //this.data.get('project')?.value
 
     if (this.data.get('project')?.value == null || this.data.get('project')?.value == "") {
 
@@ -145,7 +159,7 @@ export class AddInfoComponent {
 
 
     this.tableData.push({ ...this.data.value, show: 0 })
-    console.log(this.data.value)
+    // console.log(this.data.value)
 
 
 
@@ -161,34 +175,100 @@ export class AddInfoComponent {
     this.tableData.splice(num, 1)
   }
 
-  show() {
-    // if(this.tableData[num].show==1 ){
-    //   this.tableData[num].show=0
-    // }
-    // this.tableData[num].show=1
-    // console.log(this.date)
+  edit(num: number) {
+    this.Num=num
+
+    console.log(num)
+    //this.save[0]=this.tableData[num] //會及時修改
+    this.save[0].project = this.tableData[num].project
+    this.save[0].income = this.tableData[num].income
+    this.save[0].expenditure = this.tableData[num].expenditure
+    this.save[0].date = this.tableData[num].date
+    this.save[0].remark = this.tableData[num].remark
+    this.save[0].receipt = this.tableData[num].receipt
+
+    if (this.save[0].income == 0) {
+      this.switch = 2
+    } else if (this.save[0].expenditure == 0) {
+      this.switch = 1
+    }
+    this.editopenDialog()
   }
 
+  editSaveAndClose(num: number) {
+
+    if (num == 0) {
+      this.save[0] = []
+      this.editcloseDialog()
+    } else if (num == 1) {
+      if (this.save[0].project == null || this.save[0].project == "") {
+
+        this.alert = "未填寫項目名稱!!!"
+        this.openDialog()
+        return;
+      }
+
+      if (this.save[0].date == null || this.save[0].date == "") {
+
+        this.alert = "檢查是否選擇日期!!!"
+        this.openDialog()
+        return;
+      }
+      if (this.save[0].income <= 0 && this.save[0].expenditure <= 0) {
+
+        this.alert = "需填寫支出、收入其中一項!!!"
+        this.openDialog()
+        return;
+      }
+
+      if (this.save[0].receipt == null || this.save[0].receipt == "") {
+
+        this.alert = "請上傳收據文本!!!"
+        this.openDialog()
+        return;
+      }
+      this.tableData[this.Num].project = this.save[0].project
+      this.tableData[this.Num].income = this.save[0].income
+      this.tableData[this.Num].expenditure = this.save[0].expenditure
+      this.tableData[this.Num].date = this.save[0].date
+      this.tableData[this.Num].remark = this.save[0].remark
+      this.tableData[this.Num].receipt = this.save[0].receipt
+      this.save[0] = []
+      this.editcloseDialog()
+    }
+  }
+
+
+
+
+
+
   send(num: number) {
-    // this.table=num
-    if (this.tableData.length >= 1) {
-      for (let i = 0; i <= this.tableData.length; i++) {
+    if (this.tableData.length > 0) {
+      for (let i = 0; i < this.tableData.length; i++) {
         this.http.PostApi('http://localhost:8585/Financial/addInfo', this.tableData[i]).subscribe
-          ((res: any) => {
-
-            // this.showData=res.quizList
-            // this.dataSource = new MatTableDataSource(res.quizList);
-            // this.dataSource.paginator = this.paginator;
-            // console.log(res.quizList)
-
-
-
+          ((res: any) => { });
+        if (this.tableData.length) {
+          let searchValue = {
+            name: "",
+            sDate: "",
+            eDate: ""
           }
-          );
+
+          this.http.PostApi('http://localhost:8585/Financial/search', searchValue).subscribe
+            ((res: any) => {
+              console.log(res.financials)
+              this.http.setData(res.financials)
+            }
+            );
+
+        }
       }
     }
+
     this.tableData = []
     this.http.setNum(2)
+
   }
 
   showEye(num: number) {
@@ -209,6 +289,17 @@ export class AddInfoComponent {
   closeDialog() {
     this.dialog.nativeElement.close();
   }
+
+  @ViewChild('editDialog', { static: true }) editdialog!: ElementRef<HTMLDialogElement>;
+
+  editopenDialog() {
+    this.editdialog.nativeElement.showModal();
+  }
+
+  editcloseDialog() {
+    this.editdialog.nativeElement.close();
+  }
+
 
 
 

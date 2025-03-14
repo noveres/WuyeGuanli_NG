@@ -24,7 +24,7 @@ export class HttpServiceService {
   DeleteApi<T>(url: string): Observable<T> {
     return this.http.delete<T>(url);
   }
-
+//Dialog
   private dialogColse = new BehaviorSubject<number>(0);
 
   setNum(num:number)  {
@@ -34,5 +34,14 @@ export class HttpServiceService {
   getNum(): Observable<number> {
    return this.dialogColse.asObservable();
   }
+//search
+private Data = new BehaviorSubject<any>([]);
 
+  setData(array:[])  {
+    this.Data.next(array)
+  }
+
+  getData(): Observable<any> {
+   return this.Data.asObservable();
+  }
 }

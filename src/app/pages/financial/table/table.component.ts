@@ -28,7 +28,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 //Dialog
-import { MatDialogModule } from '@angular/material/dialog';
 import { AddInfoComponent } from '../add-info/add-info.component';
 
 import { ViewContainerRef } from '@angular/core';
@@ -68,7 +67,6 @@ import { ViewContainerRef } from '@angular/core';
     MatNativeDateModule,
     // Dialog
     MatButtonModule,
-    MatDialogModule,
 
     AddInfoComponent
 
@@ -81,26 +79,29 @@ import { ViewContainerRef } from '@angular/core';
 })
 
 
-export class TableComponent implements AfterViewInit {
+export class TableComponent {
   constructor(private http: HttpServiceService,) { }
 
+  delectNum: any = []
   table: number = 1
   showData: any = []
+  reqValue: any =
+    {
+      name: "",
+      sDate: "",
+      eDate: ""
+    }
 
 
 
-  displayedColumns: string[] = ['checkbox', 'id', 'project', 'income', 'expenditure', 'date', 'balance', 'remark', 'receipt'];
+  displayedColumns: string[] = ['id', 'project', 'income', 'expenditure', 'date', 'remark', 'receipt', 'delect'];
   dataSource = new MatTableDataSource();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  ngAfterViewInit() {
-
-    this.dataSource.paginator = this.paginator;
-  }
-
 
   ngOnInit(): void {
+
 
     this.http.getNum().subscribe(num => {
       if (num == 2) {
@@ -111,23 +112,15 @@ export class TableComponent implements AfterViewInit {
     this.dataSource = new MatTableDataSource(this.showData);
 
     // 取得資料
-    let reqValue: any =
-    {
-      name: "",
-      sDate: "",
-      eDate: ""
-    }
 
-    this.http.PostApi('/Financial/search', reqValue).subscribe
-      ((res: any) => {
+    this.http.getData().subscribe(res => {
+      this.showData.push(res)
+      this.dataSource = new MatTableDataSource(res)
+      console.log(this.showData)
+      this.dataSource.paginator! = this.paginator;
 
-        this.showData=res.quizList
-        this.dataSource = new MatTableDataSource(res.quizList);
-        this.dataSource.paginator = this.paginator;
-        console.log(res.quizList)
+    })
 
-      }
-      );
   }
 
   switch_zzxc(value: number) {
@@ -145,6 +138,21 @@ export class TableComponent implements AfterViewInit {
   closeDialog() {
     this.dialog.nativeElement.close();
     this.http.setNum(1)
+  }
+
+  delect(num: number) {
+    this.delectNum = new Set()
+    this.delectNum.add(num)
+    console.log(this.delectNum)
+  }
+
+  showEye(num: number) {
+    if (this.showData[num].show == 0) {
+      this.showData[num].show = 1
+    }
+    else {
+      this.showData[num].show = 0
+    }
   }
 }
 

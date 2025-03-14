@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, switchMap } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthService } from './auth.service';
 import { AvatarService } from './avatar.service';
@@ -34,7 +34,13 @@ export class UserService {
    * @param name 新的用戶名稱
    */
   updateUserName(userId: string | number, name: string): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${userId}`, { name });
+    // 先獲取當前用戶信息，然後只更新名稱
+    return this.http.get(`${this.apiUrl}/${userId}`).pipe(
+      switchMap(user => {
+        const updateData = { ...user, name: name };
+        return this.http.put(`${this.apiUrl}/${userId}`, updateData);
+      })
+    );
   }
 
   /**

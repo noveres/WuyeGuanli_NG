@@ -24,7 +24,7 @@ export class DiaLogAddinFoComponent
       "visitorName": "",
       "visitorPhone": "",
       "visitorReason": "",
-      "visitors": ""
+      "visitors": "",
       }
     ];
     hoous1!:string;

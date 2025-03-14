@@ -8,13 +8,30 @@
   height: 100%;
   border-radius: 10px;
   border: 2px solid black;
-  left: 25%;
+  left: 0%;
   position: absolute;
+  z-index: 0;
 }
+.Lase
+{
+  display: flex;
+  align-items: center;
+ // justify-self: center;
+  justify-self: center;
+  width: 50%;
+  height: 100%;
+  border-radius: 10px;
+  border: 2px solid black;
+  left: 50%;
+  position: absolute;
+  z-index: 1;
+}
+
 .main
 {
   height: 300px;
   width: 100%;
+  overflow: hidden;
   position: relative;
 }
 .OwnerName
@@ -53,6 +70,8 @@
   height: 100%;
   width: 100%;
   position: relative;
+  background-color: #ffffff;
+
   .mat-elevation-z8
   {
     position: absolute;
@@ -155,5 +174,4 @@
       color: #ffffff;
     }
   }
-
 

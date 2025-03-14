@@ -38,6 +38,7 @@ export class ProfileComponent implements OnInit {
   currentUser: any;
   avatarUrl: string | null = null;
   selectedFile: File | null = null;
+  showDefaultAvatar = false;
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +59,12 @@ export class ProfileComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // 先從 localStorage 設置頭像
+    const userId = localStorage.getItem('userId');
+    if (userId) {
+      this.avatarUrl = this.userService.getAvatarUrl(userId);
+    }
+
     this.loading = true;
     this.userService.getCurrentUser().subscribe({
       next: (user) => {
@@ -65,12 +72,6 @@ export class ProfileComponent implements OnInit {
         this.profileForm.patchValue({
           name: user.name
         });
-        
-        // 設置頭像URL
-        if (user.id) {
-          this.avatarUrl = this.userService.getAvatarUrl(user.id);
-        }
-        
         this.loading = false;
       },
       error: (error) => {
@@ -94,19 +95,21 @@ export class ProfileComponent implements OnInit {
       return;
     }
 
+    this.passwordForm.reset({
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
+
     this.loading = true;
     const name = this.profileForm.get('name')?.value;
     
     if (this.currentUser && this.currentUser.id) {
       this.userService.updateUserName(this.currentUser.id, name).subscribe({
-        next: () => {
+        next: (response) => {
+          console.log('Update response:', response);
           this.snackBar.open('個人資料更新成功', '關閉', { duration: 3000 });
-          // 更新本地存儲的用戶名稱
-          const user = this.authService.getCurrentUser();
-          if (user) {
-            user.name = name;
-            this.authService.saveUserToLocalStorage(user);
-          }
+          this.passwordForm.reset();
           this.loading = false;
         },
         error: (error) => {
@@ -115,6 +118,7 @@ export class ProfileComponent implements OnInit {
           this.loading = false;
         }
       });
+      
     }
   }
 
@@ -136,7 +140,21 @@ export class ProfileComponent implements OnInit {
       ).subscribe({
         next: () => {
           this.snackBar.open('密碼更新成功', '關閉', { duration: 3000 });
+          
+          // 完全重置表單
           this.passwordForm.reset();
+          
+          // 手動清除所有錯誤
+          Object.keys(this.passwordForm.controls).forEach(key => {
+            const control = this.passwordForm.get(key);
+            control?.setErrors(null);
+          });
+          
+          // 重置密碼顯示狀態
+          this.hideCurrentPassword = true;
+          this.hideNewPassword = true;
+          this.hideConfirmPassword = true;
+          
           this.loading = false;
         },
         error: (error) => {
@@ -146,6 +164,12 @@ export class ProfileComponent implements OnInit {
         }
       });
     }
+  }
+
+  // 處理頭像加載錯誤
+  handleAvatarError(): void {
+    console.log('頭像加載失敗，顯示默認頭像');
+    this.showDefaultAvatar = true;
   }
 
   // 處理文件選擇

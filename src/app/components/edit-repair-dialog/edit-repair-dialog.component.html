@@ -66,7 +66,7 @@
             <input type="file" accept="image/*" (change)="onFileSelected($event, 'photo1')">
           </div>
           <div *ngIf="photo1Preview" class="photo-preview">
-            <img [src]="photo1Preview.startsWith('http') ? photo1Preview : 'http://localhost:8585' + photo1Preview" alt="照片預覽">
+            <img [src]="photo1Preview" alt="照片預覽">
             <button type="button" mat-mini-fab color="warn" class="remove-photo-btn" (click)="removePhoto('photo1')">
               <mat-icon>delete</mat-icon>
             </button>
@@ -81,7 +81,7 @@
             <input type="file" accept="image/*" (change)="onFileSelected($event, 'photo2')">
           </div>
           <div *ngIf="photo2Preview" class="photo-preview">
-            <img [src]="photo2Preview.startsWith('http') ? photo2Preview : 'http://localhost:8585' + photo2Preview" alt="照片預覽">
+            <img [src]="photo2Preview" alt="照片預覽">
             <button type="button" mat-mini-fab color="warn" class="remove-photo-btn" (click)="removePhoto('photo2')">
               <mat-icon>delete</mat-icon>
             </button>

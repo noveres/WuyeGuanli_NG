@@ -136,6 +136,12 @@ export class TableComponent {
     this.showData.splice(num, 1)
   }
 
+  edit(index: number) {
+    // 在這裡實現編輯功能
+    console.log('編輯項目索引:', index);
+    // 您可以根據需要添加更多邏輯，例如打開編輯對話框等
+  }
+
   switch_zzxc(value: number) {
     this.table = value
     console.log(this.table)
@@ -168,4 +174,3 @@ export class TableComponent {
     }
   }
 }
-

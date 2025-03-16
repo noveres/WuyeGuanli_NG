@@ -3,14 +3,19 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { RepairRequest } from '../models/repair-request.model';
 import { environment } from '../../environments/environment';
+import { FileUploadService } from '../services/file-upload.service';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RepairService {
   private apiUrl = `${environment.apiUrl}/repairs`;
+  private fileUploadService: FileUploadService;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, fileUploadService: FileUploadService) { 
+    this.fileUploadService = fileUploadService;
+  }
 
   // 獲取所有維修申請
   getAllRepairRequests(): Observable<RepairRequest[]> {
@@ -37,10 +42,17 @@ export class RepairService {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
-  // 上傳維修照片
+  // 上傳維修照片 (使用公告的API)
   uploadPhoto(file: File): Observable<{ url: string }> {
-    const formData = new FormData();
-    formData.append('file', file);
-    return this.http.post<{ url: string }>(`${this.apiUrl}/upload`, formData);
+    return this.fileUploadService.uploadImage(file).pipe(
+      map((event: any) => {
+        if (event.body && event.body.fileName) {
+          const fileName = event.body.fileName;
+          const imageUrl = this.fileUploadService.getImageUrl(fileName);
+          return { url: imageUrl.startsWith('http') ? imageUrl : `http://localhost:8585${imageUrl}` };
+        }
+        return { url: '' };
+      })
+    );
   }
 }

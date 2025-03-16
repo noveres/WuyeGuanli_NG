@@ -43,16 +43,7 @@ export class RepairService {
   }
 
   // 上傳維修照片 (使用公告的API)
-  uploadPhoto(file: File): Observable<{ url: string }> {
-    return this.fileUploadService.uploadImage(file).pipe(
-      map((event: any) => {
-        if (event.body && event.body.fileName) {
-          const fileName = event.body.fileName;
-          const imageUrl = this.fileUploadService.getImageUrl(fileName);
-          return { url: imageUrl.startsWith('http') ? imageUrl : `http://localhost:8585${imageUrl}` };
-        }
-        return { url: '' };
-      })
-    );
+  uploadPhoto(file: File): Observable<any> {
+    return this.fileUploadService.uploadImage(file);
   }
 }

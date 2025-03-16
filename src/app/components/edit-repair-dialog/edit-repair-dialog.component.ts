@@ -14,6 +14,7 @@ import { finalize } from 'rxjs/operators';
 
 import { RepairRequest, RepairSort, RepairStatus } from '../../models/repair-request.model';
 import { RepairService } from '../../services/repair.service';
+import { FileUploadService } from '../../services/file-upload.service';
 
 @Component({
   selector: 'app-edit-repair-dialog',
@@ -125,38 +126,49 @@ export class EditRepairDialogComponent {
     this.isUploading = true;
     this.uploadProgress = 0;
 
-    // 模擬上傳進度
-    const interval = setInterval(() => {
-      this.uploadProgress += 10;
-      if (this.uploadProgress >= 100) {
-        clearInterval(interval);
-      }
-    }, 200);
-
-    this.repairService.uploadPhoto(file).subscribe({
-      next: (response: { url: string }) => {
-        this.isUploading = false;
-        this.uploadProgress = 100;
-        
-        // 更新表單值和預覽，使用後端返回的URL
-        this.repairForm.patchValue({ [photoField]: response.url });
-        
-        // 使用後端返回的URL來預覽圖片
-        if (photoField === 'photo1') {
-          this.photo1Preview = response.url;
-        } else {
-          this.photo2Preview = response.url;
+    this.repairService.uploadPhoto(file)
+      .pipe(
+        finalize(() => {
+          setTimeout(() => {
+            this.isUploading = false;
+          }, 500);
+        })
+      )
+      .subscribe({
+        next: (event: any) => {
+          if (event.type === HttpEventType.UploadProgress && event.total) {
+            // 更新上傳進度
+            this.uploadProgress = Math.round(100 * event.loaded / event.total);
+          } else if (event instanceof HttpResponse) {
+            // 上傳完成
+            this.uploadProgress = 100;
+            
+            if (event.body && event.body.fileName) {
+              // 從 FileUploadService 獲取圖片URL
+              const fileName = event.body.fileName;
+              const imageUrl = this.repairService['fileUploadService'].getImageUrl(fileName);
+              const fullImageUrl = imageUrl.startsWith('http') ? imageUrl : `http://localhost:8585${imageUrl}`;
+              
+              // 更新表單值和預覽
+              this.repairForm.patchValue({ [photoField]: fullImageUrl });
+              
+              if (photoField === 'photo1') {
+                this.photo1Preview = fullImageUrl;
+              } else {
+                this.photo2Preview = fullImageUrl;
+              }
+              
+              this.showMessage('圖片上傳成功');
+            }
+          }
+        },
+        error: (error: any) => {
+          this.isUploading = false;
+          this.uploadProgress = 0;
+          console.error('圖片上傳失敗', error);
+          this.showMessage('圖片上傳失敗');
         }
-        
-        this.showMessage('圖片上傳成功');
-      },
-      error: (error: any) => {
-        this.isUploading = false;
-        this.uploadProgress = 0;
-        console.error('圖片上傳失敗', error);
-        this.showMessage('圖片上傳失敗');
-      }
-    });
+      });
   }
 
   removePhoto(photoField: 'photo1' | 'photo2'): void {

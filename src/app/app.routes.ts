@@ -5,6 +5,7 @@ import { AnnouncementBoardComponent } from './components/announcement-board/anno
 import { RepairRequestFormComponent } from './components/repair-request-form/repair-request-form.component';
 import { RepairRequestListComponent } from './components/repair-request-list/repair-request-list.component';
 import { TableComponent } from './pages/table/table.component';
+import { CarfeeextendComponent } from './pages/carfee/carfeeextend/carfeeextend.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -34,6 +35,19 @@ export const routes: Routes = [
   {
     path: 'savetab',
     loadComponent: () => import('./pages/fee-info//savetab/savetab.component').then(m => m.SavetabComponent),
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'carfee',
+    loadComponent: () => import('./pages/carfee/carfee.component').then(m => m.CarfeeComponent),
+    canActivate: [AuthGuard],
+    children: [
+      { path: 'carfeeextend', component: CarfeeextendComponent },
+    ]
+  },
+  {
+    path: 'carfeeextend',
+    loadComponent: () => import('./pages//carfee/carfeeextend/carfeeextend.component').then(m => m.CarfeeextendComponent),
     canActivate: [AuthGuard]
   },
   {

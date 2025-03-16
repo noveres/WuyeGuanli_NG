@@ -1,0 +1,97 @@
+<div class="container">
+  <!-- 搜尋區塊 -->
+  <div class="search-container mat-elevation-z2">
+    <div class="search-fields">
+      <mat-form-field appearance="outline">
+        <mat-label>門牌搜尋</mat-label>
+        <input matInput (keyup)="applyFilter($event, 'addressRemark')" placeholder="輸入門牌">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>付款帳號搜尋</mat-label>
+        <input matInput (keyup)="applyFilter($event, 'sendMoneyAccount')" placeholder="輸入付款帳號">
+        <mat-icon matSuffix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <!-- 金額統計區塊 -->
+    <div class="summary-container">
+      <div class="total-amount">
+        <span class="amount-label">已選項目金額總計:</span>
+        <span class="amount-value">{{ calculateSelectedTotal() | currency:'TWD':'symbol-narrow':'1.0-0' }}</span>
+      </div>
+      <div class="total-items">
+        <span>已選擇 {{ getSelectedItemsCount() }} 項</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 表格 -->
+  <div class="mat-elevation-z8 table-container">
+    <table mat-table [dataSource]="dataSource" matSort>
+      <!-- 勾選欄位 -->
+      <ng-container matColumnDef="select">
+        <th mat-header-cell *matHeaderCellDef>
+          <mat-checkbox (change)="$event ? toggleAllRows() : null" [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()">
+          </mat-checkbox>
+        </th>
+        <td mat-cell *matCellDef="let row">
+          <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+            [checked]="selection.isSelected(row)">
+          </mat-checkbox>
+        </td>
+      </ng-container>
+
+      <!-- 地址/車位備註 -->
+      <ng-container matColumnDef="addressRemark">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>門牌</th>
+        <td mat-cell *matCellDef="let element">{{ element.addressRemark }}</td>
+      </ng-container>
+
+      <!-- 收款帳號 -->
+      <ng-container matColumnDef="receiveMoneyAccount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>收款帳號</th>
+        <td mat-cell *matCellDef="let element">{{ element.receiveMoneyAccount }}</td>
+      </ng-container>
+
+      <!-- 收款金額 -->
+      <ng-container matColumnDef="receive">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>收款金額</th>
+        <td mat-cell *matCellDef="let element">{{ element.receive | currency:'TWD':'symbol-narrow':'1.0-0' }}</td>
+      </ng-container>
+
+      <!-- 付款帳號 -->
+      <ng-container matColumnDef="sendMoneyAccount">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>付款帳號</th>
+        <td mat-cell *matCellDef="let element">{{ element.sendMoneyAccount }}</td>
+      </ng-container>
+
+      <!-- 費用類型 -->
+      <ng-container matColumnDef="feeforRemark">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>費用類型</th>
+        <td mat-cell *matCellDef="let element">{{ element.feeforRemark }}</td>
+      </ng-container>
+
+      <!-- 收款時間 -->
+      <ng-container matColumnDef="timeOfReceivingMoney">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>收款時間</th>
+        <td mat-cell *matCellDef="let element">{{ element.timeOfReceivingMoney | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+      </ng-container>
+
+      <!-- 備註 -->
+      <ng-container matColumnDef="remark">
+        <th mat-header-cell *matHeaderCellDef>備註</th>
+        <td mat-cell *matCellDef="let element">{{ element.remark }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)"></tr>
+    </table>
+
+    <mat-paginator [pageSizeOptions]="[ 10, 25, 100]" aria-label="選擇頁面"></mat-paginator>
+  </div>
+</div>
+
+<h4><a href="http://localhost:8585/money/records  ">全部匯款紀錄 正式報告時會隱藏</a></h4>

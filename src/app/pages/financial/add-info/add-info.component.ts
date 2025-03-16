@@ -112,7 +112,7 @@ export class AddInfoComponent {
   }
 
   sNotZore(){
-    if(this.data.get('project')?.value)
+    if(this.data.get('project')?.value){}
   }
 
   switch_zzxc(num: number) {

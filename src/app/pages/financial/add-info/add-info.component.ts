@@ -58,7 +58,7 @@ export class AddInfoComponent {
 
   tableTitle: string[] = ["編號", "項目", "資產", "負債", "日期", "備註", "文本資料"];
   tableData: any[] = []
-  switch!: number
+  switch: number = 1
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   data!: FormGroup
@@ -91,8 +91,8 @@ export class AddInfoComponent {
 
     this.data = this.formBuilder.group({
       project: ['', Validators.required],
-      income: [0, Validators.required],
-      expenditure: [0, Validators.required],
+      income: [Number, Validators.required],
+      expenditure: [Number, Validators.required],
       date: ['', Validators.required],
       remark: ['', Validators.required],
       receipt: ['', Validators.required],
@@ -109,6 +109,10 @@ export class AddInfoComponent {
     })
 
 
+  }
+
+  sNotZore(){
+    if(this.data.get('project')?.value)
   }
 
   switch_zzxc(num: number) {
@@ -150,6 +154,12 @@ export class AddInfoComponent {
       return;
     }
 
+    if (this.data.get('expenditure')?.value == null) {
+      this.data.patchValue({
+        expenditure: 0
+      })
+    }
+
     if (this.data.get('receipt')?.value == null || this.data.get('receipt')?.value == "") {
 
       this.alert = "請上傳收據文本!!!"
@@ -176,7 +186,7 @@ export class AddInfoComponent {
   }
 
   edit(num: number) {
-    this.Num=num
+    this.Num = num
 
     console.log(num)
     //this.save[0]=this.tableData[num] //會及時修改
@@ -244,6 +254,7 @@ export class AddInfoComponent {
 
 
   send(num: number) {
+
     if (this.tableData.length > 0) {
       for (let i = 0; i < this.tableData.length; i++) {
         this.http.PostApi('http://localhost:8585/Financial/addInfo', this.tableData[i]).subscribe

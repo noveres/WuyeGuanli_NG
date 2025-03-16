@@ -105,7 +105,7 @@ export class TableComponent {
 
     this.http.getNum().subscribe(num => {
       if (num == 2) {
-        this.dialog.nativeElement.close();
+        this.dialog?.nativeElement.close();
       }
     });
 
@@ -118,6 +118,9 @@ export class TableComponent {
       this.dataSource = new MatTableDataSource(res)
       console.log(this.showData)
       this.dataSource.paginator! = this.paginator;
+      for(let i=0;i<= res.length;i++){
+        this.showData.push({...this.showData,show:0})
+      }
 
     })
 
@@ -129,14 +132,14 @@ export class TableComponent {
 
   }
 
-  @ViewChild('myDialog', { static: true }) dialog!: ElementRef<HTMLDialogElement>;
+  @ViewChild('myDialog', { static: true }) dialog?: ElementRef<HTMLDialogElement>;
 
   openDialog() {
-    this.dialog.nativeElement.showModal();
+    this.dialog?.nativeElement.showModal();
   }
 
   closeDialog() {
-    this.dialog.nativeElement.close();
+    this.dialog?.nativeElement.close();
     this.http.setNum(1)
   }
 

@@ -126,6 +126,16 @@ export class TableComponent {
 
   }
 
+  del(num: number) {
+
+    if (num == -1) {
+      for (let i = 0; i <= this.showData.length; i++) {
+        this.showData = []
+      }
+    }
+    this.showData.splice(num, 1)
+  }
+
   switch_zzxc(value: number) {
     this.table = value
     console.log(this.table)

@@ -44,7 +44,7 @@ import { FloatButtonsComponent } from '../../components/float-buttons/float-butt
 })
 export class CarfeeComponent implements OnInit, AfterViewInit {
   // 定義表格列
-  displayedColumns: string[] = ['parking', 'parkingFee', 'owner', 'paid', 'receive', 'sendMoneyAccount', 'actions'];
+  displayedColumns: string[] = ['parking', 'owner', 'parkingFee', 'paid', 'receive', 'sendMoneyAccount', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
 
   feeForm!: FormGroup;

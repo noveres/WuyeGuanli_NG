@@ -50,6 +50,12 @@
         <td mat-cell *matCellDef="let element">{{ element.addressRemark }}</td>
       </ng-container>
 
+      <!-- 費用類型 -->
+      <ng-container matColumnDef="feeforRemark">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>費用類型</th>
+        <td mat-cell *matCellDef="let element">{{ element.feeforRemark }}</td>
+      </ng-container>
+
       <!-- 收款帳號 -->
       <ng-container matColumnDef="receiveMoneyAccount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>收款帳號</th>
@@ -66,12 +72,6 @@
       <ng-container matColumnDef="sendMoneyAccount">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>付款帳號</th>
         <td mat-cell *matCellDef="let element">{{ element.sendMoneyAccount }}</td>
-      </ng-container>
-
-      <!-- 費用類型 -->
-      <ng-container matColumnDef="feeforRemark">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>費用類型</th>
-        <td mat-cell *matCellDef="let element">{{ element.feeforRemark }}</td>
       </ng-container>
 
       <!-- 收款時間 -->

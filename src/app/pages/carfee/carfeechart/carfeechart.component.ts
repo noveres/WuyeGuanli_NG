@@ -74,7 +74,7 @@ export class CarfeechartComponent implements OnInit, AfterViewInit {
         labels: ['已繳清', '未繳清'],
         datasets: [{
           data: [paidCount, unpaidCount],
-          backgroundColor: ['#4CAF50', '#F44336']
+          backgroundColor: ['#43a882', '#ff7f7f']
         }]
       },
       options: {
@@ -115,8 +115,8 @@ export class CarfeechartComponent implements OnInit, AfterViewInit {
       data: {
         labels: ['停車費'],
         datasets: [
-          { data: [totalFee], label: '應繳總額', backgroundColor: '#2196F3' },
-          { data: [paidFee], label: `已繳總額 (${paidRatio}%)`, backgroundColor: '#4CAF50' }
+          { data: [totalFee], label: '應繳總額', backgroundColor: '#3eccf7' },
+          { data: [paidFee], label: `已繳總額 (${paidRatio}%)`, backgroundColor: '#e09ffc' }
         ]
       },
       options: {
@@ -174,7 +174,7 @@ export class CarfeechartComponent implements OnInit, AfterViewInit {
           label: '應繳金額',
           data: top10Data.map(item => item.parkingFee),
           backgroundColor: top10Data.map(item =>
-            item.paid ? 'rgba(76, 175, 80, 0.7)' : 'rgba(244, 67, 54, 0.7)'
+            item.paid ? 'rgba(124, 236, 127, 0.7)' : 'rgba(255, 172, 121, 0.7)'
           ),
           borderColor: top10Data.map(item =>
             item.paid ? 'rgb(76, 175, 80)' : 'rgb(244, 67, 54)'

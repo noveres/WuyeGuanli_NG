@@ -1,5 +1,12 @@
 <div class="container">
-  <h2>2026年 停車費用管理</h2>
+  <h2>
+    2026年 停車費用管理
+    <mat-icon class="help-icon"
+      matTooltip="目前這是'年'繳費表，所以資料撈當下時間-365天內的資料，所以如果需要以季或其他時段請聯絡後台管理員，已'季'為單位，資料會撈-90天的資料請注意，若超過此時間就只能手動對帳"
+      [matTooltipClass]="'custom-tooltip'" matTooltipPosition="above" style=" white-space: pre-line;">
+      help
+    </mat-icon>
+  </h2>
 
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
@@ -125,8 +132,5 @@
 <div class="chartbox">
   <app-carfeechart></app-carfeechart>
 </div>
-
-
-
 
 <app-float-buttons></app-float-buttons>

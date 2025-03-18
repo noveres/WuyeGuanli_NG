@@ -223,9 +223,14 @@ textarea:focus {
     border: 0;
 }
 
-/* 隱藏分頁器中的 "Items per page" 文字 */
+// 修改分頁器中的文字為中文
 .mat-mdc-paginator-page-size-label {
-  display: none !important;
+  font-size: 0;  // 隱藏原始文字
+  &::after {
+    content: "每頁顯示：";
+    font-size: 14px;  // 恢復字體大小
+    color: #333333;
+  }
 }
 
 html, body { 

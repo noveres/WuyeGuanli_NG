@@ -13,10 +13,12 @@ import { DiaLogAddinFoComponent } from './dia-log-addin-fo/dia-log-addin-fo.comp
 import { DiaLogUpdateComponent } from './dia-log-update/dia-log-update.component';
 import { DiaLogDeleteComponent } from './dia-log-delete/dia-log-delete.component';
 import { FormsModule } from '@angular/forms';
+import {MatIcon, MatIconModule} from '@angular/material/icon'
+import { MatPaginatorIntl } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-resident-information',
-  imports: [RouterOutlet,MatTableModule, MatPaginatorModule,FormsModule],
+  imports: [RouterOutlet,MatTableModule, MatPaginatorModule,FormsModule,MatIcon,MatPaginatorModule],
   templateUrl: './resident-information.component.html',
   styleUrl: './resident-information.component.scss'
 })
@@ -24,23 +26,24 @@ export class ResidentInformationComponent
 {
   title = 'WuyeGuanli_NG';
 
-    constructor(private router:Router ,private http:ApiService ,private service:Service){};
+    constructor(private router:Router ,private http:ApiService ,private service:Service  ){};
     readonly dialog  =inject(MatDialog);
     OwnerName:string = "房東姓名";
     OwnerPhone:string = "房東電話"
     Residential_Zone:string ="A區"
-    House_number:string = "85號"
-    isLase:string = "85號"
+    House_number:string = "85 號"
+    isLase:string = "無"
     LaseName:string[] = [];
     LasePhone:string[]=  [];
-    LaseNameA!:string
-    LasePhoneA!:string
+    LaseNameA:string = "房客姓名"
+    LasePhoneA:string = "房客電話"
     sachName!:string;
     sacResidential_Zone!:string;
     maxValue!:string;
     minValue!:string
-
     getId!:number;
+    changChack:boolean = true;
+    changCardString:string = "Resident_Information"
 
     Alldate =
     [
@@ -60,18 +63,62 @@ export class ResidentInformationComponent
     //--------------------------------------
     displayedColumns: string[] = ["id",'owerName', 'owerPhone', 'Residential_Zone',"House_number","isLase","toolbar"];
     dataSource = new MatTableDataSource(this.Alldate);
-
+    customPaginatorIntl = new MatPaginatorIntl();
     @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+    changCard()
+    {
+      console.log(this.changChack)
+      let setpos = document.getElementById(this.changCardString) as HTMLElement;
+      let setpos2 = document.getElementById("Lase") as HTMLElement;
+      if(this.changChack)
+      {
+        this.changCardString ="Resident_Information"
+
+        setpos.style.transform = "translateY(100%)";
+        setpos2.style.transform = "translateX(-10%) translateY(13%)";
+        setTimeout(()=>
+        {
+          this.changChack = false;
+          setpos.style.transform = "translateY(-13%) translateX(10%)"
+          setpos.style.zIndex ="0";
+        },100)
+      }
+
+      else
+      {
+        setpos2.style.transform = "translateY(100%) translateX(-10%)";
+        setpos.style.transform = "translateY(0%)"
+        // setpos2.style.transform = "translateY(-13%) translateX(10%)"
+        setTimeout(()=>
+          {
+            this.changChack = true;
+            setpos2.style.transform = "translateY(0%) "
+
+            setpos.style.zIndex ="1";
+          },100)
+      }
+
+
+
+
+
+
+      // this.element.addEventListener('mouseleave', () => {
+      //   this.element.style.transform = 'translateY(0)';
+      // });
+    }
     ngAfterViewInit() {
       this.dataSource.paginator = this.paginator;
     }
     ngOnInit(): void
     {
-
+      this.customPaginatorIntl.itemsPerPageLabel = '每页条目数：';
+      this.customPaginatorIntl = new MatPaginatorIntl();
       //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
       //Add 'implements OnInit' to the class.
       this.getAll();
+
     }
     getAll():void
     {
@@ -92,7 +139,7 @@ export class ResidentInformationComponent
         this.OwnerName = value.owerName
         this.OwnerPhone = value.owerPhone
         this.Residential_Zone = value.Residential_Zone
-        this.House_number = value.House_number
+        this.House_number = value.House_number+" 號"
         this.isLase = value.isLase
         this.getId = value.id-1;
         if(value.isLase == "有")

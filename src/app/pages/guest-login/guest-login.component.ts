@@ -87,8 +87,8 @@ export class GuestLoginComponent {
       this.service.data = val;
       const dialogAddQues = this.dialog.open(DiaLogUpdateComponent,{data:{name:"administrator" ,animate:"animate"},width:"500px",height:"500px"});
       dialogAddQues.afterClosed().subscribe((res:any)=>{
-        this.restAlldata();
-        this.getAll()}
+      this.restAlldata();
+      this.getAll()}
       );
     }
     getAll()
@@ -271,6 +271,7 @@ export class GuestLoginComponent {
     }
     isleav()
     {
+
       for (let i = this.AllData.length - 1; i >= 0; i--)
         {
           if (this.AllData[i].isleav != this.isLeave)

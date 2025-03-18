@@ -112,24 +112,17 @@ export class AddInfoComponent {
   }
 
 
-
-  get(){
+  get() {
     let searchValue = {
       name: "",
       sDate: "",
       eDate: ""
     }
     this.http.PostApi('http://localhost:8585/Financial/search', searchValue).subscribe
-    ((res: any) => {
-      console.log(res.financials)
-      this.http.setData(res.financials)
-    }
-
-    );
-
-
-
-
+      ((res: any) => {
+        console.log(res.financials)
+        this.http.setData(res.financials)
+      });
   }
 
 

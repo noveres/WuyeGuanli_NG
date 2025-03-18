@@ -107,7 +107,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
       )
       .subscribe((response: any) => {
         if (response && Array.isArray(response)) {
-          // 過濾掉包含 "nodisplay" 開頭的整個門牌資料
+          // 過濾掉包含 "nodisplay" 開始的整個門牌資料
           const filteredResponse = response.filter(item => {
             const records = JSON.parse(item.other);
             return !records.some((record: string) => record.startsWith('nodisplay'));
@@ -129,7 +129,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
         // 解析記錄
         const records = JSON.parse(item.other);
 
-        // 過濾掉 "hide" 開頭的子項目
+        // 過濾掉 "hide" 開始的子項目
         const visibleRecords = records.filter((record: string) => !record.startsWith('hide'));
 
         visibleRecords.forEach((record: string) => {
@@ -413,7 +413,7 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
           5: { cellWidth: 40 }  // 最後操作時間
         },
         // 增加一個表格標題
-        didDrawPage: function(data) {
+        didDrawPage: function(data: any) {
           // 可以在這裡添加頁碼等頁面信息
           doc.setFontSize(8);
         }

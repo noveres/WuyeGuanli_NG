@@ -42,8 +42,8 @@ interface ApiResponse {
   styleUrl: './carfeeextend.component.scss'
 })
 export class CarfeeextendComponent implements OnInit {
-  displayedColumns: string[] = ['select', 'addressRemark', 'receiveMoneyAccount', 'receive', 'sendMoneyAccount',
-    'feeforRemark', 'timeOfReceivingMoney', 'remark'];
+  displayedColumns: string[] = ['select','feeforRemark', 'addressRemark', 'receive', 'sendMoneyAccount',
+     'timeOfReceivingMoney', 'remark', 'receiveMoneyAccount'];
   dataSource: MatTableDataSource<ReceiveAccount> = new MatTableDataSource<ReceiveAccount>([]);
   selection = new SelectionModel<ReceiveAccount>(true, []);
   originalData: ReceiveAccount[] = [];

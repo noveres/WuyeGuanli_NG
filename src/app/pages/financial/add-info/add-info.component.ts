@@ -91,8 +91,8 @@ export class AddInfoComponent {
 
     this.data = this.formBuilder.group({
       project: ['', Validators.required],
-      income: [Number, Validators.required],
-      expenditure: [Number, Validators.required],
+      income: [Number(), Validators.required],
+      expenditure: [Number(), Validators.required],
       date: ['', Validators.required],
       remark: ['', Validators.required],
       receipt: ['', Validators.required],
@@ -111,9 +111,23 @@ export class AddInfoComponent {
 
   }
 
-  sNotZore(){
-    if(this.data.get('project')?.value){}
+
+  get() {
+    let searchValue = {
+      name: "",
+      sDate: "",
+      eDate: ""
+    }
+    this.http.PostApi('http://localhost:8585/Financial/search', searchValue).subscribe
+      ((res: any) => {
+        console.log(res.financials)
+        this.http.setData(res.financials)
+      });
   }
+
+
+
+
 
   switch_zzxc(num: number) {
     this.switch = num
@@ -169,7 +183,15 @@ export class AddInfoComponent {
 
 
     this.tableData.push({ ...this.data.value, show: 0 })
-    // console.log(this.data.value)
+    this.data.patchValue({
+      project: '',
+      income: Number(),
+      expenditure: Number(),
+      date: '',
+      remark: '',
+      receipt: '',
+    })
+
 
 
 
@@ -195,7 +217,7 @@ export class AddInfoComponent {
     this.save[0].expenditure = this.tableData[num].expenditure
     this.save[0].date = this.tableData[num].date
     this.save[0].remark = this.tableData[num].remark
-    this.save[0].receipt = this.tableData[num].receipt
+    // this.save[0].receipt = this.tableData[num].receipt
 
     if (this.save[0].income == 0) {
       this.switch = 2
@@ -258,22 +280,9 @@ export class AddInfoComponent {
     if (this.tableData.length > 0) {
       for (let i = 0; i < this.tableData.length; i++) {
         this.http.PostApi('http://localhost:8585/Financial/addInfo', this.tableData[i]).subscribe
-          ((res: any) => { });
-        if (this.tableData.length) {
-          let searchValue = {
-            name: "",
-            sDate: "",
-            eDate: ""
-          }
-
-          this.http.PostApi('http://localhost:8585/Financial/search', searchValue).subscribe
-            ((res: any) => {
-              console.log(res.financials)
-              this.http.setData(res.financials)
-            }
-            );
-
-        }
+          ((res: any) => {
+            this.get()
+          });
       }
     }
 

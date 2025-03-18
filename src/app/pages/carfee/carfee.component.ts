@@ -17,7 +17,7 @@ import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CarfeechartComponent } from './carfeechart/carfeechart.component';
 import { FloatButtonsComponent } from '../../components/float-buttons/float-buttons.component';
-
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-carfee',
@@ -37,14 +37,15 @@ import { FloatButtonsComponent } from '../../components/float-buttons/float-butt
     MatSnackBarModule,
     RouterModule,
     CarfeechartComponent,
-    FloatButtonsComponent
+    FloatButtonsComponent,
+    MatTooltipModule
   ],
   templateUrl: './carfee.component.html',
   styleUrls: ['./carfee.component.scss']
 })
 export class CarfeeComponent implements OnInit, AfterViewInit {
   // 定義表格列
-  displayedColumns: string[] = ['parking', 'parkingFee', 'owner', 'paid', 'receive', 'sendMoneyAccount', 'actions'];
+  displayedColumns: string[] = ['parking', 'owner', 'parkingFee', 'paid', 'receive', 'sendMoneyAccount', 'actions'];
   dataSource = new MatTableDataSource<any>([]);
 
   feeForm!: FormGroup;
@@ -177,7 +178,6 @@ export class CarfeeComponent implements OnInit, AfterViewInit {
       }
     });
   }
-
 
 
 }

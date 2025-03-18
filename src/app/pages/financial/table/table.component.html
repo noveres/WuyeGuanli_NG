@@ -12,18 +12,100 @@
 
 </dialog>
 
+<dialog #editDialog class="centered-dialog">
+
+  <!-- dialog.component.html -->
+
+  <!-- dialog.error.html -->
+  <dialog #errDialog class="centered-dialog">
+    <samp>
+      <h2 style="width: 80%;">錯誤代碼: 400</h2>
+      <h3><label for="" style="color: red;">{{alert}}</label></h3>
+    </samp>
+    <button mat-button (click)="errCloseDialog()" style="position: absolute; bottom: 1%; right: 0; ">確認</button>
+
+
+  </dialog>
+  <!-- dialog.error.html -->
+
+  <!-- dialog.edit.html -->
+  <div>
+    <mat-label for="">日期</mat-label> <br>
+    <input type="date" style="width: 200px;" [(ngModel)]="save[0].date">
+  </div>
+  <br>
+
+  <div>
+    <mat-label for="">項目名稱</mat-label>
+    <input type="text" [(ngModel)]="save[0].project">
+  </div>
+  <br>
+
+
+
+  <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="{{switch}}"
+    style="width: 150px;height: 40px;margin-right: 10px;">
+    <mat-button-toggle (click)="switch_zzxc(1)" value="1" style="width: 75px;height: 40px;">收入</mat-button-toggle>
+    <mat-button-toggle (click)="switch_zzxc(2)" value="2" style="width: 75px;height: 40px;">支出</mat-button-toggle>
+  </mat-button-toggle-group>
+
+  @if(switch == 1) {
+  <div>
+    <input type="number" [(ngModel)]="save[0].income">
+  </div>
+  <br>
+  }
+
+  @if(switch == 2) {
+  <div>
+    <input type="number" [(ngModel)]="save[0].expenditure">
+  </div>
+  <br>
+  }
+
+
+
+  <div>
+    <mat-label for="">文本資料</mat-label>
+    <input type="file" [(ngModel)]="save[0].receipt">
+  </div>
+  <br>
+
+  <div>
+    <mat-label for="">備註</mat-label>
+    <textarea name="" id="" [(ngModel)]="save[0].remark"></textarea>
+  </div>
+  <br>
+
+  <div style="display: flex;width: 100%;">
+
+    <div>
+      <button mat-button (click)=" editSaveAndClose(0)">取消</button>
+    </div>
+
+
+    <div>
+      <button mat-button (click)=" editSaveAndClose(1)" style="text-align: right;">儲存</button>
+    </div>
+  </div>
+
+</dialog>
+<!-- dialog.edit.html -->
 
 <!-- tableAndSearch -->
 @if (table == 1 || table == 2) {
 <app-search-box></app-search-box>
 <br><br>
-<div>
+<!-- <div>
   <mat-button-toggle-group name="fontStyle" aria-label="Font Style" value="table">
     <mat-button-toggle value="1" (click)="switch_zzxc(1)"><mat-icon>table_rows</mat-icon></mat-button-toggle>
     <mat-button-toggle value="2" (click)="switch_zzxc(2)"><mat-icon>delete</mat-icon></mat-button-toggle>
     <mat-button-toggle value="3" (click)="openDialog()"><mat-icon>add</mat-icon></mat-button-toggle>
   </mat-button-toggle-group>
-</div>
+</div> -->
+
+<button mat-icon-button (click)=" del2()"><mat-icon>delete_sweep</mat-icon></button>
+<button mat-icon-button (click)="openDialog()"><mat-icon>add</mat-icon></button>
 
 
 <div class="shadow">
@@ -33,7 +115,7 @@
       <!-- id Column -->
       <ng-container matColumnDef="id">
         <th mat-header-cell *matHeaderCellDef> 編號 </th>
-        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+        <td mat-cell *matCellDef="let element let i = index"> {{i+1}} </td>
       </ng-container>
 
       <!-- project Column -->
@@ -64,20 +146,21 @@
       <!-- remark Column -->
       <ng-container matColumnDef="remark">
         <th mat-header-cell *matHeaderCellDef> 備註 </th>
-        <td mat-cell *matCellDef="let element let i =index">@if (showData[i].show == 0 && showData[i].remark != '') {<button mat-icon-button
-          (click)="showEye(i)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-            class="bi bi-eye-fill" viewBox="0 0 16 16" style="text-align: center;">
-            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-            <path
-              d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-          </svg></button>}@else if(showData[i].show == 1)
-        {<button mat-icon-button (click)="showEye(i)"><svg xmlns="http://www.w3.org/2000/svg" width="16"
-            height="16" fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
-            <path
-              d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
-            <path
-              d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
-          </svg><br></button><label for=""> {{element.remark}}</label>} </td>
+        <td mat-cell *matCellDef="let element let i =index">@if (showData[i].show == 0 && showData[i].remark != '')
+          {<button mat-icon-button (click)="showEye(i)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16" style="text-align: center;">
+              <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+              <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+            </svg></button>}@else if(showData[i].show == 1)
+          {<button mat-icon-button (click)="showEye(i)"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+              fill="currentColor" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+              <path
+                d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7.029 7.029 0 0 0 2.79-.588zM5.21 3.088A7.028 7.028 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474L5.21 3.089z" />
+              <path
+                d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
+            </svg></button>
+          <div><label for=""> {{element.remark}}</label></div>}
+        </td>
       </ng-container>
 
       <!-- receipte Column -->
@@ -89,10 +172,13 @@
 
       <!-- id Column -->
       <ng-container matColumnDef="delect">
-        <th mat-header-cell *matHeaderCellDef> @if (table == 2) {<button mat-icon-button (click)="del(-1)"><mat-icon>delete_sweep</mat-icon></button>} </th>
-        <td mat-cell *matCellDef="let element let i =index"> @if (table == 2) {<button mat-icon-button (click)="edit(i)"><mat-icon>edit</mat-icon></button>
-          <button mat-icon-button (click)="del(i)"><mat-icon>delete</mat-icon></button>
-        }
+        <th mat-header-cell *matHeaderCellDef>編輯</th>
+        <td mat-cell *matCellDef="let element let i =index">
+          <button mat-icon-button (click)=" edit(i)"><mat-icon>edit</mat-icon></button>
+          @if (showData[i].del == 0) {<button mat-icon-button
+            (click)="del(i)"><mat-icon>delete</mat-icon></button>}@else if (showData[i].del == 1) {<button
+            mat-icon-button (click)="del(i)"><mat-icon style="color: red;">delete</mat-icon></button>}
+
         </td>
       </ng-container>
 
@@ -106,14 +192,6 @@
       aria-label="Select page of periodic elements">
     </mat-paginator>
 
-
-
-    @if (table == 2) {
-    <div style="display: flex;justify-content: right;">
-      <button mat-icon-button><mat-icon style="color: greenyellow;">done</mat-icon></button>
-      <button mat-icon-button><mat-icon style="color: red;">clear</mat-icon></button>
-    </div>
-    }
   </div>
 </div>
 }

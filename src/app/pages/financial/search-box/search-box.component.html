@@ -4,8 +4,8 @@
 
 
     <div style="display: flex;width: 100%;">
-      <div><button mat-icon-button style="font-size: 48px; width: 68px; height: 68px;" (click)="search()"><mat-icon style="font-size: 48px; width: 48px; height: 48px;top: 0;">search</mat-icon></button></div>
-      <div style="width: 100%;"><input type="text" [(ngModel)]="searchValue.name" style="width: 90%;margin-right: 10px;height: 50px;">
+      <div><button mat-icon-button style="font-size: 48px; width: 68px; height: 68px;"><mat-icon style="font-size: 48px; width: 48px; height: 48px;top: 0;">search</mat-icon></button></div>
+      <div style="width: 100%;"><input type="text" [(ngModel)]="searchValue.name" style="width: 90%;margin-right: 10px;height: 50px;" (keyup.enter)="search()" >
       </div>
        </div>
 
@@ -14,9 +14,9 @@
 
   <div class="dateDiv" class="shadow" >
     <div >
-      <input type="date" class="date" [(ngModel)]="searchValue.sDate" max ="{{searchValue.eDate}}" >
+      <input type="date" class="date" [(ngModel)]="searchValue.sDate" max ="{{searchValue.eDate}}" (change)="search()" >
       <br>
-      <input type="date" class="date"[(ngModel)]="searchValue.eDate" min="{{searchValue.sDate}}">
+      <input type="date" class="date"[(ngModel)]="searchValue.eDate" min="{{searchValue.sDate}}" (change)="search()">
     </div>
   </div>
 

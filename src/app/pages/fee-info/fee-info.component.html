@@ -16,8 +16,6 @@
       </mat-select>
     </mat-form-field>
 
-
-
     <!-- 模糊搜尋 -->
     <mat-form-field style="width: 299px;" appearance="outline" class="col-12 col-md-4 mb-3">
       <mat-label>模糊搜尋</mat-label>
@@ -25,11 +23,20 @@
     </mat-form-field>
 
     <!-- 重置搜尋按鈕 -->
-    <button mat-fab extended color="primary" class="ms-5 mb-3 col-12 col-md-2" (click)="resetFilters()">
+    <button mat-fab extended  class="ms-5 mb-3 col-12 col-md-2" (click)="resetFilters()">
       <mat-icon>refresh</mat-icon>重置搜尋</button>
 
+      
+    <!-- 匯出按鈕：Excel -->
+    <button mat-fab extended  class="ms-3 mb-3 col-12 col-md-2" (click)="exportToExcel()">
+      <mat-icon>file_download</mat-icon>匯出Excel</button>
+    
+    <!-- 匯出按鈕：PDF -->
+    <button mat-fab extended  class="ms-3 mb-3 col-12 col-md-2" (click)="exportToPDF()">
+      <mat-icon>picture_as_pdf</mat-icon>匯出PDF</button>
+
     <!-- 改動按鈕 -->
-    <button mat-fab color="accent" class="mb-3 col-12 col-md-2" style="position: absolute; top: 0; right: 0;"
+    <button mat-fab  class="mb-3 col-12 col-md-2" style="position: absolute; top: 0; right: 0;"
       (click)="openDialog()">改動</button>
   </div>
 </div>
@@ -76,7 +83,7 @@
   </tr>
 </table>
 
-<mat-paginator [length]="1000" [pageSize]="20" [pageSizeOptions]="[1, 10, 20, 100]" aria-label="Select page">
+<mat-paginator [length]="1000" [pageSize]="20" [pageSizeOptions]="[10, 20, 100]" aria-label="Select page">
 </mat-paginator>
 
 <app-float-buttons></app-float-buttons>

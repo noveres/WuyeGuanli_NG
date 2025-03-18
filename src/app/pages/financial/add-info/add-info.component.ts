@@ -124,6 +124,7 @@ export class AddInfoComponent {
       console.log(res.financials)
       this.http.setData(res.financials)
     }
+
     );
 
 
@@ -131,9 +132,9 @@ export class AddInfoComponent {
 
   }
 
-  // sNotZore(){
-  //   if(this.data.get('project')?.value)
-  // }
+
+
+
 
   switch_zzxc(num: number) {
     this.switch = num

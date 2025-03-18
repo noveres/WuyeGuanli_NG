@@ -222,8 +222,17 @@ textarea:focus {
     white-space: nowrap;
     border: 0;
 }
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+/* 隱藏分頁器中的 "Items per page" 文字 */
+.mat-mdc-paginator-page-size-label {
+  display: none !important;
+}
+
+html, body { 
+  height: 100%; 
+}
+
+body { 
+  margin: 0; 
+  font-family: Roboto, "Helvetica Neue", sans-serif; 
+}

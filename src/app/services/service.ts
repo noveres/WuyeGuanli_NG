@@ -6,5 +6,9 @@ export class Service
     gethousenumber!:string;
     deleatedate!:any;
     data = [];
+    update!:any;
+    updateLNmae!:string;
+    updateLphone!:string;
+
 
 }

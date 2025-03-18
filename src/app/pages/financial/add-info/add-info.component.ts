@@ -111,6 +111,8 @@ export class AddInfoComponent {
 
   }
 
+
+
   get(){
     let searchValue = {
       name: "",
@@ -123,6 +125,9 @@ export class AddInfoComponent {
       this.http.setData(res.financials)
     }
     );
+
+
+
 
   }
 

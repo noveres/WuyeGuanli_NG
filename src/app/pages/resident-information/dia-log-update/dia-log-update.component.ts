@@ -39,7 +39,27 @@ export class DiaLogUpdateComponent {
       residentphonenumber:""
     }
   ]
+ngOnInit(): void {
+  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+  //Add 'implements OnInit' to the class.
+  this.getValue()
+}
+getValue()
+{
 
+  this.name = this.service.update.owerName;
+  this.phone =this.service.update.owerPhone;
+  if(this.service.update.isLase == "否")
+  {
+    this.isLase  = false
+  }
+  else
+  {
+    this.isLase = this.service.update.isLase;
+  }
+  this.Lasename = this.service.updateLNmae;
+  this.Lasephone = this.service.updateLphone;
+}
  ngAfterViewInit(): void {
   //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
   //Add 'implements AfterViewInit' to the class.

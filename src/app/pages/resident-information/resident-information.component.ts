@@ -31,7 +31,7 @@ export class ResidentInformationComponent
     OwnerName:string = "房東姓名";
     OwnerPhone:string = "房東電話"
     Residential_Zone:string ="A區"
-    House_number:string = "85 號"
+    House_number:string = " 號"
     isLase:string = "無"
     LaseName:string[] = [];
     LasePhone:string[]=  [];
@@ -128,6 +128,7 @@ export class ResidentInformationComponent
         (res:any) =>{
           this.inputData(res);
           this.inputselect();
+          this.scrollToBotton();
         }
       )
     }
@@ -152,7 +153,7 @@ export class ResidentInformationComponent
           this.LaseNameA = "無";
           this.LasePhoneA ="無";
         }
-
+        this.scrollTotop();
     }
     addInfo()
     {
@@ -171,6 +172,19 @@ export class ResidentInformationComponent
       console.log(value);
       this.service.gethousenumber = this.zzxc[value.id-1];
       console.log(this.service.gethousenumber);
+      this.service.update = this.Alldate[value.id-1] ;
+      console.log(this.Alldate[value.id-1].isLase)
+      if(this.Alldate[value.id-1].isLase == "有")
+      {
+        this.service.updateLNmae  = this.LaseName[value.id-1];
+        this.service.updateLphone = this.LasePhone[value.id-1];
+      }
+      else
+      {
+        this.service.updateLNmae  = "";
+        this.service.updateLphone ="";
+      }
+      console.log(this.service.update);
       dialogAddQues.afterClosed().subscribe(
         (res:any)=>
           {
@@ -201,12 +215,14 @@ export class ResidentInformationComponent
       }
       else
       {
+        this.scrollToBotton();
            this.http.postAPI("http://localhost:8585/api/residents/SearchName",this.sachName).subscribe
           (
             (res:any)=>
             {
               this.inputData(res);
               this.inputselect();
+
             }
           )
       }
@@ -272,6 +288,7 @@ export class ResidentInformationComponent
     }
     inputselect()
     {
+
       if(this.sacResidential_Zone != ""&& this.sacResidential_Zone != null )
       {
         for (let i = this.Alldate.length - 1; i >= 0; i--) {
@@ -281,6 +298,7 @@ export class ResidentInformationComponent
             console.log(this.Alldate[i].Residential_Zone)
             this.Alldate.splice(i,1);
           }
+          this.scrollToBotton();
         }
         console.log(this.Alldate)
         this.dataSource = new MatTableDataSource(this.Alldate);
@@ -309,6 +327,7 @@ export class ResidentInformationComponent
               MaxV =Number(this.Alldate[i].House_number);
             }
           }
+
       }
       console.log( MaxV)
       for (let i = this.Alldate.length - 1; i >= 0; i--)
@@ -326,6 +345,27 @@ export class ResidentInformationComponent
           console.log(this.Alldate)
           this.dataSource = new MatTableDataSource(this.Alldate);
           this.dataSource.paginator = this.paginator;
+    }
+  scrollToBotton() {
+    const mainContent = document.querySelector('.main-content');
 
+    if (mainContent) {
+      mainContent.scrollTo({
+        top:mainContent.scrollHeight,
+        behavior: 'smooth'
+      });
     }
   }
+  scrollTotop() {
+    const mainContent = document.querySelector('.main-content');
+
+    if (mainContent) {
+      mainContent.scrollTo({
+        top:0,
+        behavior: 'smooth'
+      });
+    }
+  }
+
+  }
+

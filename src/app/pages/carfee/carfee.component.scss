@@ -12,3 +12,25 @@
     color: #3f51b5; // Material 主題色，可依據你的應用主題調整
   }
 }
+
+
+
+/* 隱藏 input 框的邊框 */
+.year-input {
+  border: none;
+  text-align: left;  
+  width: 80px;
+  max-width: 140px;  
+  min-width: 80px;
+  margin:0;
+  padding: 0;
+
+}
+
+/* 可編輯文字樣式 */
+.editable-text {
+  display: inline-block;
+
+  cursor: text;  /* 讓文字看起來可以編輯 */
+  
+}

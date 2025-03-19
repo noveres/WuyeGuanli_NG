@@ -1,12 +1,16 @@
 <div class="container">
   <h2>
-    2026年 停車費用管理
+    <input type="text" [(ngModel)]="inputText" (ngModelChange)="onInputChange()" placeholder="請輸入年份或文字"
+      class="year-input" />
+    <span class="editable-text" contenteditable="true" (input)="onEditableTextChange($event)">年停車費用管理</span>
+
     <mat-icon class="help-icon"
       matTooltip="目前這是'年'繳費表，所以資料撈當下時間-365天內的資料，所以如果需要以季或其他時段請聯絡後台管理員，已'季'為單位，資料會撈-90天的資料，請注意，若超過此時間就只能手動對帳"
-      [matTooltipClass]="'custom-tooltip'" matTooltipPosition="above" style=" white-space: pre-line;">
+      [matTooltipClass]="'custom-tooltip'" matTooltipPosition="above" style="white-space: pre-line;">
       help
     </mat-icon>
   </h2>
+
 
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
@@ -74,30 +78,36 @@
 
     <mat-paginator [pageSizeOptions]="[ 10, 25, 100]" showFirstLastButtons></mat-paginator>
   </div>
-
-  <button mat-raised-button (click)="openAddDialog()" class="add-button">
+<div class="row px-3 mt-2  justify-content-between">
+  <button mat-stroked-button (click)="openAddDialog()" class="add-button col-2" style="max-width: 200px;">
     <mat-icon>add</mat-icon> 新增停車位
   </button>
 
-  <button mat-raised-button (click)="updatePaidStatus()" class="update-button">
+  <button mat-stroked-button (click)="updatePaidStatus()" class="update-button col-2" style="max-width: 200px;">
     <mat-icon>update</mat-icon> 更新付款狀態
   </button>
 
-  <button mat-raised-button routerLink="/carfee/carfeeextend"> 顯示完整匯款清單</button>
+  <button mat-stroked-button (click)="exportToExcel()" class="export-button col-2" style="max-width: 200px;">
+    <mat-icon>file_download</mat-icon> 匯出Excel
+  </button>
 
+  <button mat-stroked-button routerLink="/carfee/carfeeextend" class="col-2" style="max-width: 200px;"> 
+    <mat-icon>dvr</mat-icon>顯示完整匯款清單
+  </button>
+</div>
 </div>
 
 <!-- 編輯/新增對話框 -->
 <ng-template #dialogTemplate>
   <h2 mat-dialog-title>{{isEditing ? '編輯' : '新增'}}停車位資料</h2>
   <div mat-dialog-content>
-    <form [formGroup]="feeForm" class="m-2">
+    <form [formGroup]="feeForm" class="m-2 ">
       <mat-form-field appearance="outline">
         <mat-label>停車位</mat-label>
         <input matInput formControlName="parking">
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="m-3">
         <mat-label>停車費</mat-label>
         <input matInput type="number" formControlName="parkingFee">
       </mat-form-field>
@@ -107,7 +117,7 @@
         <input matInput formControlName="owner">
       </mat-form-field>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" class="m-3">
         <mat-label>付款狀態</mat-label>
         <mat-select formControlName="paid">
           <mat-option [value]="true">已付款</mat-option>

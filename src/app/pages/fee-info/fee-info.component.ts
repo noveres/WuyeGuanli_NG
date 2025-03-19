@@ -322,48 +322,88 @@ export class FeeInfoComponent implements OnInit, AfterViewInit {
     }, 250);
   }
 
-  // 新增匯出Excel功能
-  exportToExcel(): void {
-    try {
-      // 取得當前過濾後的資料(考慮使用者可能已經套用了過濾器)
-      const currentData = this.dataSource.filteredData.length > 0 
-        ? this.dataSource.filteredData 
-        : this.dataSource.data;
-      
-      // 轉換資料格式為Excel友好格式
-      const excelData = currentData.map(item => {
-        return {
-          '門牌': item.address,
-          '年度': item.year,
-          '季': item.season,
-          '是否繳清費用': item.fee,
-          '備註': item.remark,
-          '最後操作時間': item.modifying
-        };
-      });
+  //匯出Excel功能
+exportToExcel(): void {
+  try {
+    // 取得當前過濾後的資料(考慮使用者可能已經套用了過濾器)
+    const currentData = this.dataSource.filteredData.length > 0 
+      ? this.dataSource.filteredData 
+      : this.dataSource.data;
+    
+    // 轉換資料格式為Excel友好格式
+    const excelData = currentData.map(item => {
+      return {
+        '門牌': item.address,
+        '年度': item.year,
+        '季': item.season,
+        '是否繳清費用': item.fee,
+        '備註': item.remark,
+        '最後操作時間': item.modifying
+      };
+    });
 
-      // 建立工作表
-      const worksheet = XLSX.utils.json_to_sheet(excelData);
-      
-      // 建立活頁簿
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, '費用資訊');
-      
-      // 生成檔案名稱 (使用當前日期時間)
-      const date = new Date();
-      const fileName = `費用資訊_${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}_${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}.xlsx`;
-      
-      // 保存檔案到桌面
-      XLSX.writeFile(workbook, fileName);
-      
-      alert('Excel檔案已成功匯出！');
-    } catch (error) {
-      console.error('匯出Excel時發生錯誤:', error);
-      alert('匯出Excel時發生錯誤，請檢查控制台以獲取詳細資訊。');
+    // 建立工作表
+    const worksheet = XLSX.utils.json_to_sheet(excelData);
+    
+    // 建立活頁簿
+    const workbook = XLSX.utils.book_new();
+    
+    // 產生檔案標題：使用查詢內容
+    let sheetName = '費用資訊';
+    
+    // 組合查詢條件作為標題
+    const queryParts = [];
+    
+    // 加入年季查詢條件
+    if (this.yearSeasonFilterValue) {
+      queryParts.push(`年季${this.yearSeasonFilterValue}`);
     }
+    
+    // 加入繳費狀態查詢條件
+    if (this.feeStatusFilterValue) {
+      queryParts.push(`繳清${this.feeStatusFilterValue}`);
+    }
+    
+    // 加入模糊搜尋條件
+    if (this.generalFilterValue) {
+      queryParts.push(`搜尋${this.generalFilterValue}`);
+    }
+    
+    // 如果有查詢條件，則將其組合成標題
+    if (queryParts.length > 0) {
+      sheetName = queryParts.join('_');
+    }
+    
+    // 工作表標題最多只能有31個字元
+    if (sheetName.length > 31) {
+      sheetName = sheetName.substring(0, 28) + '...';
+    }
+    
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    
+    // 生成檔案名稱 (使用查詢條件和當前日期時間)
+    const date = new Date();
+    const dateString = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2, '0')}${date.getDate().toString().padStart(2, '0')}_${date.getHours().toString().padStart(2, '0')}${date.getMinutes().toString().padStart(2, '0')}${date.getSeconds().toString().padStart(2, '0')}`;
+    
+    // 檔案名稱：使用查詢條件
+    let fileName = '費用資訊';
+    if (queryParts.length > 0) {
+      fileName = queryParts.join('_');
+    }
+    
+    // 檔案名稱加上日期
+    fileName = `${fileName}_${dateString}.xlsx`;
+    
+    // 保存檔案
+    XLSX.writeFile(workbook, fileName);
+    
+    alert('Excel檔案已成功匯出！');
+  } catch (error) {
+    console.error('匯出Excel時發生錯誤:', error);
+    alert('匯出Excel時發生錯誤，請檢查控制台以獲取詳細資訊。');
   }
+}
 
-  // 修復後的匯出PDF功能
   exportToPDF(): void {
     try {
       // 取得當前過濾後的資料

@@ -18,6 +18,8 @@ import { RouterModule } from '@angular/router';
 import { CarfeechartComponent } from './carfeechart/carfeechart.component';
 import { FloatButtonsComponent } from '../../components/float-buttons/float-buttons.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormsModule } from '@angular/forms';
+import * as XLSX from 'xlsx';
 
 @Component({
   selector: 'app-carfee',
@@ -38,7 +40,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     RouterModule,
     CarfeechartComponent,
     FloatButtonsComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    FormsModule
   ],
   templateUrl: './carfee.component.html',
   styleUrls: ['./carfee.component.scss']
@@ -51,6 +54,11 @@ export class CarfeeComponent implements OnInit, AfterViewInit {
   feeForm!: FormGroup;
   isEditing = false;
   currentItem: any = null;
+
+  currentYear: number = new Date().getFullYear();  // 取得當前年份
+  inputText: string = (this.currentYear + 1).toString();  // 預設為當前年份加1作為輸入框的預設值
+  editableText: string = '年 停車費用管理';  // 可編輯文字內容
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -98,6 +106,17 @@ export class CarfeeComponent implements OnInit, AfterViewInit {
         this.snackBar.open('載入資料失敗', '關閉', { duration: 3000 });
       }
     });
+  }
+
+  onInputChange(): void {
+    // 當使用者更改了輸入框的值，這裡可以進行進一步處理
+    console.log("當前輸入值:", this.inputText);
+  }
+
+  onEditableTextChange(event: Event): void {
+    const target = event.target as HTMLElement;
+    this.editableText = target.innerText;  // 這裡捕捉到用戶修改的文字
+    console.log("可編輯文字內容:", this.editableText);
   }
 
   // 打開新增對話框
@@ -179,5 +198,44 @@ export class CarfeeComponent implements OnInit, AfterViewInit {
     });
   }
 
-
+  // 匯出Excel功能
+  exportToExcel(): void {
+    try {
+      // 取得當前資料
+      const currentData = this.dataSource.data;
+      
+      // 取得標題文字 (結合輸入框和可編輯文字)
+      let title = this.inputText + this.editableText;
+      
+      // 轉換資料格式為Excel友好格式
+      const excelData = currentData.map(item => {
+        return {
+          '停車位': item.parking,
+          '擁有者': item.owner,
+          '停車費(年費)': item.parkingFee,
+          '全繳清狀態': item.paid ? '是' : '否',
+          '總共支付金額': item.receive || 'N/A',
+          '付款帳號': item.sendMoneyAccount || '尚無付款'
+        };
+      });
+      
+      // 建立工作表
+      const worksheet = XLSX.utils.json_to_sheet(excelData);
+      
+      // 建立活頁簿
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, '停車費用');
+      
+      // 使用標題作為檔名 (移除空格和特殊字符)
+      const fileName = `${title.replace(/\s+/g, '_')}_${new Date().getTime()}.xlsx`;
+      
+      // 保存檔案
+      XLSX.writeFile(workbook, fileName);
+      
+      this.snackBar.open('Excel檔案已成功匯出！', '關閉', { duration: 3000 });
+    } catch (error) {
+      console.error('匯出Excel時發生錯誤:', error);
+      this.snackBar.open('匯出Excel時發生錯誤', '關閉', { duration: 3000 });
+    }
+  }
 }

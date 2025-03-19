@@ -60,7 +60,7 @@ export class RepairRequestListComponent implements OnInit {
   repairRequests: RepairRequest[] = [];
   filteredRepairs: RepairRequest[] = [];
   isLoading = false;
-  displayedColumns: string[] = ['id', 'sort', 'location', 'status', 'createTime', 'actions'];
+  displayedColumns: string[] = ['id', 'sort', 'location', 'description', 'status', 'createTime', 'actions'];
   
   // 分頁相關
   totalItems: number = 0;

@@ -27,8 +27,8 @@
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="search-input">
-        <mat-label>搜尋</mat-label>
-        <input matInput [(ngModel)]="searchText" (ngModelChange)="search()" placeholder="搜索描述或位置...">
+        <mat-label>搜尋描述或位置</mat-label>
+        <input matInput [(ngModel)]="searchText" (ngModelChange)="search()" placeholder="搜尋描述或位置...">
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
 
@@ -103,6 +103,16 @@
           </div>
         </th>
         <td mat-cell *matCellDef="let request">{{ request.location }}</td>
+      </ng-container>
+      
+      <!-- 問題描述列 -->
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="sort-header">
+            <span>問題描述</span>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let request">{{ request.description }}</td>
       </ng-container>
       
       <!-- 狀態列 -->

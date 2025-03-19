@@ -45,7 +45,7 @@ export class EditRepairDialogComponent {
   photo2Preview: string | null = null;
   
   repairSorts: RepairSort[] = ['水電相關', '設備相關', '結構相關', '其他'];
-  repairStatuses: RepairStatus[] = ['待處理', '處理中', '已完成', '已拒絕'];
+  repairStatuses: RepairStatus[] = ['待處理', '處理中', '已完成'];
   repairLocations: string[] = [
     'B2 停車場',
     'B1 倉庫',

@@ -21,6 +21,12 @@
   align-items: center;
   justify-content: center;
   transition: opacity 0.3s, transform 0.3s;
+  
+  // 確保所有 SVG 圖示居中
+  svg {
+    width: 24px;
+    height: 24px;
+  }
 }
 
 .float-button:hover {
@@ -32,16 +38,35 @@
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+  
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
-.top-button.visible {
-  opacity: 1;
-  visibility: visible;
+// 新增的返回按鈕樣式
+.back-button {
+  background-color: #6c757d; // 灰色背景，與其他按鈕區分
+  
+  &:hover {
+    background-color: #5a6268;
+  }
 }
 
 @media (max-width: 768px) {
   .float-buttons-container {
     bottom: 20px;
     right: 20px;
+  }
+  
+  .float-button {
+    width: 40px;
+    height: 40px;
+    
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 }

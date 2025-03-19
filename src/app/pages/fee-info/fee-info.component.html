@@ -1,7 +1,7 @@
 <div class="container" style="position: relative;">
   <div class="row">
     <!-- 年+季搜尋 -->
-    <mat-form-field style="width: 299px;" appearance="outline" class="col-12 col-md-4 mb-3">
+    <mat-form-field style="width: 277px;" appearance="outline" class="col-12 col-md-4 mb-3">
       <mat-label>年+季搜尋</mat-label>
       <input matInput id="yearSeasonInput" (keyup)="applyYearSeasonFilter($event)" placeholder="例如輸入1141" #input>
     </mat-form-field>
@@ -17,7 +17,7 @@
     </mat-form-field>
 
     <!-- 模糊搜尋 -->
-    <mat-form-field style="width: 299px;" appearance="outline" class="col-12 col-md-4 mb-3">
+    <mat-form-field style="width: 277px;" appearance="outline" class="col-12 col-md-4 mb-3">
       <mat-label>模糊搜尋</mat-label>
       <input matInput id="generalInput" (keyup)="applyGeneralFilter($event)" placeholder="搜尋任何欄位關鍵字 例如門牌A01" #input>
     </mat-form-field>
@@ -32,8 +32,8 @@
       <mat-icon>file_download</mat-icon>匯出Excel</button>
     
     <!-- 匯出按鈕：PDF -->
-    <button mat-fab extended  class="ms-3 mb-3 col-12 col-md-2" (click)="exportToPDF()">
-      <mat-icon>picture_as_pdf</mat-icon>匯出PDF</button>
+    <!-- <button mat-fab extended  class="ms-3 mb-3 col-12 col-md-2" (click)="exportToPDF()">
+      <mat-icon>picture_as_pdf</mat-icon>匯出PDF</button> -->
 
     <!-- 改動按鈕 -->
     <button mat-fab  class="mb-3 col-12 col-md-2" style="position: absolute; top: 0; right: 0;"

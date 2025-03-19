@@ -18,26 +18,26 @@
     <!-- 維修位置 -->
     <mat-form-field appearance="outline">
       <mat-label>維修位置</mat-label>
-      <input matInput formControlName="location" required placeholder="例如：客廳、廚房、衛生間等">
-      <mat-icon matPrefix>place</mat-icon>
+      <mat-select formControlName="location" required>
+        <mat-option *ngFor="let location of repairLocations" [value]="location">
+          <mat-icon matPrefix>place</mat-icon> {{ location }}
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="repairForm.get('location')?.hasError('required')">
-        請輸入維修位置
-      </mat-error>
-      <mat-error *ngIf="repairForm.get('location')?.hasError('minlength')">
-        維修位置至少需要2個字符
+        請選擇維修位置
       </mat-error>
     </mat-form-field>
 
     <!-- 問題描述 -->
     <mat-form-field appearance="outline">
       <mat-label>問題描述</mat-label>
-      <textarea matInput formControlName="description" rows="4" placeholder="請詳細描述您遇到的問題..."></textarea>
-      <mat-icon matPrefix>description</mat-icon>
+      <mat-select formControlName="description" required>
+        <mat-option *ngFor="let description of repairDescriptions" [value]="description">
+          <mat-icon matPrefix>description</mat-icon> {{ description }}
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="repairForm.get('description')?.hasError('required')">
-        請輸入問題描述
-      </mat-error>
-      <mat-error *ngIf="repairForm.get('description')?.hasError('maxlength')">
-        問題描述不能超過200個字符
+        請選擇問題描述
       </mat-error>
     </mat-form-field>
 

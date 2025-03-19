@@ -1,4 +1,7 @@
-<h2 mat-dialog-title>{{ data.id ? '編輯維修申請' : '新增維修申請' }}</h2>
+<h2 mat-dialog-title>
+  <mat-icon>build</mat-icon>
+  {{ data.id ? '編輯維修申請' : '新增維修申請' }}
+</h2>
 
 <mat-dialog-content>
   <form [formGroup]="repairForm" class="repair-form">
@@ -7,6 +10,7 @@
       <mat-label>維修類型</mat-label>
       <mat-select formControlName="sort">
         <mat-option *ngFor="let sort of repairSorts" [value]="sort">
+          <mat-icon>{{ getRepairSortIcon(sort) }}</mat-icon>
           {{ sort }}
         </mat-option>
       </mat-select>
@@ -18,26 +22,27 @@
     <!-- 維修位置 -->
     <mat-form-field appearance="outline">
       <mat-label>維修位置</mat-label>
-      <input matInput formControlName="location" required placeholder="例如：客廳、廚房、衛生間等">
-      <mat-icon matPrefix>place</mat-icon>
+      <mat-select formControlName="location" required>
+        <mat-option *ngFor="let location of repairLocations" [value]="location">
+          <mat-icon>place</mat-icon> {{ location }}
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="repairForm.get('location')?.hasError('required')">
-        請輸入維修位置
-      </mat-error>
-      <mat-error *ngIf="repairForm.get('location')?.hasError('minlength')">
-        維修位置至少需要2個字符
+        請選擇維修位置
       </mat-error>
     </mat-form-field>
 
     <!-- 問題描述 -->
     <mat-form-field appearance="outline">
       <mat-label>問題描述</mat-label>
-      <textarea matInput formControlName="description" rows="4" placeholder="請詳細描述您遇到的問題..."></textarea>
-      <mat-icon matPrefix>description</mat-icon>
+      <mat-select formControlName="description" required>
+        <mat-option *ngFor="let description of repairDescriptions" [value]="description">
+          <mat-icon>{{ getDescriptionIcon(description) }}</mat-icon>
+          {{ description }}
+        </mat-option>
+      </mat-select>
       <mat-error *ngIf="repairForm.get('description')?.hasError('required')">
-        請輸入問題描述
-      </mat-error>
-      <mat-error *ngIf="repairForm.get('description')?.hasError('maxlength')">
-        問題描述不能超過45個字符
+        請選擇問題描述
       </mat-error>
     </mat-form-field>
 
@@ -46,6 +51,7 @@
       <mat-label>狀態</mat-label>
       <mat-select formControlName="status">
         <mat-option *ngFor="let status of repairStatuses" [value]="status">
+          <mat-icon>{{ getStatusIcon(status) }}</mat-icon>
           {{ status }}
         </mat-option>
       </mat-select>
@@ -99,9 +105,13 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()" [disabled]="isSubmitting || isUploading">取消</button>
+  <button mat-button (click)="onCancel()" [disabled]="isSubmitting || isUploading">
+    <mat-icon>close</mat-icon>
+    取消
+  </button>
   <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="repairForm.invalid || isSubmitting || isUploading">
-    <mat-icon>save</mat-icon> {{ data.id ? '更新' : '提交' }}
+    <mat-icon>{{ data.id ? 'update' : 'save' }}</mat-icon>
+    {{ data.id ? '更新' : '提交' }}
     <mat-icon *ngIf="isSubmitting" class="spinner">sync</mat-icon>
   </button>
 </mat-dialog-actions>

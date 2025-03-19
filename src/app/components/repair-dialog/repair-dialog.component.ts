@@ -45,6 +45,18 @@ export class RepairDialogComponent {
   
   repairSorts: string[] = ['水電相關', '設備相關', '結構相關', '其他'];
   repairStatuses: string[] = ['待處理', '處理中', '已完成', '已拒絕'];
+  repairLocations: string[] = ['客廳', '廚房', '衛生間', '臥室', '陽台', '走廊', '電梯', '公共區域', '其他'];
+  repairDescriptions: string[] = [
+    '漏水',
+    '堵塞',
+    '破損',
+    '異響',
+    '電路故障',
+    '設備故障',
+    '牆面/地面損壞',
+    '門窗問題',
+    '其他'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -54,9 +66,9 @@ export class RepairDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: RepairRequest
   ) {
     this.repairForm = this.fb.group({
-      description: ['', [Validators.required, Validators.maxLength(200)]],
-      location: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-      sort: ['水電', Validators.required],
+      description: ['', [Validators.required]],
+      location: ['', [Validators.required]],
+      sort: ['水電相關', Validators.required],
       status: ['待處理', Validators.required],
       photo1: [''],
       photo2: ['']
@@ -67,7 +79,7 @@ export class RepairDialogComponent {
       this.repairForm.patchValue({
         description: this.data.description || '',
         location: this.data.location || '',
-        sort: this.data.sort || '水電',
+        sort: this.data.sort || '水電相關',
         status: this.data.status || '待處理',
         photo1: this.data.photo1 || '',
         photo2: this.data.photo2 || ''

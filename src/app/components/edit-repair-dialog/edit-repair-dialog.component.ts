@@ -46,6 +46,42 @@ export class EditRepairDialogComponent {
   
   repairSorts: RepairSort[] = ['水電相關', '設備相關', '結構相關', '其他'];
   repairStatuses: RepairStatus[] = ['待處理', '處理中', '已完成', '已拒絕'];
+  repairLocations: string[] = [
+    'B2 停車場',
+    'B1 倉庫',
+    '1F 大廳廁所',
+    '1F 大廳走廊',
+    '2F 員工廁所',
+    '2F 會議室',
+    '3F 辦公室區域',
+    '3F 走廊',
+    '4F 員工廁所',
+    '4F 樓梯間',
+    '5F 辦公室區域',
+    '5F 會議室',
+    '5F 員工休息區',
+    '5F 空調機房',
+    '5F 電梯機房',
+    '5F 露天平台'
+  ];
+  repairDescriptions: string[] = [
+    '水管漏水',
+    '馬桶堵塞',
+    '水龍頭壞掉',
+    '燈不亮',
+    '電梯故障',
+    '門鎖損壞',
+    '玻璃破裂',
+    '牆壁剝落',
+    '空調異常',
+    '電線外露',
+    '地板破損',
+    '電路故障',
+    '設備故障',
+    '牆面/地面損壞',
+    '門窗問題',
+    '其他'
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -55,9 +91,9 @@ export class EditRepairDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: Partial<RepairRequest>
   ) {
     this.repairForm = this.fb.group({
-      description: [data.description || '', [Validators.required, Validators.maxLength(200)]],
-      location: [data.location || '', [Validators.required, Validators.minLength(2), Validators.maxLength(20)]],
-      sort: [data.sort || '水電', Validators.required],
+      description: [data.description || '', [Validators.required]],
+      location: [data.location || '', [Validators.required]],
+      sort: [data.sort || '水電相關', Validators.required],
       photo1: [data.photo1 || ''],
       photo2: [data.photo2 || ''],
       status: [data.status || '待處理']
@@ -178,6 +214,64 @@ export class EditRepairDialogComponent {
       this.photo1Preview = null;
     } else {
       this.photo2Preview = null;
+    }
+  }
+
+  getRepairSortIcon(sort: string): string {
+    switch (sort) {
+      case '水電相關':
+        return 'water_drop';
+      case '設備相關':
+        return 'build';
+      case '結構相關':
+        return 'architecture';
+      default:
+        return 'more_horiz';
+    }
+  }
+
+  getDescriptionIcon(description: string): string {
+    switch (description) {
+      case '水管漏水':
+      case '馬桶堵塞':
+      case '水龍頭壞掉':
+        return 'water_drop';
+      case '燈不亮':
+      case '電線外露':
+      case '電路故障':
+        return 'electrical_services';
+      case '電梯故障':
+        return 'elevator';
+      case '門鎖損壞':
+      case '門窗問題':
+        return 'door_front';
+      case '玻璃破裂':
+        return 'window';
+      case '牆壁剝落':
+      case '地板破損':
+      case '牆面/地面損壞':
+        return 'wall';
+      case '空調異常':
+        return 'ac_unit';
+      case '設備故障':
+        return 'build';
+      default:
+        return 'warning';
+    }
+  }
+
+  getStatusIcon(status: string): string {
+    switch (status) {
+      case '待處理':
+        return 'schedule';
+      case '處理中':
+        return 'engineering';
+      case '已完成':
+        return 'check_circle';
+      case '已拒絕':
+        return 'cancel';
+      default:
+        return 'help';
     }
   }
 

@@ -1,14 +1,56 @@
+[h2] {
+  display: flex;
+  align-items: center;
+  color: #1890ff;
+  margin: 0;
+  padding: 16px;
+  border-bottom: 1px solid #f0f0f0;
+  
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
 .repair-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  padding: 8px 0;
+  padding: 16px;
   min-width: 500px;
   max-width: 600px;
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  ::ng-deep {
+    .mat-mdc-form-field-icon-prefix {
+      color: #1890ff;
+    }
+
+    .mat-mdc-select-value {
+      display: flex;
+      align-items: center;
+    }
+
+    .mat-mdc-select-arrow {
+      color: #1890ff;
+    }
+
+    .mdc-list-item__primary-text {
+      display: flex !important;
+      align-items: center;
+      
+      mat-icon {
+        margin-right: 8px;
+        color: #1890ff;
+      }
+    }
+  }
 }
 
 .section-header {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
   
   h3 {
     display: flex;
@@ -16,16 +58,19 @@
     font-size: 16px;
     font-weight: 500;
     margin: 0;
+    color: #1890ff;
     
     mat-icon {
       margin-right: 8px;
-      color: #5c6bc0;
     }
   }
 }
 
 .photo-upload-section {
-  margin-top: 8px;
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
 }
 
 .photo-upload-container {
@@ -37,13 +82,19 @@
 .photo-upload-box {
   width: 160px;
   height: 160px;
-  border: 2px dashed #ccc;
+  border: 2px dashed #1890ff;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
+  transition: all 0.3s;
+  
+  &:hover {
+    border-color: #40a9ff;
+  }
   
   &.has-image {
     border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
   }
   
   .upload-placeholder {
@@ -59,7 +110,7 @@
       font-size: 36px;
       height: 36px;
       width: 36px;
-      color: #5c6bc0;
+      color: #1890ff;
       margin-bottom: 8px;
     }
     
@@ -99,6 +150,8 @@
       width: 30px;
       height: 30px;
       line-height: 30px;
+      opacity: 0;
+      transition: opacity 0.3s;
       
       mat-icon {
         font-size: 16px;
@@ -106,18 +159,40 @@
         width: 16px;
       }
     }
+    
+    &:hover .remove-photo-btn {
+      opacity: 1;
+    }
   }
 }
 
 .upload-progress {
-  margin-top: 8px;
+  margin-top: 16px;
   
   .progress-text {
     display: block;
     text-align: center;
     font-size: 12px;
-    margin-top: 4px;
-    color: #5c6bc0;
+    margin-top: 8px;
+    color: #1890ff;
+  }
+}
+
+mat-dialog-actions {
+  padding: 8px 16px;
+  border-top: 1px solid #f0f0f0;
+  
+  button {
+    display: flex;
+    align-items: center;
+    
+    mat-icon {
+      margin-right: 4px;
+    }
+    
+    &:not(:last-child) {
+      margin-right: 8px;
+    }
   }
 }
 

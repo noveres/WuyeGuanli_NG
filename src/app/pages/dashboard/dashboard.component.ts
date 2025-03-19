@@ -7,7 +7,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../services/auth.service';
 import { AnnouncementService } from '../../services/announcement.service';
 import { UserService } from '../../services/user.service';
+import { RepairService } from '../../services/repair.service';
+import { ApiService } from '../../services/Api';
+import { CarfeeService } from '../../services/carfee.service';
 import { Announcement, AnnouncementType } from '../../models/announcement.model';
+import { RepairRequest } from '../../models/repair-request.model';
 
 interface DashboardAnnouncement {
   id: number;
@@ -16,6 +20,19 @@ interface DashboardAnnouncement {
   header: string;
   content: string;
   imgUrl: string | null;
+}
+
+interface DashboardStats {
+  totalVisitors: number;
+  currentVisitors: number;
+  leftVisitors: number;
+  totalParkingSpaces: number;
+  paidParkingSpaces: number;
+  parkingPaymentRate: number;
+  totalRepairs: number;
+  completedRepairs: number;
+  repairCompletionRate: number;
+  visitorRate: number;
 }
 
 @Component({
@@ -29,17 +46,37 @@ export class DashboardComponent implements OnInit {
   userName = '系統管理員';
   userRole = '系統管理員';
   announcements: DashboardAnnouncement[] = [];
+  repairRequests: RepairRequest[] = [];
+  repairCount = 0;
+  stats: DashboardStats = {
+    totalVisitors: 0,
+    currentVisitors: 0,
+    leftVisitors: 0,
+    totalParkingSpaces: 0,
+    paidParkingSpaces: 0,
+    parkingPaymentRate: 0,
+    totalRepairs: 0,
+    completedRepairs: 0,
+    repairCompletionRate: 0,
+    visitorRate: 0
+  };
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private userService: UserService,
-    private announcementService: AnnouncementService
+    private repairService: RepairService,
+    private announcementService: AnnouncementService,
+    private apiService: ApiService,
+    private carfeeService: CarfeeService
   ) {}
 
   ngOnInit() {
     this.loadAnnouncements();
     this.updateUserInfo();
+    this.loadRepairRequests();
+    this.loadVisitorStats();
+    this.loadParkingStats();
   }
 
   private updateUserInfo(): void {
@@ -61,6 +98,41 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  loadParkingStats() {
+    this.carfeeService.getAllFees().subscribe({
+      next: (data: any[]) => {
+        this.stats.totalParkingSpaces = data.length;
+        this.stats.paidParkingSpaces = data.filter(item => item.paid).length;
+        this.stats.parkingPaymentRate = this.stats.totalParkingSpaces > 0 
+          ? (this.stats.paidParkingSpaces / this.stats.totalParkingSpaces) * 100 
+          : 0;
+      },
+      error: (error) => {
+        console.error('獲取停車費統計失敗:', error);
+      }
+    });
+  }
+
+  loadVisitorStats() {
+    this.apiService.getApi("http://localhost:8585/api/visitors/getAll").subscribe({
+      next: (res: any) => {
+        if (res && res.visitorRecords) {
+          this.stats.totalVisitors = res.visitorRecords.length;
+          this.stats.currentVisitors = res.visitorRecords.filter((v: any) => 
+            v.visitorTime === v.outTime).length;
+          this.stats.leftVisitors = this.stats.totalVisitors - this.stats.currentVisitors;
+          // 計算在場訪客比率
+          this.stats.visitorRate = this.stats.totalVisitors > 0 
+            ? (this.stats.currentVisitors / this.stats.totalVisitors) * 100 
+            : 0;
+        }
+      },
+      error: (error) => {
+        console.error('獲取訪客統計失敗:', error);
+      }
+    });
+  }
+
   loadAnnouncements() {
     this.announcementService.getAnnouncements().subscribe({
       next: (announcements: Announcement[]) => {
@@ -76,10 +148,35 @@ export class DashboardComponent implements OnInit {
             imgUrl: announcement.imageUrl || null
           }));
       },
-      error: (error: any) => {
+      error: (error) => {
         console.error('獲取公告失敗:', error);
       }
     });
+  }
+
+  loadRepairRequests() {
+    this.repairService.getAllRepairRequests().subscribe({
+      next: (repairs: RepairRequest[]) => {
+        this.repairRequests = repairs;
+        this.repairCount = repairs.length;
+        this.stats.totalRepairs = repairs.length;
+        this.stats.completedRepairs = repairs.filter(repair => repair.status === '已完成').length;
+        this.stats.repairCompletionRate = this.stats.totalRepairs > 0 
+          ? (this.stats.completedRepairs / this.stats.totalRepairs) * 100 
+          : 0;
+      },
+      error: (error) => {
+        console.error('獲取維修請求失敗:', error);
+      }
+    });
+  }
+
+  getRepairCountByType(type: string): number {
+    return this.repairRequests.filter(repair => repair.sort === type).length;
+  }
+
+  getRepairCountByStatus(status: string): number {
+    return this.repairRequests.filter(repair => repair.status === status).length;
   }
 
   logout(): void {

@@ -110,45 +110,187 @@
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #1976d2, #64b5f6);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  h3 {
+    margin: 0 0 20px 0;
+    color: #2c3e50;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .stat-number {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1976d2;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+
+    &::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(90deg, rgba(25, 118, 210, 0.2), transparent);
+      margin-left: 12px;
+    }
+  }
+
+  .stat-details {
+    .stat-row {
+      margin-bottom: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      .stat-label {
+        color: #546e7a;
+        font-size: 14px;
+        font-weight: 500;
+        min-width: 80px;
+      }
+
+      .stat-value {
+        background: #f8fafc;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 14px;
+        color: #2c3e50;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+
+        &:nth-child(2) {
+          background: #e3f2fd;
+          color: #1976d2;
+        }
+
+        &:nth-child(3) {
+          background: #fff3e0;
+          color: #f57c00;
+        }
+
+        &:hover {
+          transform: translateX(2px);
+        }
+      }
+    }
+  }
+
+  // 為不同類型的公告添加不同的頂部邊框顏色
+  &[data-type="水電相關"]::before {
+    background: linear-gradient(90deg, #1890ff, #91d5ff);
+  }
+
+  &[data-type="住戶相關"]::before {
+    background: linear-gradient(90deg, #52c41a, #b7eb8f);
+  }
+
+  &[data-type="維修相關"]::before {
+    background: linear-gradient(90deg, #fa8c16, #ffd591);
+  }
+
+  &[data-type="其他"]::before {
+    background: linear-gradient(90deg, #8c8c8c, #d9d9d9);
+  }
+}
+
+// 進度條樣式美化
+.progress-bar {
+  flex: 1;
+  height: 8px;
+  background: #f1f5f9;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+
+  .progress {
+    height: 100%;
+    background: linear-gradient(90deg, #1976d2, #64b5f6);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.1),
+        rgba(255, 255, 255, 0.2),
+        rgba(255, 255, 255, 0.1)
+      );
+      transform: translateX(-100%);
+      animation: shimmer 2s infinite;
+    }
+  }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@media (max-width: 1200px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
 
   .stat-card {
-    background: white;
     padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s;
-
-    &:hover {
-      transform: translateY(-2px);
-    }
-
-    h3 {
-      margin: 0;
-      color: #7f8c8d;
-      font-size: 15px;
-      font-weight: normal;
-    }
 
     .stat-number {
       font-size: 32px;
-      font-weight: 600;
-      color: #2c3e50;
-      margin: 12px 0;
-    }
-
-    .stat-details {
-      display: flex;
-      justify-content: space-between;
-      color: #7f8c8d;
-      font-size: 13px;
-
-      span {
-        padding: 4px 8px;
-        background: #f8f9fa;
-        border-radius: 4px;
-      }
     }
   }
 }

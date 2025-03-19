@@ -82,7 +82,7 @@ export class RepairRequestListComponent implements OnInit {
   
   // 定義維修類型和狀態
   repairSorts: string[] = ['水電相關', '設備相關', '結構相關', '其他'];
-  repairStatuses: string[] = ['待處理', '處理中', '已完成', '已拒絕'];
+  repairStatuses: string[] = ['待處理', '處理中', '已完成'];
   
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -383,7 +383,7 @@ export class RepairRequestListComponent implements OnInit {
       case '待處理': return 'status-pending';
       case '處理中': return 'status-processing';
       case '已完成': return 'status-completed';
-      case '已拒絕': return 'status-rejected';
+      // case '已拒絕': return 'status-rejected';
       default: return '';
     }
   }

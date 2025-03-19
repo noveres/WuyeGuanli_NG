@@ -7,41 +7,59 @@
       </div>
 
       <div class="stats-grid">
+        
         <div class="stat-card">
-          <h3>總住戶數</h3>
-          <div class="stat-number">124</div>
+          <h3>收支比</h3>
+          <div class="stat-number">9</div>
           <div class="stat-details">
-            <span>進入 12</span>
-            <span>遷出 3</span>
+            <span>收入</span>
+            <span>支出</span>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <h3>總訪客數</h3>
+          <div class="stat-number">{{ stats.totalVisitors }}</div>
+          <div class="stat-details">
+            <div class="stat-row">
+              <span class="stat-label">當前狀態：</span>
+              <span class="stat-value">在場: {{ stats.currentVisitors }}</span>
+              <span class="stat-value">已離開: {{ stats.leftVisitors }}</span>
+            </div>
           </div>
         </div>
 
         <div class="stat-card">
-          <h3>需額交管理費人數</h3>
-          <div class="stat-number">121</div>
+          <h3>停車費繳交</h3>
+          <div class="stat-number">{{ stats.totalParkingSpaces }}</div>
           <div class="stat-details">
-            <span>繳交 2</span>
-            <span>遲出 7</span>
+            <div class="stat-row">
+              <span class="stat-label">繳費狀態：</span>
+              <span class="stat-value">已繳: {{ stats.paidParkingSpaces }}</span>
+              <span class="stat-value">未繳: {{ stats.totalParkingSpaces - stats.paidParkingSpaces }}</span>
+            </div>
           </div>
         </div>
 
         <div class="stat-card">
           <h3>維修案件</h3>
-          <div class="stat-number">7</div>
+          <div class="stat-number">{{ repairCount }}</div>
           <div class="stat-details">
-            <span>受理 5</span>
-            <span>持修中 2</span>
+            <div class="stat-row">
+              <span class="stat-label">類型統計：</span>
+              <span class="stat-value">水電: {{ getRepairCountByType('水電相關') }}</span>
+              <span class="stat-value">設備: {{ getRepairCountByType('設備相關') }}</span>
+              <span class="stat-value">其他: {{ getRepairCountByType('其他') }}</span>
+            </div>
+            <div class="stat-row">
+              <span class="stat-label">狀態統計：</span>
+              <span class="stat-value">待處理: {{ getRepairCountByStatus('待處理') }}</span>
+              <span class="stat-value">處理中: {{ getRepairCountByStatus('處理中') }}</span>
+            </div>
           </div>
         </div>
 
-        <div class="stat-card">
-          <h3>待處理投訴</h3>
-          <div class="stat-number">9</div>
-          <div class="stat-details">
-            <span>受理 6</span>
-            <span>未受理 3</span>
-          </div>
-        </div>
+
       </div>
     </div>
 
@@ -60,23 +78,23 @@
           <div class="stat-row">
             <span class="label">訪客人數</span>
             <div class="progress-bar">
-              <div class="progress" style="width: 40%"></div>
+              <div class="progress" [style.width.%]="stats.visitorRate"></div>
             </div>
-            <span class="value">23 人</span>
+            <span class="value">{{ stats.currentVisitors }}/{{ stats.totalVisitors }} 人</span>
           </div>
           <div class="stat-row">
-            <span class="label">維修案件</span>
+            <span class="label">維修完成率</span>
             <div class="progress-bar">
-              <div class="progress" style="width: 70%"></div>
+              <div class="progress" [style.width.%]="stats.repairCompletionRate"></div>
             </div>
-            <span class="value">7 件</span>
+            <span class="value">{{ stats.completedRepairs/ stats.totalRepairs *100 | number:'1.0-0' }} %</span>
           </div>
           <div class="stat-row">
-            <span class="label">本月繳費率</span>
+            <span class="label">停車位繳費率</span>
             <div class="progress-bar">
-              <div class="progress" style="width: 50%"></div>
+              <div class="progress" [style.width.%]="stats.parkingPaymentRate"></div>
             </div>
-            <span class="value">50 %</span>
+            <span class="value">{{ stats.parkingPaymentRate | number:'1.0-0' }} %</span>
           </div>
         </div>
       </div>

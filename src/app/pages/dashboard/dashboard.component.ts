@@ -10,6 +10,7 @@ import { UserService } from '../../services/user.service';
 import { RepairService } from '../../services/repair.service';
 import { ApiService } from '../../services/Api';
 import { CarfeeService } from '../../services/carfee.service';
+import { HttpServiceService } from '../../services/http-service.service';
 import { Announcement, AnnouncementType } from '../../models/announcement.model';
 import { RepairRequest } from '../../models/repair-request.model';
 
@@ -32,6 +33,9 @@ interface DashboardStats {
   totalRepairs: number;
   completedRepairs: number;
   repairCompletionRate: number;
+  totalIncome: number;
+  totalExpenditure: number;
+  incomeExpenditureRatio: number;
   visitorRate: number;
 }
 
@@ -58,6 +62,9 @@ export class DashboardComponent implements OnInit {
     totalRepairs: 0,
     completedRepairs: 0,
     repairCompletionRate: 0,
+    totalIncome: 0,
+    totalExpenditure: 0,
+    incomeExpenditureRatio: 0,
     visitorRate: 0
   };
 
@@ -68,7 +75,8 @@ export class DashboardComponent implements OnInit {
     private repairService: RepairService,
     private announcementService: AnnouncementService,
     private apiService: ApiService,
-    private carfeeService: CarfeeService
+    private carfeeService: CarfeeService,
+    private httpService: HttpServiceService
   ) {}
 
   ngOnInit() {
@@ -77,6 +85,7 @@ export class DashboardComponent implements OnInit {
     this.loadRepairRequests();
     this.loadVisitorStats();
     this.loadParkingStats();
+    this.loadFinancialStats();
   }
 
   private updateUserInfo(): void {
@@ -129,6 +138,33 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('獲取訪客統計失敗:', error);
+      }
+    });
+  }
+
+  loadFinancialStats() {
+    const searchValue = {
+      name: "",
+      sDate: "",
+      eDate: ""
+    };
+    
+    this.httpService.PostApi('http://localhost:8585/Financial/search', searchValue).subscribe({
+      next: (res: any) => {
+        if (res && res.financials) {
+          this.stats.totalIncome = res.financials.reduce((sum: number, item: any) => 
+            sum + (item.income || 0), 0);
+          this.stats.totalExpenditure = res.financials.reduce((sum: number, item: any) => 
+            sum + (item.expenditure || 0), 0);
+          
+          // 計算收支比
+          this.stats.incomeExpenditureRatio = this.stats.totalExpenditure > 0 
+            ? (this.stats.totalIncome / this.stats.totalExpenditure) * 100 
+            : 0;
+        }
+      },
+      error: (error) => {
+        console.error('獲取財務統計失敗:', error);
       }
     });
   }

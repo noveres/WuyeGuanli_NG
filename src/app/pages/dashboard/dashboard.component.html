@@ -9,11 +9,17 @@
       <div class="stats-grid">
         
         <div class="stat-card">
-          <h3>收支比</h3>
-          <div class="stat-number">9</div>
+          <h3>收支統計</h3>
+          <div class="stat-number">{{ stats.incomeExpenditureRatio | number:'1.0-2' }}%</div>
           <div class="stat-details">
-            <span>收入</span>
-            <span>支出</span>
+            <div class="stat-row">
+              <div class="stat-label">總收入</div>
+              <div class="stat-value">{{ stats.totalIncome | number:'1.0-0' }}</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-label">總支出</div>
+              <div class="stat-value">{{ stats.totalExpenditure | number:'1.0-0' }}</div>
+            </div>
           </div>
         </div>
         
@@ -59,6 +65,7 @@
           </div>
         </div>
 
+      
 
       </div>
     </div>
@@ -69,11 +76,11 @@
         <h3>本月資料統計</h3>
         <div class="stat-rows">
           <div class="stat-row">
-            <span class="label">社區人數</span>
+            <span class="label">收支比</span>
             <div class="progress-bar">
-              <div class="progress" style="width: 80%"></div>
+              <div class="progress" [style.width.%]="stats.incomeExpenditureRatio > 100 ? 100 : stats.incomeExpenditureRatio"></div>
             </div>
-            <span class="value">106 人</span>
+            <span class="value">{{ stats.incomeExpenditureRatio | number:'1.0-2' }}%</span>
           </div>
           <div class="stat-row">
             <span class="label">訪客人數</span>

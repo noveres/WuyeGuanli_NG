@@ -56,6 +56,33 @@
   .mat-mdc-tab-body-content {
     padding: 0;
   }
+  
+  .mat-mdc-paginator {
+    .mat-mdc-paginator-container {
+      padding: 0 16px;
+      min-height: 56px;
+      justify-content: flex-end;
+      gap: 8px;  
+    }
+    
+    .mat-mdc-form-field {
+      min-width: 80px !important;
+    }
+    
+    .mat-mdc-select-trigger {
+      min-width: 72px;
+      padding: 0 12px;
+    }
+
+    .mat-mdc-select-value {
+      min-width: 32px;
+      text-align: center;
+    }
+
+    .mat-mdc-select-arrow-wrapper {
+      padding-left: 8px;
+    }
+  }
 }
 
 .tab-content {

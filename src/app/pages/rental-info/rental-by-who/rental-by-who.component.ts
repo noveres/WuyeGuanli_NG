@@ -60,6 +60,7 @@ export class RentalByWhoComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
+  searchText: string = ''; // 新增全表格模糊搜尋用
 
   // Mat-table 相關
   displayedColumns: string[] = ['idwhoRental', 'rentalWhat', 'accountRental', 'name', 'changeTime', 'verify', 'returnYorN', 'actions'];
@@ -86,9 +87,22 @@ export class RentalByWhoComponent implements OnInit {
     if (!this.selectedItem) return '請選擇物品';
     const item = this.rentalItems.find(i => i.item === this.selectedItem);
     if (item) {
-      return `${item.item} (可用數量: ${item.total})`;
+      return `${item.item} (可用數量: ${this.getAvailableItemCount(item)})`;
     }
     return this.selectedItem;
+  }
+
+  // 新增的方法：計算可用數量（總數減去未歸還的數量）
+  getAvailableItemCount(item: RentalItem): number {
+    if (!item) return 0;
+
+    // 計算特定物品的未歸還數量
+    const unreturned = this.whoRentalList.filter(rental =>
+      rental.rentalWhat === item.item && !rental.returnYorN
+    ).length;
+
+    // 可用數量 = 總數 - 未歸還數量
+    return Math.max(0, item.total - unreturned);
   }
 
   loadRentalItems(): void {
@@ -157,6 +171,92 @@ export class RentalByWhoComponent implements OnInit {
           // 更新 MatTableDataSource
           this.dataSource.data = [...this.whoRentalList];
           this.successMessage = '刷新成功';
+          setTimeout(() => this.successMessage = '', 3000);
+        }
+      });
+  }
+
+  // 更新 - 更新歸還狀態的方法，確保所有欄位都被保留
+  updateReturnStatus(id: number): void {
+    const rentalItem = this.whoRentalList.find(item => item.idwhoRental === id);
+    if (!rentalItem) {
+      this.errorMessage = '找不到此租借記錄';
+      return;
+    }
+
+    this.loading = true;
+    // 把所有資料都帶回去，只更新 returnYorN 狀態
+    const updateData = {
+      idwhoRental: rentalItem.idwhoRental,
+      rentalWhat: rentalItem.rentalWhat,
+      accountRental: rentalItem.accountRental,
+      returnYorN: !rentalItem.returnYorN,
+      verify: rentalItem.verify,
+      name: rentalItem.name
+      // 不需要帶入 changeTime，讓系統自動更新
+    };
+
+    this.httpService.PostApi<any>(`${this.apiBaseUrl}/whorental`, updateData)
+      .pipe(
+        catchError(error => {
+          console.error('更新歸還狀態失敗:', error);
+          this.errorMessage = '更新歸還狀態失敗';
+          this.successMessage = '';
+          return of(null);
+        }),
+        finalize(() => this.loading = false)
+      )
+      .subscribe(response => {
+        if (response) {
+          console.log('更新歸還狀態成功:', response);
+          this.successMessage = '更新歸還狀態成功';
+          this.errorMessage = '';
+
+          // 更新本地資料
+          const index = this.whoRentalList.findIndex(item => item.idwhoRental === id);
+          if (index !== -1) {
+            this.whoRentalList[index].returnYorN = !rentalItem.returnYorN;
+            this.dataSource.data = [...this.whoRentalList];
+          }
+
+          // 3秒後清除成功訊息
+          setTimeout(() => this.successMessage = '', 3000);
+        }
+      });
+  }
+
+  // 使用PUT請求驗證租借
+  verifyRental(id: number, inputAmount: string): void {
+    if (!inputAmount) {
+      this.errorMessage = '請輸入驗證碼';
+      return;
+    }
+
+    const rentalItem = this.whoRentalList.find(item => item.idwhoRental === id);
+    if (!rentalItem) {
+      this.errorMessage = '找不到此租借記錄';
+      return;
+    }
+
+    this.loading = true;
+
+    // 使用 PUT 請求并使用 query 參數
+    this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&inputAmount=${inputAmount}`, null)
+      .pipe(
+        catchError(error => {
+          console.error('驗證失敗:', error);
+          this.errorMessage = '驗證失敗';
+          this.successMessage = '';
+          return of(null);
+        }),
+        finalize(() => this.loading = false)
+      )
+      .subscribe(response => {
+        if (response) {
+          console.log('驗證成功:', response);
+          this.successMessage = '驗證成功';
+          this.errorMessage = '';
+          this.loadWhoRentalInfo(); // 重新載入列表
           setTimeout(() => this.successMessage = '', 3000);
         }
       });
@@ -238,7 +338,7 @@ export class RentalByWhoComponent implements OnInit {
     return date.toLocaleString('zh-TW');
   }
 
-  // 用於 mat-table 篩選
+  // 用於 mat-table 全域搜尋
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -247,4 +347,19 @@ export class RentalByWhoComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  // 刷新當前頁面的方法
+  refreshPage(): void {
+    this.loading = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+
+    // 重新載入租借物品和租借記錄
+    this.loadRentalItems();
+    this.loadWhoRentalInfo();
+
+    this.successMessage = '頁面已刷新';
+    setTimeout(() => this.successMessage = '', 3000);
+  }
+
 }

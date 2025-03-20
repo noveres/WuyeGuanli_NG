@@ -1,24 +1,24 @@
 <div class="container">
-    <h2>租借系統</h2>
-  
-    <!-- 警告訊息 -->
-    <div *ngIf="errorMessage" class="alert alert-danger">
-      {{ errorMessage }}
-    </div>
-    <div *ngIf="successMessage" class="alert alert-success">
-      {{ successMessage }}
-    </div>
-  
-    <!-- 載入指示器 -->
-    <div *ngIf="loading" class="loading-indicator">
-      載入中...
-    </div>
-  
-    <!-- 租借表單 -->
-    <div class="rental-form">
-      <h3>新增租借</h3>
-      <div class="form-group">
-        <label for="rentalItem">租借物品</label>
+  <h2>租借系統/與紀錄</h2>
+
+  <!-- 警告訊息 -->
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <!-- 載入指示器 -->
+  <div *ngIf="loading" class="loading-indicator">
+    載入中...
+  </div>
+
+  <!-- 租借表單 -->
+  <div class="rental-form">
+    <h3>新增租借</h3>
+    <div class="row">
+      <div class="col-7">
         <mat-form-field appearance="fill" class="form-control">
           <mat-select id="rentalItem" [(ngModel)]="selectedItem" placeholder="請選擇物品">
             <mat-select-trigger>
@@ -26,104 +26,150 @@
             </mat-select-trigger>
             <mat-option value="">請選擇物品</mat-option>
             <mat-option *ngFor="let item of rentalItems" [value]="item.item">
-              {{ item.item }} (可用數量: {{ item.total }}) - {{ item.remark }}
+              {{ item.item }} (可用數量: {{ getAvailableItemCount(item) }}) - {{ item.remark }}
             </mat-option>
           </mat-select>
-        
         </mat-form-field>
       </div>
-      <div class="form-group">
+      <div class="col-3">
         <mat-form-field appearance="fill" class="form-control">
           <mat-label>租借帳號</mat-label>
           <input matInput type="text" id="accountRental" [(ngModel)]="accountRental" placeholder="請輸入租借帳號">
         </mat-form-field>
       </div>
-      <button mat-raised-button color="primary" (click)="addRental()">確認租借</button>
-    </div>
-  
-    <!-- 租借記錄表格 (改為 mat-table) -->
-    <div class="rental-table">
-      <h3>租借記錄</h3>
-      
-      <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" class="full-width-table">
-          
-          <!-- ID 欄位 -->
-          <ng-container matColumnDef="idwhoRental">
-            <th mat-header-cell *matHeaderCellDef>ID</th>
-            <td mat-cell *matCellDef="let item">{{item.idwhoRental}}</td>
-          </ng-container>
-          
-          <!-- 租借物品欄位 -->
-          <ng-container matColumnDef="rentalWhat">
-            <th mat-header-cell *matHeaderCellDef>租借物品</th>
-            <td mat-cell *matCellDef="let item">{{item.rentalWhat}}</td>
-          </ng-container>
-          
-          <!-- 租借帳號欄位 -->
-          <ng-container matColumnDef="accountRental">
-            <th mat-header-cell *matHeaderCellDef>租借帳號</th>
-            <td mat-cell *matCellDef="let item">{{item.accountRental}}</td>
-          </ng-container>
-          
-          <!-- 使用者欄位 -->
-          <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef>使用者</th>
-            <td mat-cell *matCellDef="let item">{{item.name}}</td>
-          </ng-container>
-          
-          <!-- 租借時間欄位 -->
-          <ng-container matColumnDef="changeTime">
-            <th mat-header-cell *matHeaderCellDef>租借時間</th>
-            <td mat-cell *matCellDef="let item">{{formatDate(item.changeTime)}}</td>
-          </ng-container>
-          
-          <!-- 歸還狀態欄位 -->
-          <ng-container matColumnDef="returnYorN">
-            <th mat-header-cell *matHeaderCellDef>歸還狀態</th>
-            <td mat-cell *matCellDef="let item">
-              <span [ngClass]="item.returnYorN ? 'status-yes' : 'status-no'">
-                {{ item.returnYorN ? '已歸還=使用結束' : '未歸還' }}
-              </span>
-            </td>
-          </ng-container>
-          
-          <!-- 驗證狀態欄位 -->
-          <ng-container matColumnDef="verify">
-            <th mat-header-cell *matHeaderCellDef>驗證狀態</th>
-            <td mat-cell *matCellDef="let item">
-              <span [ngClass]="item.verify ? 'status-yes' : 'status-no'">
-                {{ item.verify ? '已驗證=已出借=用戶使用中' : '未驗證=未出借=或驗證失敗' }}
-              </span>
-            </td>
-          </ng-container>
-          
-          <!-- 操作欄位 -->
-          <ng-container matColumnDef="actions">
-            <th mat-header-cell *matHeaderCellDef>操作</th>
-            <td mat-cell *matCellDef="let item">
-              <button mat-icon-button (click)="getWhoRentalById(item.idwhoRental)" matTooltip="刷新">
-                <mat-icon>refresh</mat-icon>
-              </button>
-              <button mat-icon-button  (click)="deleteRental(item.idwhoRental)" matTooltip="刪除">
-                <mat-icon>delete_forever</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-          
-          <!-- 定義列 -->
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-          
-          <!-- 無資料時顯示 -->
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
-              無租借記錄
-            </td>
-          </tr>
-        </table>
-  
-        <mat-paginator [pageSizeOptions]="[ 10, 25, 100]" showFirstLastButtons></mat-paginator>
+      <div class="col-2">
+        <button (click)="addRental()" class="full-width-button btn-primary">確認租借</button>
       </div>
     </div>
   </div>
+
+  <!-- 租借記錄表格 (mat-table) -->
+  <div class="rental-table">
+    <div class="row align-items-center">
+      <!-- 搜尋框 -->
+      <div class="col-10">
+        <mat-form-field appearance="outline" class="search-field w-100">
+          <mat-label>搜尋</mat-label>
+          <input matInput (keyup)="applyFilter($event)" placeholder="輸入搜尋內容..." [(ngModel)]="searchText">
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </div>
+
+      <!-- 刷新按鈕 (占 3 格) -->
+      <div class="col-1 text-end">
+        <button mat-icon-button class="" (click)="refreshPage()" matTooltip="刷新頁面">
+          <mat-icon>refresh</mat-icon><span class="d-none d-md-inline">F5</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource" class="full-width-table" matSort>
+
+        <!-- ID 欄位 -->
+        <ng-container matColumnDef="idwhoRental">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header style="display: none;">ID</th>
+          <td mat-cell *matCellDef="let item" style="display: none;">{{item.idwhoRental}}</td>
+        </ng-container>
+
+        <!-- 租借物品欄位 -->
+        <ng-container matColumnDef="rentalWhat">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>租借物品</th>
+          <td mat-cell *matCellDef="let item">{{item.rentalWhat}}</td>
+        </ng-container>
+
+        <!-- 租借帳號欄位 -->
+        <ng-container matColumnDef="accountRental">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>租借帳號</th>
+          <td mat-cell *matCellDef="let item">{{item.accountRental}}</td>
+        </ng-container>
+
+        <!-- 使用者欄位 -->
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>使用者</th>
+          <td mat-cell *matCellDef="let item">{{item.name}}</td>
+        </ng-container>
+
+        <!-- 租借時間欄位 -->
+        <ng-container matColumnDef="changeTime">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>租借時間或歸還時間</th>
+          <td mat-cell *matCellDef="let item">{{formatDate(item.changeTime)}}</td>
+        </ng-container>
+
+        <!-- 驗證狀態欄位 -->
+        <ng-container matColumnDef="verify">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>驗證狀態</th>
+          <td mat-cell *matCellDef="let item">
+            <span [ngClass]="item.verify ? 'status-yes' : 'status-no'">
+              {{ item.verify ? '已驗證' : '未驗證' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- 歸還狀態欄位 -->
+        <ng-container matColumnDef="returnYorN">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>歸還狀態</th>
+          <td mat-cell *matCellDef="let item">
+            <span [ngClass]="item.returnYorN ? 'status-yes' : 'status-no'">
+              {{ item.returnYorN ? '已歸還' : '未歸還' }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- 操作欄位 -->
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef> 操作</th>
+          <td mat-cell *matCellDef="let item" class="action-cell">
+            <div class="action-controls">
+              <input type="text" class="verification-code-input" #inputAmount placeholder="輸入驗證碼">
+              <button class="action-button btn btn-primary" (click)="verifyRental(item.idwhoRental, inputAmount.value)">
+                驗證
+              </button>
+              <button mat-icon-button color="accent" class="action-button"
+                (click)="updateReturnStatus(item.idwhoRental)" matTooltip="更新歸還狀態">
+                <mat-icon>autorenew</mat-icon>
+              </button>
+
+              <button mat-icon-button color="warn" class="action-button" (click)="deleteRental(item.idwhoRental)"
+                matTooltip="永久刪除">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- 定義列 -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        <!-- 無資料時顯示 -->
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+            無租借記錄或無符合搜尋條件的記錄
+          </td>
+        </tr>
+      </table>
+
+      <mat-paginator [pageSizeOptions]="[20, 50, 100]" showFirstLastButtons></mat-paginator>
+    </div>
+  </div>
+
+  <div class="explame pt-2 container">
+    <div class="status-explanation">
+      <div class="status-item">
+        <h5>驗證狀態說明:</h5>
+        <ul class="status-list">
+          <li>已驗證=已出借=用戶使用中</li>
+          <li>未驗證=未出借=或驗證失敗</li>
+        </ul>
+      </div>
+      <div class="status-item">
+        <h5>歸還狀態說明:</h5>
+        <ul class="status-list">
+          <li>已歸還=使用結束=或取消申請</li>
+          <li>未歸還=使用中</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

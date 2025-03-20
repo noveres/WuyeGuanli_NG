@@ -12,6 +12,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RentalDialogComponent } from './rental-dialog/rental-dialog.component';
 import { HttpServiceService } from '../../services/http-service.service';
+import { RentalByWhoComponent } from './rental-by-who/rental-by-who.component';
 
 interface RentalResponse {
   statusCode: number;
@@ -39,7 +40,8 @@ interface Rental {
     MatSortModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    RentalByWhoComponent,
   ]
 })
 export class RentalInfoComponent implements OnInit {

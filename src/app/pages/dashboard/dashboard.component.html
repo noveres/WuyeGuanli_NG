@@ -65,8 +65,20 @@
           </div>
         </div>
 
-      
-
+        <div class="stat-card" data-type="其他">
+          <h3>公共器材歸還率</h3>
+          <div class="stat-number">{{ stats.rentalReturnRate | number:'1.0-2' }}%</div>
+          <div class="stat-details">
+            <div class="stat-row">
+              <div class="stat-label">已歸還</div>
+              <div class="stat-value">{{ stats.returnedRentals }}</div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-label">未歸還</div>
+              <div class="stat-value">{{ stats.totalRentals - stats.returnedRentals }}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

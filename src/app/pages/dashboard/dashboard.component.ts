@@ -37,6 +37,9 @@ interface DashboardStats {
   totalExpenditure: number;
   incomeExpenditureRatio: number;
   visitorRate: number;
+  totalRentals: number;
+  returnedRentals: number;
+  rentalReturnRate: number;
 }
 
 @Component({
@@ -65,7 +68,10 @@ export class DashboardComponent implements OnInit {
     totalIncome: 0,
     totalExpenditure: 0,
     incomeExpenditureRatio: 0,
-    visitorRate: 0
+    visitorRate: 0,
+    totalRentals: 0,
+    returnedRentals: 0,
+    rentalReturnRate: 0
   };
 
   constructor(
@@ -86,6 +92,7 @@ export class DashboardComponent implements OnInit {
     this.loadVisitorStats();
     this.loadParkingStats();
     this.loadFinancialStats();
+    this.loadRentalStats();
   }
 
   private updateUserInfo(): void {
@@ -203,6 +210,23 @@ export class DashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('獲取維修請求失敗:', error);
+      }
+    });
+  }
+
+  loadRentalStats() {
+    this.httpService.GetApi<any[]>('http://localhost:8585/rental/whorentalallinfo').subscribe({
+      next: (data) => {
+        if (data) {
+          this.stats.totalRentals = data.length;
+          this.stats.returnedRentals = data.filter(item => item.returnYorN).length;
+          this.stats.rentalReturnRate = this.stats.totalRentals > 0 
+            ? (this.stats.returnedRentals / this.stats.totalRentals) * 100 
+            : 0;
+        }
+      },
+      error: (error) => {
+        console.error('獲取租賃統計失敗:', error);
       }
     });
   }

@@ -30,13 +30,13 @@
             <div class="stat-row">
               <span class="stat-label">當前狀態：</span>
               <span class="stat-value">在場: {{ stats.currentVisitors }}</span>
-              <span class="stat-value">已離開: {{ stats.leftVisitors }}</span>
+              <span class="stat-value">離開: {{ stats.leftVisitors }}</span>
             </div>
           </div>
         </div>
 
         <div class="stat-card">
-          <h3>停車費繳交</h3>
+          <h3>停車位費繳交</h3>
           <div class="stat-number">{{ stats.totalParkingSpaces }}</div>
           <div class="stat-details">
             <div class="stat-row">
@@ -90,18 +90,18 @@
             <span class="value">{{ stats.currentVisitors }}/{{ stats.totalVisitors }} 人</span>
           </div>
           <div class="stat-row">
-            <span class="label">維修完成率</span>
-            <div class="progress-bar">
-              <div class="progress" [style.width.%]="stats.repairCompletionRate"></div>
-            </div>
-            <span class="value">{{ stats.completedRepairs/ stats.totalRepairs *100 | number:'1.0-0' }} %</span>
-          </div>
-          <div class="stat-row">
             <span class="label">停車位繳費率</span>
             <div class="progress-bar">
               <div class="progress" [style.width.%]="stats.parkingPaymentRate"></div>
             </div>
             <span class="value">{{ stats.parkingPaymentRate | number:'1.0-0' }} %</span>
+          </div>
+          <div class="stat-row">
+            <span class="label">維修完成率</span>
+            <div class="progress-bar">
+              <div class="progress" [style.width.%]="stats.repairCompletionRate"></div>
+            </div>
+            <span class="value">{{ stats.completedRepairs/ stats.totalRepairs *100 | number:'1.0-0' }} %</span>
           </div>
         </div>
       </div>

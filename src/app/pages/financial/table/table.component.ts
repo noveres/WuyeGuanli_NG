@@ -185,7 +185,7 @@ export class TableComponent {
     this.save[0].expenditure = this.showData[num].expenditure
     this.save[0].date = this.showData[num].date
     this.save[0].remark = this.showData[num].remark
-    // this.save[0].receipt = this.showData[num].receipt
+    this.save[0].receipt = this.showData[num].receipt
     console.log(this.save[0])
 
     if (this.save[0].income == 0) {
@@ -199,8 +199,21 @@ export class TableComponent {
 
 
 
-  switch_zzxc(value: number) {
-    this.table = value
+  switch_zzxc(num: number) {
+    this.table = num
+    this.switch = num
+    if (num == 1) {
+      this.save[0].expenditure = 0
+      // this.s.patchValue({
+      //   expenditure: Number()
+      // })
+    }
+    if (num == 2) {
+      this.save[0].income = 0
+      // this.data.patchValue({
+      //   income: Number()
+      // })
+    }
 
   }
 
@@ -268,12 +281,12 @@ export class TableComponent {
         this.errOpenDialog()
         return;
       }
-      this.showData[this.Num].project = this.save[0].project
-      this.showData[this.Num].income = this.save[0].income
-      this.showData[this.Num].expenditure = this.save[0].expenditure
-      this.showData[this.Num].date = this.save[0].date
-      this.showData[this.Num].remark = this.save[0].remark
-      this.showData[this.Num].receipt = this.save[0].receipt
+      // this.showData[this.Num].project = this.save[0].project
+      // this.showData[this.Num].income = this.save[0].income
+      // this.showData[this.Num].expenditure = this.save[0].expenditure
+      // this.showData[this.Num].date = this.save[0].date
+      // this.showData[this.Num].remark = this.save[0].remark
+      // this.showData[this.Num].receipt = this.save[0].receipt
 
       let save ={ids:[this.showData[this.Num].id]}
       this.http.PostApi('http://localhost:8585/Financial/delect', save).subscribe

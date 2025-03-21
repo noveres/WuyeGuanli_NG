@@ -1,20 +1,42 @@
-<h2 mat-dialog-title>預覽公告</h2>
+<h2 mat-dialog-title>
+  <mat-icon>campaign</mat-icon>
+  預覽公告
+</h2>
 
 <mat-dialog-content>
   <div class="announcement-preview">
+
+
     <h3 class="title">{{ data.title }}</h3>
-    <div class="date">{{ data.date | date:'yyyy-MM-dd' }}</div>
     
+    <div class="date">
+      <div class="date-info">
+        <mat-icon>event</mat-icon>
+        {{ data.date | date:'yyyy-MM-dd HH:mm' }}
+      </div>
+      <div class="type-tag" [ngClass]="'type-' + getTypeClass(data.type)">
+        <mat-icon>{{ getTypeIcon(data.type) }}</mat-icon>
+        {{ data.type }}
+      </div>
+    </div>
+ 
     <div class="image-container" *ngIf="data.imageUrl">
-      <img [src]="data.imageUrl" alt="公告圖片">
+      <div class="image-wrapper">
+        <img [src]="data.imageUrl" alt="公告圖片" (click)="openImagePreview(data.imageUrl)">
+      </div>
     </div>
     
     <div class="content">
       <p>{{ data.content }}</p>
     </div>
+
+  
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onClose()">關閉</button>
+  <button mat-button (click)="onClose()" color="primary">
+    <mat-icon>close</mat-icon>
+    關閉
+  </button>
 </mat-dialog-actions>

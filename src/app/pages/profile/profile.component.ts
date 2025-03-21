@@ -168,8 +168,8 @@ export class ProfileComponent implements OnInit {
 
   // 處理頭像加載錯誤
   handleAvatarError(): void {
-    console.log('頭像加載失敗，顯示默認頭像');
     this.showDefaultAvatar = true;
+    this.avatarUrl = null;
   }
 
   // 處理文件選擇
@@ -217,9 +217,19 @@ export class ProfileComponent implements OnInit {
     this.userService.uploadAvatar(this.currentUser.id, this.selectedFile).subscribe({
       next: (response) => {
         this.snackBar.open('頭像上傳成功', '關閉', { duration: 3000 });
-        // 更新頭像URL（添加時間戳避免緩存）
-        this.avatarUrl = this.userService.getAvatarUrl(this.currentUser.id);
-        // 通知頭像已更新 - 由於我們已在 userService 中實現了通知，這裡可以省略
+        
+        // 直接使用上傳後返回的URL，而不是重新請求
+        if (response && response.avatarUrl) {
+          this.avatarUrl = response.avatarUrl;
+          this.showDefaultAvatar = false;
+          
+          // 更新本地存儲
+          localStorage.setItem(`avatar_${this.currentUser.id}`, response.avatarUrl);
+          
+          // 通知其他組件頭像已更新
+          this.avatarService.updateAvatar(response.avatarUrl);
+        }
+        
         this.selectedFile = null;
         this.loading = false;
       },
@@ -228,10 +238,9 @@ export class ProfileComponent implements OnInit {
         this.snackBar.open('頭像上傳失敗，請稍後再試', '關閉', { duration: 3000 });
         this.loading = false;
         
-        // 如果上傳失敗，恢復之前的頭像URL
-        if (this.currentUser && this.currentUser.id) {
-          this.avatarUrl = this.userService.getAvatarUrl(this.currentUser.id);
-        }
+        // 如果上傳失敗，恢復為預設頭像
+        this.showDefaultAvatar = true;
+        this.avatarUrl = null;
       }
     });
   }

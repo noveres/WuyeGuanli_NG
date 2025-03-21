@@ -12,16 +12,13 @@
     </mat-card-header>
     <mat-card-content class="avatar-content">
       <div class="avatar-container">
-        <ng-container *ngIf="avatarUrl; else defaultAvatar">
-          <img [src]="avatarUrl" alt="用戶頭像" class="avatar-image">
-        </ng-container>
-        <ng-template #defaultAvatar>
-          <div class="avatar-placeholder">
-            <svg xmlns="http://www.w3.org/2000/svg" height="36" viewBox="0 -960 960 960" width="36" fill="#757575">
-              <path d="M480-480q-66 0-113-47t-47-113q0-66 47-113t113-47q66 0 113 47t47 113q0 66-47 113t-113 47ZM160-160v-112q0-34 17.5-62.5T224-378q62-31 126-46.5T480-440q66 0 130 15.5T736-378q29 15 46.5 43.5T800-272v112H160Z"/>
-            </svg>
-          </div>
-        </ng-template>
+        <img *ngIf="!showDefaultAvatar && avatarUrl" [src]="avatarUrl" alt="用戶頭像" class="avatar-image" (error)="handleAvatarError()">
+        <svg *ngIf="showDefaultAvatar || !avatarUrl" xmlns="http://www.w3.org/2000/svg" width="150" height="150"
+          viewBox="0 0 150 150">
+          <circle cx="75" cy="75" r="75" fill="#f0f0f0" />
+          <circle cx="75" cy="60" r="25" fill="#999" />
+          <path d="M75,85 C51,85 33,95 33,115 L117,115 C117,95 99,85 75,85 Z" fill="#999" />
+        </svg>
       </div>
       <div class="avatar-actions">
         <button mat-raised-button color="primary" (click)="fileInput.click()" [disabled]="loading">

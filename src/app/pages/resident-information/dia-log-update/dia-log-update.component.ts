@@ -42,6 +42,8 @@ export class DiaLogUpdateComponent {
 ngOnInit(): void {
   //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
   //Add 'implements OnInit' to the class.
+  console.log(this.service.addData);
+  this.service.addData;
   this.getValue()
 }
 getValue()
@@ -69,7 +71,6 @@ getValue()
     let retirn_data = ['status','not_click'];
     this.dialog_ref.close(retirn_data);
   }
-
   on_loding_click(bool : boolean):void
   {
     if(!bool)
@@ -82,8 +83,17 @@ getValue()
        this.insterdate[0].owerName = this.name;
        this.insterdate[0].owerPhone =this.phone;
        this.insterdate[0].lease = this.isLase;
-       this.insterdate[0].residentname = this.Lasename;
-       this.insterdate[0].residentphonenumber = this.Lasephone;
+       if(this.isLase)
+       {
+        this.insterdate[0].residentname = this.Lasename;
+        this.insterdate[0].residentphonenumber = this.Lasephone;
+       }
+       else
+       {
+        this.insterdate[0].residentname = "";
+        this.insterdate[0].residentphonenumber = ""
+       }
+
       console.log(this.insterdate[0]);
        this.http.putAPI("http://localhost:8585/api/residents/update",this.insterdate[0]).subscribe
        (

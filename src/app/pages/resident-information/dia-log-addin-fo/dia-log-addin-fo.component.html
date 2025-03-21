@@ -3,26 +3,43 @@
 
 <mat-dialog-content>
   <h3>住戶姓名 &nbsp; :&nbsp; <input type="text" name="" id="" [(ngModel)]="name" style="height: 50px; font-size: 22.5px; width: 270px;"></h3>
+  @if (name == "")
+  {
+    <h5 style="color: rgb(209, 31, 31);">住戶名字不能為空</h5>
+  }
   <p></p>
-  <h3>住戶電話 &nbsp; :&nbsp; 09 -&nbsp;&nbsp;<input type="text" name="" id="" [(ngModel)]="phone" style="height: 50px; font-size: 22.5px; width: 210px;"></h3>
+  <h3>住戶電話 &nbsp; :&nbsp; 09 -&nbsp;&nbsp;<input type="text" name="" id="" [(ngModel)]="phone" style="height: 50px; font-size: 22.5px; width: 210px;"(keyup)="chickPhone()"></h3>
+  @if (chickPhone())
+  {
+    <h5 style="color: rgb(209, 31, 31);">{{errorStr}}</h5>
+  }
   <p></p>
   <h3>區號 &nbsp; :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-    <select name="" id=""  [(ngModel)]="Residential_Zone" style="height: 50px; font-size: 22.5px; width: 270px;">
+    <select name="" id=""  [(ngModel)]="Residential_Zone" style="height: 50px; font-size: 22.5px; width: 270px;"(keyup)="chickHouse_number()">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
     </select>
   </h3>
   <p></p>
-  <h3>門牌號碼 &nbsp; :&nbsp; <input type="text" name="" id="" [(ngModel)]="House_number" style="height: 50px; font-size: 22.5px; width: 270px;"></h3>
+  <h3>門牌號碼 &nbsp; :&nbsp; <input type="text" name="" id="" [(ngModel)]="House_number" style="height: 50px; font-size: 22.5px; width: 270px;"(keyup)="chickHouse_number()"></h3>
+  @if (chickHouse_number())
+  {
+    <h5 style="color: rgb(209, 31, 31);">{{errorStr1}}</h5>
+  }
   <h3>是否出租 <input type="checkbox" name="" id=""[(ngModel)]="isLase" style="height: 25px; width: 25px;"></h3>
   <p></p>
+
   @if (isLase)
   {
      <h3>租客姓名 &nbsp; :&nbsp; <input type="text" name="" id="" [(ngModel)]="Lasename" style="height: 50px; font-size: 22.5px; width: 270px;"></h3>
      <p></p>
-     <h3 >租客電話 &nbsp; :&nbsp; 09 -&nbsp;&nbsp;<input type="text" name="" id="" [(ngModel)]="Lasephone" style="height: 50px; font-size: 22.5px; width: 210px;"></h3>
+     <h3 >租客電話 &nbsp; :&nbsp; 09 -&nbsp;&nbsp;<input type="text" name="" id="" [(ngModel)]="Lasephone" style="height: 50px; font-size: 22.5px; width: 210px;"(keyup)="chickLasephone()"></h3>
      <h3></h3>
+     @if (chickLasephone())
+     {
+       <h5 style="color: rgb(209, 31, 31);">{{errorStr2}}</h5>
+     }
      <p></p>
   }
 </mat-dialog-content>

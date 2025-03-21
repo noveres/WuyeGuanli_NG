@@ -9,6 +9,8 @@ export class Service
     update!:any;
     updateLNmae!:string;
     updateLphone!:string;
+    addData:any;
+    visAllData:any;
 
 
 }

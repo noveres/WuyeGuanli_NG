@@ -79,7 +79,7 @@ export class GuestLoginComponent {
       const dialogAddQues = this.dialog.open(DiaLogAddinFoComponent,{data:{name:"administrator" ,animate:"animate"},width:"500px",height:"500px"});
       dialogAddQues.afterClosed().subscribe((res:any)=>{
         this.restAlldata();
-        this.getAll()
+        this.getAll();
       });
     }
     upDeta(val:any)
@@ -98,6 +98,8 @@ export class GuestLoginComponent {
       {
         this.restGetAll(res);
         this.initialData();
+        console.log(this.AllData);
+        this.service.visAllData = this.AllData;
         this.dataSource = new MatTableDataSource(this.AllData);
         this.dataSource.paginator = this.paginator();
 
@@ -187,9 +189,22 @@ export class GuestLoginComponent {
             this.AllData[i].id = id;
           }
         }
-
+    chickisLeave()
+    {
+      if(this.isLeave == true || this.isLeave == null)
+        {
+           this.isLeave = false;
+        }
+        else
+        {
+           this.isLeave = true;
+        }
+        this.inputData();
+    }
     inputData()
     {
+
+      console.log(this.isLeave)
       console.log(this.startDate);
       console.log(this.endDate);
       console.log(this.scaData);
@@ -238,7 +253,7 @@ export class GuestLoginComponent {
       MaxV = Number(this.maxvalue);
       if(minV<=0 ||minV == null ||this.minValue =="" || this.minValue == null)
         {
-          minV =0;
+          minV =1;
         }
       if(MaxV==null || MaxV<0 || this.maxvalue =="" || this.maxvalue == null)
       {
@@ -246,9 +261,9 @@ export class GuestLoginComponent {
         for (let i = this.AllData.length - 1; i >= 0; i--)
           {
 
-            if(MaxV <Number(this.AllData[i].House_number))
+            if(MaxV <= Number(this.AllData[i].House_number))
             {
-              MaxV =Number(this.AllData[i].House_number);
+              MaxV =Number(this.AllData[i].House_number)+2;
             }
           }
       }
@@ -277,7 +292,7 @@ export class GuestLoginComponent {
           if (this.AllData[i].isleav != this.isLeave)
           {
             this.AllData.splice(i, 1);
-        }
+          }
     }
     this.dataSource = new MatTableDataSource(this.AllData);
     this.dataSource.paginator = this.paginator();

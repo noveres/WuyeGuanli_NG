@@ -1,3 +1,4 @@
+import { Service } from './../../../services/service';
 import { Component } from '@angular/core';
 import { AfterViewInit,inject, ViewChild, viewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -15,7 +16,7 @@ import { ApiService } from '../../../services/Api';
 })
 export class DiaLogAddinFoComponent
 {
-  constructor(private http:ApiService) { }
+  constructor(private http:ApiService , private service:Service) { }
   readonly dialog_ref = inject(MatDialogRef<DiaLogAddinFoComponent>);
   readonly data = inject(MAT_DIALOG_DATA);
   inputData =
@@ -31,9 +32,17 @@ export class DiaLogAddinFoComponent
     hoous2!:string;
     hoous3!:string;
     hoous!:string;
- ngAfterViewInit(): void {
+    error:string = "還未離開手機號碼"
+ ngAfterViewInit(): void
+ {
   //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
   //Add 'implements AfterViewInit' to the class.
+ }
+ ngOnInit(): void {
+  //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+  //Add 'implements OnInit' to the class.
+    console.log(this.service.visAllData);
+
  }
   on_not_click():void
   {
@@ -59,5 +68,14 @@ export class DiaLogAddinFoComponent
     {
       this.on_not_click();
     }
+  }
+  chickPhone():boolean
+  {
+    let chick =  this.service.visAllData.visitorPhone.some((res:any)=>
+    {
+      res == this.inputData[0].visitorPhone;
+    });
+    return true
+
   }
 }

@@ -30,7 +30,7 @@ export class ResidentInformationComponent
     readonly dialog  =inject(MatDialog);
     OwnerName:string = "房東姓名";
     OwnerPhone:string = "房東電話"
-    Residential_Zone:string ="A區"
+    Residential_Zone:string ="區"
     House_number:string = " 號"
     isLase:string = "無"
     LaseName:string[] = [];
@@ -38,7 +38,7 @@ export class ResidentInformationComponent
     LaseNameA:string = "房客姓名"
     LasePhoneA:string = "房客電話"
     sachName!:string;
-    sacResidential_Zone!:string;
+    sacResidential_Zone:string = "";
     maxValue!:string;
     minValue!:string
     getId!:number;
@@ -126,6 +126,7 @@ export class ResidentInformationComponent
       this.http.getApi("http://localhost:8585/api/residents/getAll").subscribe
       (
         (res:any) =>{
+          this.service.addData = res;
           this.inputData(res);
           this.inputselect();
           this.scrollToBotton();
@@ -157,12 +158,12 @@ export class ResidentInformationComponent
     }
     addInfo()
     {
+      console.log(this.service.addData)
       const dialogAddQues = this.dialog.open(DiaLogAddinFoComponent,{data:{name:"administrator" ,animate:"animate"},width:"500px",height:"500px"});
       dialogAddQues.afterClosed().subscribe(
         (res:any)=>
           {
             this.getAll();
-
           }
       );
     }

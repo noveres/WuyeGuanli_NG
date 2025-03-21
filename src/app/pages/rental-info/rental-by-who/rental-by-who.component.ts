@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { catchError, finalize, of } from 'rxjs';
+import { FloatButtonsComponent } from '../../../components/float-buttons/float-buttons.component';
 
 interface RentalItem {
   idrental: number;
@@ -49,7 +50,8 @@ interface WhoRentalInfo {
     MatSelectModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    FloatButtonsComponent
   ]
 })
 export class RentalByWhoComponent implements OnInit {
@@ -240,26 +242,47 @@ export class RentalByWhoComponent implements OnInit {
 
     this.loading = true;
 
-    // 使用 PUT 請求并使用 query 參數
+    // 使用 PUT 
     this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&inputAmount=${inputAmount}`, null)
-      .pipe(
-        catchError(error => {
-          console.error('驗證失敗:', error);
-          this.errorMessage = '驗證失敗';
-          this.successMessage = '';
-          return of(null);
-        }),
-        finalize(() => this.loading = false)
-      )
-      .subscribe(response => {
-        if (response) {
-          console.log('驗證成功:', response);
-          this.successMessage = '驗證成功';
-          this.errorMessage = '';
-          this.loadWhoRentalInfo(); // 重新載入列表
-          setTimeout(() => this.successMessage = '', 3000);
-        }
-      });
+    // 使用 PUT
+this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&inputAmount=${inputAmount}`, null)
+.pipe(
+  catchError(error => {
+    console.error('驗證失敗:', error);
+    this.errorMessage = '驗證失敗';
+    this.successMessage = '';
+    this.loading = false;
+    throw error; // 重要：拋出錯誤使訂閱進入 error 分支
+  }),
+  finalize(() => this.loading = false)
+)
+.subscribe({
+  next: (response) => {
+    // 需要檢查 response 中的某個標誌或狀態碼來判斷是否成功
+    // 假設 API 返回包含 statusCode 或 success 字段
+    if (response && (response.statusCode === 200 || response.success)) {
+      console.log('驗證成功:', response);
+      this.successMessage = '驗證成功';
+      this.errorMessage = '';
+      this.loadWhoRentalInfo(); // 重新載入列表
+    } else {
+      // API 返回了，但沒有成功標誌
+      console.warn('驗證可能失敗:', response);
+      this.errorMessage = '驗證失敗: ' + (response?.message || '未知錯誤');
+      this.successMessage = '';
+    }
+    setTimeout(() => {
+      this.successMessage = '';
+      this.errorMessage = '';
+    }, 3000);
+  },
+  error: (error) => {
+    // 這裡會處理網絡錯誤或 catchError 中拋出的錯誤
+    console.error('驗證過程發生錯誤:', error);
+    this.errorMessage = '驗證失敗: 請稍後再試';
+    this.successMessage = '';
+  }
+});
   }
 
   addRental(): void {

@@ -246,11 +246,10 @@ export class EditRepairDialogComponent {
       case '門窗問題':
         return 'door_front';
       case '玻璃破裂':
-        return 'window';
       case '牆壁剝落':
       case '地板破損':
       case '牆面/地面損壞':
-        return 'wall';
+        return 'window';
       case '空調異常':
         return 'ac_unit';
       case '設備故障':

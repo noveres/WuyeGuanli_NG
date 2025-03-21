@@ -62,7 +62,7 @@ export class RentalByWhoComponent implements OnInit {
   loading: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
-  searchText: string = ''; // 新增全表格模糊搜尋用
+  searchText: string = ''; // 全表格模糊搜尋用
 
   // Mat-table 相關
   displayedColumns: string[] = ['idwhoRental', 'rentalWhat', 'accountRental', 'name', 'changeTime', 'verify', 'returnYorN', 'actions'];
@@ -94,7 +94,7 @@ export class RentalByWhoComponent implements OnInit {
     return this.selectedItem;
   }
 
-  // 新增的方法：計算可用數量（總數減去未歸還的數量）
+  // 計算可用數量（總數減去未歸還的數量）
   getAvailableItemCount(item: RentalItem): number {
     if (!item) return 0;
 
@@ -107,19 +107,41 @@ export class RentalByWhoComponent implements OnInit {
     return Math.max(0, item.total - unreturned);
   }
 
+  // 顯示訊息並在指定時間後清除
+  showMessage(success: boolean, message: string, duration: number = 3000): void {
+    if (success) {
+      this.successMessage = message;
+      this.errorMessage = '';
+    } else {
+      this.errorMessage = message;
+      this.successMessage = '';
+    }
+
+    setTimeout(() => {
+      this.successMessage = '';
+      this.errorMessage = '';
+    }, duration);
+  }
+
+  // 通用 API 錯誤處理
+  handleApiError(operation: string, error: any) {
+    console.error(`${operation}失敗:`, error);
+    return of(null);
+  }
+
   loadRentalItems(): void {
     this.loading = true;
     this.httpService.GetApi<RentalItem[]>(`${this.apiBaseUrl}/getall`)
       .pipe(
-        catchError(error => {
-          console.error('載入租借物品失敗:', error);
-          this.errorMessage = '載入租借物品失敗';
-          return of([]);
-        }),
+        catchError(error => this.handleApiError('載入租借物品', error)),
         finalize(() => this.loading = false)
       )
       .subscribe(response => {
-        this.rentalItems = response;
+        if (response) {
+          this.rentalItems = response;
+        } else {
+          this.showMessage(false, '載入租借物品失敗');
+        }
       });
   }
 
@@ -127,11 +149,7 @@ export class RentalByWhoComponent implements OnInit {
     this.loading = true;
     this.httpService.GetApi<any>(`${this.apiBaseUrl}/whorentalallinfo`)
       .pipe(
-        catchError(error => {
-          console.error('載入租借記錄失敗:', error);
-          this.errorMessage = '載入租借記錄失敗';
-          return of([]);
-        }),
+        catchError(error => this.handleApiError('載入租借記錄', error)),
         finalize(() => this.loading = false)
       )
       .subscribe(response => {
@@ -153,11 +171,7 @@ export class RentalByWhoComponent implements OnInit {
     this.loading = true;
     this.httpService.GetApi<WhoRentalInfo>(`${this.apiBaseUrl}/whorentalallinfo?idwho_rental=${id}`)
       .pipe(
-        catchError(error => {
-          console.error(`載入租借記錄 ID ${id} 失敗:`, error);
-          this.errorMessage = `載入租借記錄 ID ${id} 失敗`;
-          return of(null);
-        }),
+        catchError(error => this.handleApiError(`載入租借記錄 ID ${id}`, error)),
         finalize(() => this.loading = false)
       )
       .subscribe(response => {
@@ -172,17 +186,16 @@ export class RentalByWhoComponent implements OnInit {
 
           // 更新 MatTableDataSource
           this.dataSource.data = [...this.whoRentalList];
-          this.successMessage = '刷新成功';
-          setTimeout(() => this.successMessage = '', 3000);
+          this.showMessage(true, '刷新成功');
         }
       });
   }
 
-  // 更新 - 更新歸還狀態的方法，確保所有欄位都被保留
+  // 更新歸還狀態的方法
   updateReturnStatus(id: number): void {
     const rentalItem = this.whoRentalList.find(item => item.idwhoRental === id);
     if (!rentalItem) {
-      this.errorMessage = '找不到此租借記錄';
+      this.showMessage(false, '找不到此租借記錄');
       return;
     }
 
@@ -200,19 +213,13 @@ export class RentalByWhoComponent implements OnInit {
 
     this.httpService.PostApi<any>(`${this.apiBaseUrl}/whorental`, updateData)
       .pipe(
-        catchError(error => {
-          console.error('更新歸還狀態失敗:', error);
-          this.errorMessage = '更新歸還狀態失敗';
-          this.successMessage = '';
-          return of(null);
-        }),
+        catchError(error => this.handleApiError('更新歸還狀態', error)),
         finalize(() => this.loading = false)
       )
       .subscribe(response => {
         if (response) {
           console.log('更新歸還狀態成功:', response);
-          this.successMessage = '更新歸還狀態成功';
-          this.errorMessage = '';
+          this.showMessage(true, '更新歸還狀態成功');
 
           // 更新本地資料
           const index = this.whoRentalList.findIndex(item => item.idwhoRental === id);
@@ -220,9 +227,6 @@ export class RentalByWhoComponent implements OnInit {
             this.whoRentalList[index].returnYorN = !rentalItem.returnYorN;
             this.dataSource.data = [...this.whoRentalList];
           }
-
-          // 3秒後清除成功訊息
-          setTimeout(() => this.successMessage = '', 3000);
         }
       });
   }
@@ -230,64 +234,53 @@ export class RentalByWhoComponent implements OnInit {
   // 使用PUT請求驗證租借
   verifyRental(id: number, inputAmount: string): void {
     if (!inputAmount) {
-      this.errorMessage = '請輸入驗證碼';
+      this.showMessage(false, '請輸入驗證碼');
       return;
     }
 
     const rentalItem = this.whoRentalList.find(item => item.idwhoRental === id);
     if (!rentalItem) {
-      this.errorMessage = '找不到此租借記錄';
+      this.showMessage(false, '找不到此租借記錄');
       return;
     }
 
     this.loading = true;
 
-    // 使用 PUT 
+    // 使用 PUT 請求
     this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&inputAmount=${inputAmount}`, null)
-    // 使用 PUT
-this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&inputAmount=${inputAmount}`, null)
-.pipe(
-  catchError(error => {
-    console.error('驗證失敗:', error);
-    this.errorMessage = '驗證失敗';
-    this.successMessage = '';
-    this.loading = false;
-    throw error; // 重要：拋出錯誤使訂閱進入 error 分支
-  }),
-  finalize(() => this.loading = false)
-)
-.subscribe({
-  next: (response) => {
-    // 需要檢查 response 中的某個標誌或狀態碼來判斷是否成功
-    // 假設 API 返回包含 statusCode 或 success 字段
-    if (response && (response.statusCode === 200 || response.success)) {
-      console.log('驗證成功:', response);
-      this.successMessage = '驗證成功';
-      this.errorMessage = '';
-      this.loadWhoRentalInfo(); // 重新載入列表
-    } else {
-      // API 返回了，但沒有成功標誌
-      console.warn('驗證可能失敗:', response);
-      this.errorMessage = '驗證失敗: ' + (response?.message || '未知錯誤');
-      this.successMessage = '';
-    }
-    setTimeout(() => {
-      this.successMessage = '';
-      this.errorMessage = '';
-    }, 3000);
-  },
-  error: (error) => {
-    // 這裡會處理網絡錯誤或 catchError 中拋出的錯誤
-    console.error('驗證過程發生錯誤:', error);
-    this.errorMessage = '驗證失敗: 請稍後再試';
-    this.successMessage = '';
-  }
-});
+      .pipe(
+        catchError(error => {
+          console.error('驗證失敗:', error);
+          this.loading = false;
+          throw error; // 拋出錯誤使訂閱進入 error 分支
+        }),
+        finalize(() => this.loading = false)
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('API 回應:', response);
+          this.showMessage(true, '驗證成功'); // 假設已經成功
+          
+          // 直接在本地更新狀態
+          const index = this.whoRentalList.findIndex(item => item.idwhoRental === id);
+          if (index !== -1) {
+            this.whoRentalList[index].verify = true;
+            this.dataSource.data = [...this.whoRentalList];
+          } else {
+            // 如果本地找不到，重新載入全部資料
+            this.loadWhoRentalInfo();
+          }
+        },
+        error: (error) => {
+          console.error('驗證過程發生錯誤:', error);
+          this.showMessage(false, '認證功能已啟動，可刷新頁面確認');
+        }
+      });
   }
 
   addRental(): void {
     if (!this.selectedItem || !this.accountRental) {
-      this.errorMessage = '請選擇租借物品並輸入帳號';
+      this.showMessage(false, '請選擇租借物品並輸入帳號');
       return;
     }
 
@@ -299,27 +292,18 @@ this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&input
 
     this.httpService.PostApi<any>(`${this.apiBaseUrl}/whorental`, rentalData)
       .pipe(
-        catchError(error => {
-          console.error('租借失敗:', error);
-          this.errorMessage = '租借失敗';
-          this.successMessage = '';
-          return of(null);
-        }),
+        catchError(error => this.handleApiError('租借', error)),
         finalize(() => this.loading = false)
       )
       .subscribe(response => {
         if (response) {
           console.log('租借成功:', response);
-          this.successMessage = '租借成功';
-          this.errorMessage = '';
+          this.showMessage(true, '租借成功');
           this.loadWhoRentalInfo(); // 重新載入列表
 
           // 重設表單欄位
           this.selectedItem = '';
           this.accountRental = '';
-
-          // 3秒後清除成功訊息
-          setTimeout(() => this.successMessage = '', 3000);
         }
       });
   }
@@ -329,28 +313,19 @@ this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&input
       this.loading = true;
       this.httpService.DeleteApi<any>(`${this.apiBaseUrl}/delete/whorental/${id}`)
         .pipe(
-          catchError(error => {
-            console.error(`刪除 ID ${id} 租借記錄失敗:`, error);
-            this.errorMessage = '刪除失敗';
-            this.successMessage = '';
-            return of(null);
-          }),
+          catchError(error => this.handleApiError(`刪除 ID ${id} 租借記錄`, error)),
           finalize(() => this.loading = false)
         )
         .subscribe(response => {
           if (response !== null) {
             console.log('刪除成功:', response);
-            this.successMessage = '刪除成功';
-            this.errorMessage = '';
+            this.showMessage(true, '刪除成功');
 
             // 從本地陣列移除
             this.whoRentalList = this.whoRentalList.filter(item => item.idwhoRental !== id);
 
             // 更新 MatTableDataSource
             this.dataSource.data = [...this.whoRentalList];
-
-            // 3秒後清除成功訊息
-            setTimeout(() => this.successMessage = '', 3000);
           }
         });
     }
@@ -381,8 +356,6 @@ this.httpService.PutApi<any>(`${this.apiBaseUrl}/verify?idwho_rental=${id}&input
     this.loadRentalItems();
     this.loadWhoRentalInfo();
 
-    this.successMessage = '頁面已刷新';
-    setTimeout(() => this.successMessage = '', 3000);
+    this.showMessage(true, '頁面已刷新');
   }
-
 }

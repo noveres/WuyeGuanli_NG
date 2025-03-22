@@ -57,6 +57,7 @@ export class GuestLoginComponent {
     dataSource = new MatTableDataSource(this.AllData);
     startDate =  Date();
     endDate =  Date();
+    resData:any;
     readonly paginator = viewChild.required(MatPaginator);
 
     ngAfterViewInit()
@@ -68,7 +69,6 @@ export class GuestLoginComponent {
       //Add 'implements OnInit' to the class.
       this.getAll();
     }
-
 
     getResidents(value:number)
     {
@@ -91,6 +91,7 @@ export class GuestLoginComponent {
       this.getAll()}
       );
     }
+
     getAll()
     {
       this.http.getApi("http://localhost:8585/api/visitors/getAll").subscribe

@@ -33,6 +33,7 @@ export class DiaLogAddinFoComponent
     hoous3!:string;
     hoous!:string;
     error:string = "還未離開手機號碼"
+    resData:any
  ngAfterViewInit(): void
  {
   //Called after ngAfterContentInit when the component's view has been initialized. Applies to components only.
@@ -42,8 +43,23 @@ export class DiaLogAddinFoComponent
   //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
   //Add 'implements OnInit' to the class.
     console.log(this.service.visAllData);
-
+    this.getResAll();
  }
+ getResAll()
+    {
+      this.http.getApi("http://localhost:8585/api/residents/getAll").subscribe
+      (
+        (res:any) =>
+          {
+            console.log(res);
+            this.resData = res.resident_Informations;
+            console.log(this.resData)
+
+          }
+        )
+        console.log(this.resData);
+    }
+
   on_not_click():void
   {
     let retirn_data = ['status','not_click'];
@@ -69,13 +85,30 @@ export class DiaLogAddinFoComponent
       this.on_not_click();
     }
   }
+  chickZon()
+    {
+      this.resData.forEach((res:any) =>
+      {
+        if((this.hoous1+this.hoous2) == res.partitionhousenumber)
+        {
+          this.hoous3  = res.owerName;
+        }
+      });
+      console.log(this.hoous1+this.hoous2)
+
+    }
   chickPhone():boolean
   {
-    let chick =  this.service.visAllData.visitorPhone.some((res:any)=>
+    let chick =  this.service.visAllData.some((res:any)=>
     {
-      res == this.inputData[0].visitorPhone;
+      return this.inputData[0].visitorPhone == res.visitorPhone && !res.isleav;
     });
-    return true
+    part:String  =
+    if(this.inputData[0].visitorPhone.match(/\d/g)&&this.inputData[0].visitorPhone.length <10)
+    {
 
+    }
+    console.log(chick)
+    return chick
   }
 }

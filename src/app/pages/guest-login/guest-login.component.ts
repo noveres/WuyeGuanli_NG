@@ -159,7 +159,7 @@ export class GuestLoginComponent {
           }
           getChar[i] = res.visitorRecords[i].visitors.charAt(0);
           getafter[i] = res.visitorRecords[i].visitors.match(/\d+/);
-          getafterName[i] =res.visitorRecords[i].visitors.match(/\d+(\w+)/);
+          getafterName[i] =res.visitorRecords[i].visitors.match(/[a-zA-Z\u4E00-\u9FA5]+/g);
           id++;
           this.AllData[i].id = id;
           this.AllData[i].visitorName = res.visitorRecords[i].visitorName;
@@ -172,12 +172,14 @@ export class GuestLoginComponent {
           this.AllData[i].Residential_Zone = getChar[i];
           this.AllData[i].House_number = getafter[i][0];
           this.AllData[i].ai =res.visitorRecords[i].ai;
-          if(this.AllData[i].visitorTime === this.AllData[i].outTime )
+          if(this.AllData[i].visitorTime === this.AllData[i].outTime)
           {
             this.AllData[i].outTime = "---------";
             this.AllData[i].isleav = false;
           }
+          console.log(getafterName[i]);
         }
+
     }
     initialData() {
       this.AllData.sort((a, b) => {

@@ -33,6 +33,8 @@ export class DiaLogAddinFoComponent
     hoous3!:string;
     hoous!:string;
     error:string = "還未離開手機號碼"
+    zoneError:string = "此區域未有人註冊"
+    zoneChick:boolean = false
     resData:any
  ngAfterViewInit(): void
  {
@@ -76,8 +78,12 @@ export class DiaLogAddinFoComponent
       this.http.postAPI("http://localhost:8585/api/visitors/Add",this.inputData[0]).subscribe
       ((res:any)=>
       {
+        alert(res.message);
         console.log(this.inputData[0]);
-        this.on_not_click();
+        if(res.message == "成功")
+          {
+            this.on_not_click();
+          }
       });
     }
     else
@@ -85,28 +91,45 @@ export class DiaLogAddinFoComponent
       this.on_not_click();
     }
   }
-  chickZon()
+  chickZon():boolean
     {
-      this.resData.forEach((res:any) =>
+      let chick
+      console.log(this.resData)
+      if( (this.hoous1+this.hoous2).length>=3)
       {
-        if((this.hoous1+this.hoous2) == res.partitionhousenumber)
+        return chick = this.resData.some((res:any)=>
         {
-          this.hoous3  = res.owerName;
-        }
-      });
-      console.log(this.hoous1+this.hoous2)
-
+          if((this.hoous1+this.hoous2) == res.partitionhousenumber)
+            {
+              this.zoneChick =true;
+              this.hoous3  = res.owerName;
+            }
+        })
+      }
+      this.hoous3 = "";
+      chick =false;
+      return chick
     }
+
   chickPhone():boolean
   {
-    let chick =  this.service.visAllData.some((res:any)=>
+    let chick
+    if(this.inputData[0].visitorPhone.length >= 10)
     {
-      return this.inputData[0].visitorPhone == res.visitorPhone && !res.isleav;
-    });
-    part:String  =
-    if(this.inputData[0].visitorPhone.match(/\d/g)&&this.inputData[0].visitorPhone.length <10)
-    {
-
+      chick =  this.service.visAllData.some((res:any)=>
+        {
+          return this.inputData[0].visitorPhone == res.visitorPhone && !res.isleav;
+        });
+      if(!this.inputData[0].visitorPhone.match(/\d/g))
+        {
+          this.error = "未符合格式"
+          return true
+        }
+        if(this.inputData[0].visitorPhone.length > 10)
+        {
+           this.error = "未符合格式"
+           return true
+        }
     }
     console.log(chick)
     return chick

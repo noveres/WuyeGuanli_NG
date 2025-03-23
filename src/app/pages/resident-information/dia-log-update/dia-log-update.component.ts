@@ -57,7 +57,7 @@ getValue()
   }
   else
   {
-    this.isLase = this.service.update.isLase;
+    this.isLase = true;
   }
   this.Lasename = this.service.updateLNmae;
   this.Lasephone = this.service.updateLphone;
@@ -101,8 +101,11 @@ getValue()
           {
 
             // console.log(res);
-            // alert(res.message);
-            this.on_not_click();
+             alert(res.message);
+             if(res.message == "成功")
+             {
+              this.on_not_click();
+             }
          }
       );
     }

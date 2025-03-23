@@ -190,6 +190,13 @@ export class ResidentInformationComponent
         (res:any)=>
           {
             this.getAll();
+            this.OwnerName = "房東姓名";
+            this.OwnerPhone = "房東電話"
+            this.Residential_Zone ="區"
+            this.House_number = " 號"
+            this.isLase= "無"
+            this.LaseNameA = "房客姓名"
+            this.LasePhoneA= "房客電話"
           }
       );
     }

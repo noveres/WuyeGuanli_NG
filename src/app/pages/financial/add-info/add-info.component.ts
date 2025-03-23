@@ -63,6 +63,7 @@ export class AddInfoComponent {
   secondFormGroup!: FormGroup;
   data!: FormGroup
   alert!: string
+  img!:string
   save: any[] = [{
     project: "",
     income: "",
@@ -318,6 +319,22 @@ export class AddInfoComponent {
 
   editcloseDialog() {
     this.editdialog.nativeElement.close();
+  }
+
+  @ViewChild('imgDialog', { static: true }) imgdialog!: ElementRef<HTMLDialogElement>;
+
+  imgopenDialog() {
+    this.imgdialog.nativeElement.showModal();
+  }
+
+  imgcloseDialog() {
+    this.imgdialog.nativeElement.close();
+  }
+
+  imgShow(str:string){
+    console.log(str)
+    this.img=str
+    this.imgopenDialog()
   }
 
 

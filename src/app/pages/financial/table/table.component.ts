@@ -81,6 +81,7 @@ import { ViewContainerRef } from '@angular/core';
 
 export class TableComponent {
   constructor(private http: HttpServiceService,) { }
+  show:number=1
   comp: number = 0
   alert!: string
   delectNum: any = []
@@ -288,17 +289,17 @@ export class TableComponent {
       // this.showData[this.Num].remark = this.save[0].remark
       // this.showData[this.Num].receipt = this.save[0].receipt
 
-      let save ={ids:[this.showData[this.Num].id]}
+      let save = { ids: [this.showData[this.Num].id] }
       this.http.PostApi('http://localhost:8585/Financial/delect', save).subscribe
-      ((res: any) => {
-        this.http.PostApi('http://localhost:8585/Financial/addInfo', this.save[0]).subscribe
         ((res: any) => {
-          this.get();
-          this.save[0] = [];
-          window.location.reload();
-        });
-      }
-      );
+          this.http.PostApi('http://localhost:8585/Financial/addInfo', this.save[0]).subscribe
+            ((res: any) => {
+              this.get();
+              this.save[0] = [];
+              window.location.reload();
+            });
+        }
+        );
 
       this.editcloseDialog()
     }
@@ -311,12 +312,23 @@ export class TableComponent {
   }
 
   showEye(num: number) {
-    if (num == -1) {
-      for (let i = 0; i <= this.showData.length; i++) {
-        this.showData[i].push({ ...this.showData[i], show: 0 })
-        console.log(this.showData)
+    if (num == -2) {
+      for (let i = 0; i < this.showData.length; i++) {
+        this.showData[i].show = 1;
+        this.show=0
+      }
+    } else if (num == -3) {
+      for (let i = 0; i < this.showData.length; i++) {
+        this.showData[i].show = 0;
+        this.show=1
       }
     }
+    // if (num == -1) {
+    //   for (let i = 0; i <= this.showData.length; i++) {
+    //     this.showData[i].push({ ...this.showData[i], show: 0 })
+    //     console.log(this.showData)
+    //   }
+    // }
     if (this.showData[num].show == 0) {
       this.showData[num].show = 1
     }

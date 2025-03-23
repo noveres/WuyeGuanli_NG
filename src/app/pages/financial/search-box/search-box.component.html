@@ -1,23 +1,28 @@
 <div style="display: flex;">
-  <div class="shadow" style="width: 85%;margin-right: 5px;padding: 25px;">
 
 
 
-    <div style="display: flex;width: 100%;">
-      <div><button mat-icon-button style="font-size: 48px; width: 68px; height: 68px;"><mat-icon style="font-size: 48px; width: 48px; height: 48px;top: 0;">search</mat-icon></button></div>
-      <div style="width: 100%;"><input type="text" [(ngModel)]="searchValue.name" style="width: 90%;margin-right: 10px;height: 50px;" (keyup.enter)="search()" >
+  <div style="width: 100%;" class="shadow">
+    <div style="display: flex;">
+      <div>
+        <input type="date" class="date" [(ngModel)]="searchValue.sDate" max="{{searchValue.eDate}}" (change)="search()">
       </div>
-       </div>
 
-
-  </div>
-
-  <div class="dateDiv" class="shadow" >
-    <div >
-      <input type="date" class="date" [(ngModel)]="searchValue.sDate" max ="{{searchValue.eDate}}" (change)="search()" >
+      <div>
+        <input type="date" class="date" [(ngModel)]="searchValue.eDate" min="{{searchValue.sDate}}" (change)="search()">
+      </div>
       <br>
-      <input type="date" class="date"[(ngModel)]="searchValue.eDate" min="{{searchValue.sDate}}" (change)="search()">
     </div>
+
+    <div style="display: flex;" class="shadow">
+
+      <div style="width: 100%;">
+        <!-- <mat-icon>search</mat-icon> -->
+        <input type="text" [(ngModel)]="searchValue.name" placeholder="搜索..."
+          (keyup)="search()">
+      </div>
+    </div>
+
   </div>
 
 </div>

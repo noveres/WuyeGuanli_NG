@@ -6,8 +6,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class HttpServiceService {
-
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   GetApi<T>(url: string): Observable<T> {
     return this.http.get<T>(url);
@@ -24,24 +23,31 @@ export class HttpServiceService {
   DeleteApi<T>(url: string): Observable<T> {
     return this.http.delete<T>(url);
   }
-//Dialog
+  //Dialog
   private dialogColse = new BehaviorSubject<number>(0);
 
-  setNum(num:number)  {
+  setNum(num: number) {
     this.dialogColse.next(num)
   }
 
   getNum(): Observable<number> {
-   return this.dialogColse.asObservable();
+    return this.dialogColse.asObservable();
   }
-//search
-private Data = new BehaviorSubject<any>([]);
+  //search
+  private Data = new BehaviorSubject<any>([]);
 
-  setData(array:[])  {
+  setData(array: []) {
     this.Data.next(array)
   }
 
   getData(): Observable<any> {
-   return this.Data.asObservable();
+    return this.Data.asObservable();
+  }
+  //google gas
+  private uploadUrl = 'YOUR_GOOGLE_APPS_SCRIPT_URL'; // Google Apps Script 部署網址
+
+  uploadFile(formData: any): Observable<any> {
+    return this.http.post<any>(this.uploadUrl, formData);
   }
 }
+

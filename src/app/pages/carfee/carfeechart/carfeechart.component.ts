@@ -155,8 +155,8 @@ export class CarfeechartComponent implements OnInit, AfterViewInit {
   }
 
   initializeRelationChart(): void {
-    // 取前10個車位資料
-    const top10Data = this.chartData.slice(0, 10);
+    // 取前10000個車位資料
+    const top10Data = this.chartData.slice(0, 10000);
 
     // 使用 owner 欄位作為用戶資訊
     const ctx = this.relationChartRef.nativeElement.getContext('2d');

@@ -22,7 +22,7 @@
 
       <!-- 停車費欄位 -->
       <ng-container matColumnDef="parkingFee">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>停車費(年費)</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>車位費(年費)</th>
         <td mat-cell *matCellDef="let element">{{ element.parkingFee }}</td>
       </ng-container>
 
@@ -78,23 +78,23 @@
 
     <mat-paginator [pageSizeOptions]="[ 10, 25, 100]" showFirstLastButtons></mat-paginator>
   </div>
-<div class="row px-3 mt-2  justify-content-between">
-  <button mat-stroked-button (click)="openAddDialog()" class="add-button col-2" style="max-width: 200px;">
-    <mat-icon>add</mat-icon> 新增停車位
-  </button>
+  <div class="row px-3 mt-2  justify-content-between">
+    <button mat-stroked-button (click)="openAddDialog()" class="add-button col-2" style="max-width: 200px;">
+      <mat-icon>add</mat-icon> 新增停車位
+    </button>
 
-  <button mat-stroked-button (click)="updatePaidStatus()" class="update-button col-2" style="max-width: 200px;">
-    <mat-icon>update</mat-icon> 更新付款狀態
-  </button>
+    <button mat-stroked-button (click)="updatePaidStatus()" class="update-button col-2" style="max-width: 200px;">
+      <mat-icon>update</mat-icon> 更新付款狀態
+    </button>
 
-  <button mat-stroked-button (click)="exportToExcel()" class="export-button col-2" style="max-width: 200px;">
-    <mat-icon>file_download</mat-icon> 匯出Excel
-  </button>
+    <button mat-stroked-button (click)="exportToExcel()" class="export-button col-2" style="max-width: 200px;">
+      <mat-icon>file_download</mat-icon> 匯出Excel
+    </button>
 
-  <button mat-stroked-button routerLink="/carfee/carfeeextend" class="col-2" style="max-width: 200px;"> 
-    <mat-icon>dvr</mat-icon>顯示完整匯款清單
-  </button>
-</div>
+    <button mat-stroked-button routerLink="/carfee/carfeeextend" class="col-2" style="max-width: 200px;">
+      <mat-icon>dvr</mat-icon>顯示完整匯款清單
+    </button>
+  </div>
 </div>
 
 <!-- 編輯/新增對話框 -->

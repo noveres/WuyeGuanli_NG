@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, NgZone, ViewChild } from '@angular/core';
 //步進器
 import { FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
@@ -53,17 +53,18 @@ export class AddInfoComponent {
 
 
 
-
+  imgStr!:string
   Num!: number
-
-  tableTitle: string[] = ["編號", "項目", "資產", "負債", "日期", "備註", "文本資料"];
+  imageUrl2: string | ArrayBuffer | null = null;
+  imageUrl: string | ArrayBuffer | null = null;
+  tableTitle: string[] = ["編號", "項目", "收入", "支出", "日期", "備註", "文本資料"];
   tableData: any[] = []
   switch: number = 1
   firstFormGroup!: FormGroup;
   secondFormGroup!: FormGroup;
   data!: FormGroup
   alert!: string
-  img!:string
+  img!: string
   save: any[] = [{
     project: "",
     income: "",
@@ -76,7 +77,7 @@ export class AddInfoComponent {
 
 
 
-  constructor(private formBuilder: FormBuilder, private http: HttpServiceService) { }
+  constructor(private formBuilder: FormBuilder, private http: HttpServiceService, private ngZone: NgZone) { }
 
   @ViewChild('stepper') stepper!: MatStepper;
 
@@ -121,7 +122,6 @@ export class AddInfoComponent {
     }
     this.http.PostApi('http://localhost:8585/Financial/search', searchValue).subscribe
       ((res: any) => {
-        console.log(res.financials)
         this.http.setData(res.financials)
       });
   }
@@ -211,14 +211,13 @@ export class AddInfoComponent {
   edit(num: number) {
     this.Num = num
 
-    console.log(num)
     //this.save[0]=this.tableData[num] //會及時修改
     this.save[0].project = this.tableData[num].project
     this.save[0].income = this.tableData[num].income
     this.save[0].expenditure = this.tableData[num].expenditure
     this.save[0].date = this.tableData[num].date
     this.save[0].remark = this.tableData[num].remark
-    // this.save[0].receipt = this.tableData[num].receipt
+    this.save[0].receipt = this.tableData[num].receipt
 
     if (this.save[0].income == 0) {
       this.switch = 2
@@ -331,18 +330,49 @@ export class AddInfoComponent {
     this.imgdialog.nativeElement.close();
   }
 
-  imgShow(str:string){
-    console.log(str)
-    this.img=str
+  imgShow(num:number) {
+
     this.imgopenDialog()
+    this.imgStr=this.tableData[num].receipt
+
   }
 
+  onFileSelected(event: Event) {
 
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
 
+      // 使用 FileReader 讀取圖片內容
+      const reader = new FileReader();
+      // 轉換為 Base64
+      this.ngZone.run(() => {
+        reader.onload = () => {
+          this.imageUrl = reader.result;
+          this.data.patchValue
+            ({ receipt: this.imageUrl });
+        }
+        reader.readAsDataURL(file);
+      })
+    }
+  }
 
+  onFileSelected2(event: Event) {
 
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
 
-
-
-
+      // 使用 FileReader 讀取圖片內容
+      const reader = new FileReader();
+      // 轉換為 Base64
+      this.ngZone.run(() => {
+        reader.onload = () => {
+          this.imageUrl2 = reader.result;
+            this.save[0].receipt=this.imageUrl2
+        }
+      })
+      reader.readAsDataURL(file);
+    }
+  }
 }

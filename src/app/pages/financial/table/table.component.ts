@@ -1,4 +1,4 @@
-import { Component, ElementRef } from '@angular/core';
+import { Component, ElementRef, NgZone } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 //財務表格
@@ -80,7 +80,9 @@ import { ViewContainerRef } from '@angular/core';
 
 
 export class TableComponent {
-  constructor(private http: HttpServiceService,) { }
+  constructor(private http: HttpServiceService,private ngZone: NgZone) { }
+  imageUrl2: string | ArrayBuffer | null = null;
+  imgStr!:string
   show:number=1
   comp: number = 0
   alert!: string
@@ -127,7 +129,6 @@ export class TableComponent {
 
     this.http.getData().subscribe(res => {
       this.showData = Array.isArray(res) ? res : [];
-      console.log(res)
       this.dataSource = new MatTableDataSource(this.showData)
       this.dataSource.paginator! = this.paginator;
       for (let i = 0; i < this.showData.length; i++) {
@@ -139,6 +140,7 @@ export class TableComponent {
     })
   }
 
+
   get() {
     let searchValue = {
       name: "",
@@ -147,7 +149,6 @@ export class TableComponent {
     }
     this.http.PostApi('http://localhost:8585/Financial/search', searchValue).subscribe
       ((res: any) => {
-        console.log(res.financials)
         this.http.setData(res.financials)
       }
       );
@@ -155,8 +156,6 @@ export class TableComponent {
 
 
   del(num: number) {
-    console.log(num)
-
     if (this.showData[num].del == 0) {
       this.showData[num].del = 1
       this.delectNum.push(this.showData[num].id)
@@ -168,7 +167,6 @@ export class TableComponent {
   }
   del2() {
     let del = { ids: this.delectNum }
-    console.log(del)
     this.http.PostApi('http://localhost:8585/Financial/delect', del).subscribe
       ((res: any) => {
         this.delectNum = []
@@ -187,7 +185,6 @@ export class TableComponent {
     this.save[0].date = this.showData[num].date
     this.save[0].remark = this.showData[num].remark
     this.save[0].receipt = this.showData[num].receipt
-    console.log(this.save[0])
 
     if (this.save[0].income == 0) {
       this.switch = 2
@@ -282,25 +279,20 @@ export class TableComponent {
         this.errOpenDialog()
         return;
       }
-      // this.showData[this.Num].project = this.save[0].project
-      // this.showData[this.Num].income = this.save[0].income
-      // this.showData[this.Num].expenditure = this.save[0].expenditure
-      // this.showData[this.Num].date = this.save[0].date
-      // this.showData[this.Num].remark = this.save[0].remark
-      // this.showData[this.Num].receipt = this.save[0].receipt
-
+      this.ngZone.run(()=>{
       let save = { ids: [this.showData[this.Num].id] }
       this.http.PostApi('http://localhost:8585/Financial/delect', save).subscribe
         ((res: any) => {
-          this.http.PostApi('http://localhost:8585/Financial/addInfo', this.save[0]).subscribe
-            ((res: any) => {
-              this.get();
-              this.save[0] = [];
-              window.location.reload();
-            });
-        }
-        );
 
+
+        });
+        this.http.PostApi('http://localhost:8585/Financial/addInfo', this.save[0]).subscribe
+        ((res: any) => {
+          this.get();
+          this.save[0] = [];
+          window.location.reload();
+        });
+      })
       this.editcloseDialog()
     }
   }
@@ -308,7 +300,6 @@ export class TableComponent {
   delect(num: number) {
     this.delectNum = new Set()
     this.delectNum.add(num)
-    console.log(this.delectNum)
   }
 
   showEye(num: number) {
@@ -323,17 +314,64 @@ export class TableComponent {
         this.show=1
       }
     }
-    // if (num == -1) {
-    //   for (let i = 0; i <= this.showData.length; i++) {
-    //     this.showData[i].push({ ...this.showData[i], show: 0 })
-    //     console.log(this.showData)
-    //   }
-    // }
     if (this.showData[num].show == 0) {
       this.showData[num].show = 1
     }
     else {
       this.showData[num].show = 0
+    }
+  }
+
+  //==============================
+  // imageUrl: string | ArrayBuffer | null = null;
+
+  // // 處理圖片選擇與預覽
+  // onFileSelected(event: Event) {
+  //   const input = event.target as HTMLInputElement;
+  //   if (input.files && input.files.length > 0) {
+  //     const file = input.files[0];
+
+  //     // 使用 FileReader 讀取圖片內容
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.imageUrl = reader.result; // 轉換為 Base64
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
+
+  @ViewChild('imgDialog', { static: true }) imgdialog!: ElementRef<HTMLDialogElement>;
+
+  imgopenDialog() {
+    this.imgdialog.nativeElement.showModal();
+  }
+
+  imgcloseDialog() {
+    this.imgdialog.nativeElement.close();
+  }
+
+  imgShow(num:number) {
+    this.imgopenDialog()
+    this.imgStr=this.showData[num].receipt
+
+  }
+
+  onFileSelected2(event: Event) {
+
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+
+      // 使用 FileReader 讀取圖片內容
+      const reader = new FileReader();
+      // 轉換為 Base64
+      this.ngZone.run(() => {
+        reader.onload = () => {
+          this.imageUrl2 = reader.result;
+            this.save[0].receipt=this.imageUrl2
+        }
+        reader.readAsDataURL(file);
+      })
     }
   }
 }

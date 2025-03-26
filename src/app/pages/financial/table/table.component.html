@@ -1,3 +1,8 @@
+<dialog #imgDialog class="centered-dialog" style="height: 600px;width: 600px;">
+
+  <img [src]="imgStr" alt="" style="width: 500px;height: 500px;">
+  <button mat-button (click)="imgcloseDialog()" style="position: absolute; bottom: 1%; right: 0; ">確認</button>
+</dialog>
 <!-- dialog.component.html -->
 
 <dialog #myDialog class="centered-dialog">
@@ -67,7 +72,8 @@
 
   <div>
     <mat-label for="">文本資料</mat-label>
-    <input type="file" [(ngModel)]="save[0].receipt">
+    <input type="file"  (change)="onFileSelected2($event)">
+    <img [src]="save[0].receipt" alt="" style="width: 200px;height: 200px;">
   </div>
   <br>
 
@@ -187,7 +193,7 @@
       <!-- receipte Column -->
       <ng-container matColumnDef="receipt">
         <th mat-header-cell *matHeaderCellDef> 收據 </th>
-        <td mat-cell *matCellDef="let element"> <button mat-icon-button><mat-icon>picture_as_pdf</mat-icon></button>
+        <td mat-cell *matCellDef="let element let i =index"><button mat-icon-button (click)="imgShow(i)"><mat-icon> insert_photo</mat-icon></button>
         </td>
       </ng-container>
 
@@ -216,3 +222,6 @@
   </div>
 </div>
 }
+
+<!-- =================================================== -->
+

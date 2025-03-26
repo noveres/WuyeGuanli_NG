@@ -9,9 +9,9 @@
 
 </dialog>
 <!-- ============================================================ -->
-<dialog #imgDialog class="centered-dialog">
+<dialog #imgDialog class="centered-dialog" style="height: 600px;width: 600px;">
 
-  <img src="img" alt="">
+  <img [src]="imgStr" alt="" style="width: 500px;height: 500px;">
   <button mat-button (click)="imgcloseDialog()" style="position: absolute; bottom: 1%; right: 0; ">確認</button>
 </dialog>
 <!-- ============================================================ -->
@@ -56,7 +56,8 @@
 
   <div>
     <mat-label for="">文本資料</mat-label>
-    <input type="file" [(ngModel)]="save[0].receipt">
+    <input type="file"  (change)="onFileSelected2($event)">
+    <img [src]="save[0].receipt" alt="" style="width: 200px;height: 200px;">
   </div>
   <br>
 
@@ -126,9 +127,9 @@
         }
 
         <button mat-button type="file">
-          <form [formGroup]="data">
-            <input type="file" id="file" formControlName="receipt" class="inputTable" required value="請選擇上船的文本資料">
-          </form>
+
+            <input type="file" id="file"  class="inputTable" required value="請選擇文本資料" (change)="onFileSelected($event)" >
+
         </button>
         <br>
 
@@ -181,7 +182,7 @@
                     d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829l-2.83-2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12-.708.708z" />
                 </svg></button><br><label for="">{{item.remark}}</label>}</td>
 
-            <td><button mat-icon-button (click)="imgShow(item.receipt)"><mat-icon> insert_photo</mat-icon></button></td>
+            <td><button mat-icon-button (click)="imgShow(i)"><mat-icon> insert_photo</mat-icon></button></td>
 
             <td><button mat-icon-button (click)="edit(i)"><mat-icon>edit</mat-icon></button>
               <button mat-icon-button (click)="del(i)"><mat-icon>delete</mat-icon></button>
@@ -238,7 +239,7 @@
           <td><label for="">{{item.expenditure}}</label></td>
           <td><label for="">{{item.date}}</label></td>
           <td><label for="">{{item.remark}}</label></td>
-          <td><label for="">{{item.receipt}}</label></td>
+          <td><button mat-icon-button (click)="imgShow(i)"><mat-icon> insert_photo</mat-icon></button></td>
         </tr>
         }
       </tbody>

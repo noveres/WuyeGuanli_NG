@@ -280,11 +280,9 @@ export class TableComponent {
         return;
       }
       this.ngZone.run(()=>{
-      let save = { ids: [this.showData[this.Num].id] }
+        let save = { ids: [this.showData[this.Num].id] }
       this.http.PostApi('http://localhost:8585/Financial/delect', save).subscribe
         ((res: any) => {
-
-
         });
         this.http.PostApi('http://localhost:8585/Financial/addInfo', this.save[0]).subscribe
         ((res: any) => {

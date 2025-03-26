@@ -25,7 +25,7 @@
         
         <div class="stat-card">
           <h3>總訪客數</h3>
-          <div class="stat-number">{{ stats.totalVisitors }}</div>
+          <div class="stat-number">{{ stats.totalVisitors }}/100</div>
           <div class="stat-details">
             <div class="stat-row">
               <span class="stat-label">當前狀態：</span>
@@ -49,7 +49,7 @@
 
         <div class="stat-card">
           <h3>維修案件</h3>
-          <div class="stat-number">{{ repairCount }}</div>
+          <div class="stat-number">{{ repairCount - getRepairCountByStatus('已完成') }}</div>
           <div class="stat-details">
             <div class="stat-row">
               <span class="stat-label">類型統計：</span>
@@ -61,6 +61,7 @@
               <span class="stat-label">狀態統計：</span>
               <span class="stat-value">待處理: {{ getRepairCountByStatus('待處理') }}</span>
               <span class="stat-value">處理中: {{ getRepairCountByStatus('處理中') }}</span>
+              <span class="stat-value">已完成: {{ getRepairCountByStatus('已完成') }}</span>
             </div>
           </div>
         </div>
@@ -97,9 +98,9 @@
           <div class="stat-row">
             <span class="label">訪客人數</span>
             <div class="progress-bar">
-              <div class="progress" [style.width.%]="stats.visitorRate"></div>
+              <div class="progress" [style.width.%]="(stats.currentVisitors / 100 * 100) > 100 ? 100 : (stats.currentVisitors / 100 * 100)"></div>
             </div>
-            <span class="value">{{ stats.currentVisitors }}/{{ stats.totalVisitors }} 人</span>
+            <span class="value">{{ stats.currentVisitors > 100 ? 100 : stats.currentVisitors }}/100 人</span>
           </div>
           <div class="stat-row">
             <span class="label">停車位繳費率</span>
